@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import NavBar from "./components/molecules/nav-bar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +17,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body suppressHydrationWarning={true} className={`flex flex-row ${inter.className}`}>
+        <NavBar />
+        <main className="flex flex-grow bg">
+          {children}
+        </main>
+        </body>
     </html>
   );
 }
