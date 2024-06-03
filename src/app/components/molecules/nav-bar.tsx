@@ -30,8 +30,8 @@ export default function NavBar () {
         <nav className={`flex ${isOpen ? "bg-background absolute w-full h-full" : 'static h-fit'}  md:relative md:w-fit flex-col px-6 py-4 md:py-8 space-y-16`}>
             <section className={`flex flex-col space-y-4`}>
                 <div className="flex w-full justify-between">
-                    <div className={`bg-gray-200 w-24 h-10 rounded-lg ${!isOpen && "hidden"}`}></div>
                     <SideBarButton className={`md:absolute -right-4`} isOpen={isOpen} onClick={toggleOpen}/>
+                    <div className={`bg-gray-200 w-24 h-10 rounded-lg ${!isOpen && "hidden"}`}></div>
                 </div>
                 <div className={`${!isOpen && "hidden"}`}>
                     <ProfileNavItem />
