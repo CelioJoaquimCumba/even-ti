@@ -32,7 +32,7 @@ export default function NavBar () {
                 <div className="bg-gray-200 w-24 h-10 rounded-lg"></div>
                 <ProfileNavItem />
             </section>
-            <ul className={`flex flex-col space-y-4 ${!isOpen && "hidden"}`}>
+            <ul className={`flex flex-col space-y-4 overflow-y-auto ${!isOpen && "hidden"}`}>
                 { navItems.map((item) => <NavItem key={item.label} label={item.label} path={item.path} selected={path === item.path} />) }
             </ul>
         </nav>
