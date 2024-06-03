@@ -13,7 +13,7 @@ export default function NavItem ({selected = false, label='nav-item', path}: Nav
     const [state, setState] = useState<state>(selected ? 'selected' : 'default')
     return (
         <Link href={path}>
-            <li className={`flex  px-6 py-3 rounded-lg ${state === 'selected' || state === 'hover' ? "bg-gray-100" : "bg-white"}`} onMouseEnter={() => state === 'default' && setState('hover')} onMouseLeave={() => state === 'hover' && setState('default')}>
+            <li className={`flex  px-6 py-3 rounded-lg ${state === 'selected' || state === 'hover' ? "bg-secondary" : "bg-background"}`} onMouseEnter={() => state === 'default' && setState('hover')} onMouseLeave={() => state === 'hover' && setState('default')}>
                 {label}
             </li>
         </Link>
