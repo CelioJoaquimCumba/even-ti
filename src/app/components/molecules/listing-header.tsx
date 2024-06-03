@@ -76,20 +76,37 @@ const filters = [
     },
 ]
 
+interface selectedFilters {
+    filterId: string,
+    optionId: string
+}
 export function ListingHeader () {
     const [searchInput, setSearchInput] = useState('')
+    const [selectedFilters, setSelectedFilters] = useState<selectedFilters[]>([])
+
+    const handleSelectChange = (event: string, id: string) => {
+        const value = event.toString()
+        const index = selectedFilters.findIndex((filter) => filter.filterId === id)
+        if(index >= 0) {
+            const newFilters = [...selectedFilters]
+            newFilters[index] = {filterId: id, optionId: value}
+            setSelectedFilters(newFilters)
+        } else {
+            setSelectedFilters([...selectedFilters, {filterId: id, optionId: value}])
+        }
+    }
     const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
     }
     return (
-        <div className="flex flex-row p-4 bg-white rounded-md space-x-8">
-            <form className="flex w-full items-center space-x-2" onSubmit={handleSearch}>
+        <div className="flex flex-row flex-wrap p-4 bg-white rounded-md gap-8">
+            <form className="flex grow-[2] items-center space-x-2" onSubmit={handleSearch}>
                 <Input type="text" placeholder="Pesquise o evento" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} />
                 <Button type="submit">Pesquisar</Button>
             </form>
-            <div className="flex space-x-2">
+            <div className="flex flex-wrap lg:flex-nowrap gap-2 flex-grow">
                 {filters.map((filter) => (
-                    <Select key={filter.id}>
+                    <Select key={filter.id} onValueChange={(e) => handleSelectChange(e, filter.id)}>
                         <SelectTrigger className="flex space-x-2">
                             <SelectValue placeholder={filter.label}/>
                         </SelectTrigger>
