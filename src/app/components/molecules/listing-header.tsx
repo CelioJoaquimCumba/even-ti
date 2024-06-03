@@ -104,7 +104,7 @@ export function ListingHeader () {
                 <Input type="text" placeholder="Pesquise o evento" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} />
                 <Button type="submit">Pesquisar</Button>
             </form>
-            <div className="flex flex-wrap lg:flex-nowrap gap-2 flex-grow">
+            <div className="flex flex-wrap md:flex-nowrap gap-2 flex-grow">
                 {filters.map((filter) => (
                     <Select key={filter.id} onValueChange={(e) => handleSelectChange(e, filter.id)}>
                         <SelectTrigger className="flex space-x-2">
