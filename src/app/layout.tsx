@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ['latin'] });
 const LayoutContent: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { title } = useTitle();
   return (
-    <div className={`flex flex-col md:flex-row overflow-hidden ${inter.className}`}>
+    <div className={`flex flex-row overflow-hidden ${inter.className}`}>
       <NavBar />
       <div className="flex flex-col py-8 px-6 bg-gray-100 overflow-y-auto w-full space-y-6">
         <h1 className="text-2xl text-gray-700">{title}</h1>
