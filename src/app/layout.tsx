@@ -14,7 +14,7 @@ const LayoutContent: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   return (
     <div className={`flex flex-col md:flex-row overflow-hidden ${inter.className}`}>
       <NavBar />
-      <div className="flex flex-col py-8 px-6 bg-gray-100 overflow-y-auto w-full space-y-6">
+      <div className="flex flex-col py-8 px-6 bg-secondary overflow-y-auto w-full h-full space-y-6">
         <h1 className="text-2xl text-gray-700">{title}</h1>
         <header>
           <ListingHeader/>
