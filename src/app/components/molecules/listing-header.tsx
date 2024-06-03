@@ -99,7 +99,7 @@ export function ListingHeader () {
         e.preventDefault()
     }
     return (
-        <div className="flex flex-row flex-wrap p-4 bg-white rounded-md gap-8">
+        <div className="flex flex-row flex-wrap p-4 bg-background rounded-md gap-8">
             <form className="flex grow-[2] items-center space-x-2" onSubmit={handleSearch}>
                 <Input type="text" placeholder="Pesquise o evento" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} />
                 <Button type="submit">Pesquisar</Button>
