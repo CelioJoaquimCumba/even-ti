@@ -4,6 +4,22 @@ import ProfileNavItem from "../atoms/profile-nav-item";
 import NavItem from "../atoms/nav-item";
 import SideBarButton from "../atoms/sidebar-button";
 import { useState } from "react";
+import { useRouter } from "next/router";
+
+const navItems = [
+    {
+        label: 'Eventos',
+        path: '/events'
+    },
+    {
+        label: 'Comunidade',
+        path: '/community'
+    },
+    {
+        label: 'Reservas',
+        path: '/reservations'
+    }
+]
 
 export default function NavBar () {
     const [isOpen, setIsOpen] = useState(true)
@@ -16,9 +32,7 @@ export default function NavBar () {
                 <ProfileNavItem />
             </section>
             <ul className={`flex flex-col space-y-4 ${!isOpen && "hidden"}`}>
-                <NavItem label="nav-item-1" selected />
-                <NavItem label="nav-item-2"/>
-                <NavItem label="nav-item-3" />
+                { navItems.map((item) => <NavItem key={item.label} label={item.label} path={item.path} />) }
             </ul>
         </nav>
     )
