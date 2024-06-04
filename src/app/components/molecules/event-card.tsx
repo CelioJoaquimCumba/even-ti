@@ -15,13 +15,13 @@ export function EventCard(props: { event: Event }) {
     const [isOpen, setIsOpen] = useState(false)
     return (
         <Card className={`flex flex-col space-y-2 ${!isOpen && "md:flex-row"} w-full justify-between p-4 rounded-2xl gap-2`}>
-            <CardContent className="flex gap-6 p-0 ">
+            <CardContent className="flex flex-wrap md:flex-nowrap gap-6 p-0 ">
                 <div className={`hidden ${!isOpen && "md:flex md:flex-col"} w-64 aspect-square justify-center items-center border rounded-3xl`}>
                     <h2>{date.split('de')[1]}</h2>
                     <h3>{date.split('de')[0]}</h3>
                 </div>
                 <Image src={image} alt="datawave-event" width={200} height={200} className={`flex flex-col ${isOpen ? "w-80 aspect-[3/4]" : "w-40 aspect-square"} justify-center items-center border rounded-3xl`}/>
-                <section className="flex flex-col space-y-2 w-full">
+                <section className="flex flex-col space-y-2">
                     <div className="flex justify-between w-full">
                         <h2 className="text-base font-normal">{community}</h2>
                         <Button variant={"outline"} size={"icon"} className={`rounded-full hidden md:flex ${!isOpen && "md:hidden"}`} onClick={() => setIsOpen(!isOpen)}>
