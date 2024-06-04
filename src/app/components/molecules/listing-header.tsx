@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "../atoms/button";
 import { Input } from "../atoms/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../atoms/select";
+import { MixerHorizontalIcon } from '@radix-ui/react-icons'
 
 const filters = [
     {
@@ -83,6 +84,7 @@ interface selectedFilters {
 export function ListingHeader () {
     const [searchInput, setSearchInput] = useState('')
     const [selectedFilters, setSelectedFilters] = useState<selectedFilters[]>([])
+    const [isOpen, setIsOpen] = useState(true)
 
     const handleSelectChange = (event: string, id: string) => {
         const value = event.toString()
@@ -103,8 +105,11 @@ export function ListingHeader () {
             <form className="flex grow-[2] items-center space-x-2" onSubmit={handleSearch}>
                 <Input type="text" placeholder="Pesquise o evento" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} />
                 <Button type="submit">Pesquisar</Button>
+                <Button variant={isOpen ? 'default' : 'outline'} size={'icon'} className={`rounded-full px-2 md:hidden`} onClick={() => setIsOpen(!isOpen)}>
+                    <MixerHorizontalIcon/>
+                </Button>
             </form>
-            <div className="flex flex-wrap md:flex-nowrap gap-2 flex-grow">
+            <div className={`flex flex-wrap md:flex-nowrap gap-2 flex-grow ${!isOpen && 'hidden md:flex'}}`}>
                 {filters.map((filter) => (
                     <Select key={filter.id} onValueChange={(e) => handleSelectChange(e, filter.id)}>
                         <SelectTrigger className="flex space-x-2">
