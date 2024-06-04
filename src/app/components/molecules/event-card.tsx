@@ -58,7 +58,7 @@ export function EventCard(props: { event: Event }) {
                 <Button variant={"outline"} size={"icon"} className={`rounded-full hidden md:flex ${isOpen && "md:hidden"}`} onClick={() => setIsOpen(!isOpen)}>
                     <ChevronDown/>
                 </Button>
-                <div className="flex gap-2">
+                <div className="flex gap-2 w-full">
                     <Link href={`/event/${props.event.id}`} className={`w-full md:w-fit whitespace-pre-line hidden ${isOpen && "md:flex"}`}>
                         <Button variant={'outline'} className="w-full md:w-fit whitespace-pre-line">Ver mais detalhes</Button>
                     </Link>

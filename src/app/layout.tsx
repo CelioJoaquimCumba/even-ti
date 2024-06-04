@@ -19,7 +19,7 @@ const LayoutContent: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         <header>
           <ListingHeader/>
         </header>
-        <main className="flex flex-grow overflow-y-auto">{children}</main>
+        <main className="flex flex-grow overflow-hidden p-2 md:p-4 bg-white">{children}</main>
       </div>
     </div>
   );

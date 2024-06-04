@@ -62,7 +62,7 @@ export default function Home() {
     setTitle('Events')
   })
   return (
-    <main className="flex w-full h-full flex-col items-center justify-between p-2 md:p-4 gap-6 bg-white rounded-2xl">
+    <main className="flex w-full h-full flex-col items-center justify-between gap-6 bg-white rounded-2xl overflow-y-auto">
       {events.map((event: Event) => <EventCard key={event.title} event={event} />)}
     </main>
   );
