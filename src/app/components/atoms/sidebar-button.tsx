@@ -11,10 +11,10 @@ export default function SideBarButton ({className, isOpen, onClick}: SideBarButt
     const handleClick = () => onClick && onClick()
     return (
         <div className="flex">
-            <Button variant={'default'} size={'icon'} className={cn("rounded-full hidden md:flex", className)} onClick={handleClick}>
+            <Button variant={'default'} size={'icon'} className={cn("rounded-full hidden lg:flex", className)} onClick={handleClick}>
                 {isOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />}
             </Button>
-            <Button variant={'default'} size={'icon'} className={cn("rounded-full flex md:hidden", className)} onClick={handleClick}>
+            <Button variant={'default'} size={'icon'} className={cn("rounded-full flex lg:hidden", className)} onClick={handleClick}>
                 {isOpen ? <Cross2Icon /> : <HamburgerMenuIcon />}
             </Button>
         </div>
