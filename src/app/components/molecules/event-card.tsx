@@ -1,20 +1,24 @@
+'use client'
+
 import Image from "next/image";
 import { Card, CardContent, CardFooter } from "../atoms/card";
 import DataWaveEvent from "@/../assets/images/datawave-event.png"
 import { Badge } from "../atoms/badge";
 import { ClockIcon, SewingPinIcon, CalendarIcon } from '@radix-ui/react-icons'
 import { Button } from "../atoms/button";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, Router } from "lucide-react";
 import { useState } from "react";
 import { SpeakerCard } from "../atoms/speaker-card";
 import { Event } from "@/data/types";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export function EventCard(props: { event: Event }) {
-    const { community, title, image, date, time, location, description, speakers, tickets } = props.event
+    const { id, community, title, image, date, time, location, description, speakers, tickets } = props.event
     const [isOpen, setIsOpen] = useState(false)
+    const router = useRouter()
     return (
-        <Card className={`flex flex-col space-y-2 ${!isOpen && "md:flex-row"} w-full justify-between p-4 rounded-2xl gap-2`}>
+        <Card className={`flex flex-col space-y-2 ${!isOpen && "md:flex-row"} w-full hover:bg-gray-50 justify-between p-4 rounded-2xl gap-2 cursor-pointer`} onClick={() => router.push(`/events/${id}`)}>
             <CardContent className="flex flex-wrap md:flex-nowrap gap-6 p-0 ">
                 <div className={`hidden ${!isOpen && "md:flex md:flex-col"} w-40 h-40 justify-center items-center border rounded-3xl`}>
                     <h2>{date.split('de')[1]}</h2>
@@ -24,7 +28,7 @@ export function EventCard(props: { event: Event }) {
                 <section className="flex flex-col space-y-2">
                     <div className="flex justify-between w-full">
                         <h2 className="text-base font-normal">{community}</h2>
-                        <Button variant={"outline"} size={"icon"} className={`rounded-full hidden md:flex ${!isOpen && "md:hidden"}`} onClick={() => setIsOpen(!isOpen)}>
+                        <Button variant={"outline"} size={"icon"} className={`rounded-full hidden md:flex ${!isOpen && "md:hidden"}`} onClick={(e) => {setIsOpen(!isOpen); e.stopPropagation()} }>
                             <ChevronUp/>
                         </Button>
                     </div>
@@ -55,7 +59,7 @@ export function EventCard(props: { event: Event }) {
                 </section>
             </CardContent>
             <CardFooter className={`flex flex-col justify-between items-end p-0`}>
-                <Button variant={"outline"} size={"icon"} className={`rounded-full hidden md:flex ${isOpen && "md:hidden"}`} onClick={() => setIsOpen(!isOpen)}>
+                <Button variant={"outline"} size={"icon"} className={`rounded-full hidden md:flex ${isOpen && "md:hidden"}`} onClick={(e) => {setIsOpen(!isOpen); e.stopPropagation()}}>
                     <ChevronDown/>
                 </Button>
                 <div className="flex gap-2 w-full">
