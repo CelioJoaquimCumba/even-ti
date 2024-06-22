@@ -1,8 +1,8 @@
 'use client'
 import Image from "next/image";
-import { useTitle } from "../providers/TitleContext";
+import { useTitle } from "@/app/providers/TitleContext";
 import { useEffect } from "react";
-import { EventCard } from "../components/molecules/event-card";
+import { EventCard } from "@/app/components/molecules/event-card";
 import { Event } from "@/data/types";
 import dataWaveEvent from '@/../assets/images/datawave-event.png'
 import profile from '/@/../assets/images/profile.png'
