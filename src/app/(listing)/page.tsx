@@ -3,16 +3,16 @@ import Image from "next/image";
 import { useTitle } from "@/app/providers/TitleContext";
 import { useEffect } from "react";
 import { EventCard } from "@/app/components/molecules/event-card";
-import { Event } from "@/data/types";
+import { EventLite } from "@/data/types";
 import dataWaveEvent from '@/../assets/images/datawave-event.png'
 import profile from '/@/../assets/images/profile.png'
 
-const events: Array<Event> = [
+const events: Array<EventLite> = [
   {
     id: '1',
     community: "MozDevz",
     title: "DataWave",
-    image: dataWaveEvent.src,
+    logo: dataWaveEvent.src,
     date: "05 de Junho",
     time: "08:00 - 17:00",
     location: "São Paulo, SP",
@@ -35,7 +35,7 @@ const events: Array<Event> = [
     id: '2',
     community: "MozDevz",
     title: "DataWave",
-    image: dataWaveEvent.src,
+    logo: dataWaveEvent.src,
     date: "05 de Junho",
     time: "08:00 - 17:00",
     location: "São Paulo, SP",
@@ -63,7 +63,7 @@ export default function Home() {
   })
   return (
     <main className="flex w-full h-full flex-col items-center gap-2 md:gap-6 bg-white rounded-2xl overflow-y-auto">
-      {events.map((event: Event) => <EventCard key={event.id} event={event} />)}
+      {events.map((event: EventLite) => <EventCard key={event.id} event={event} />)}
     </main>
   );
 }

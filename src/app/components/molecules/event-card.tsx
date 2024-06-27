@@ -9,12 +9,12 @@ import { Button } from "../atoms/button";
 import { ChevronDown, ChevronUp, Router } from "lucide-react";
 import { useState } from "react";
 import { SpeakerCard } from "../atoms/speaker-card";
-import { Event } from "@/data/types";
+import { EventLite } from "@/data/types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-export function EventCard(props: { event: Event }) {
-    const { id, community, title, image, date, time, location, description, speakers, tickets } = props.event
+export function EventCard(props: { event: EventLite }) {
+    const { id, community, title, logo: image, date, time, location, description, speakers, tickets } = props.event
     const [isOpen, setIsOpen] = useState(false)
     const router = useRouter()
     return (
