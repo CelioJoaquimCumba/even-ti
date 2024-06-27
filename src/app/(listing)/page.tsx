@@ -1,7 +1,7 @@
 'use client'
 import Image from "next/image";
 import { useTitle } from "@/app/providers/TitleContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { EventCard } from "@/app/components/molecules/event-card";
 import { EventLite } from "@/data/types";
 import dataWaveEvent from '@/../assets/images/datawave-event.png'
@@ -57,10 +57,19 @@ const events: Array<EventLite> = [
 ]
 
 export default function Home() {
+  // const [events, setEvents] = useState([])
   const {setTitle} = useTitle()
   useEffect(() => {
     setTitle('Events')
   })
+  useEffect(() => {
+    (async function () {
+      const events = await fetch(`/api/event`, {
+        method: "GET"
+      });
+      console.log(events)
+    })()
+  }, [])
   return (
     <main className="flex w-full h-full flex-col items-center gap-2 md:gap-6 bg-white rounded-2xl overflow-y-auto">
       {events.map((event: EventLite) => <EventCard key={event.id} event={event} />)}

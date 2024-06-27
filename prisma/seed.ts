@@ -31,6 +31,7 @@ const users = [
     name: 'Celio Cumba',
     email: 'celio.joaquim.cumba@gmail.com',
     password: 'Password123.',
+    image: 'https://via.placeholder.com/150',
   },
 ];
 
