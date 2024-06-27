@@ -1,5 +1,5 @@
 export const routes = {
-    events: '/events/',
+    events: '/',
     community: '/community/',
     reservations: '/reservations/'
 }

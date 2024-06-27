@@ -5,28 +5,30 @@ import NavItem from "../atoms/nav-item";
 import SideBarButton from "../atoms/sidebar-button";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import { routes } from "@/data/routes";
+import { getBreakpoint, isBreakpointLowOrEqual } from "@/utils";
 
 const navItems = [
     {
         label: 'Eventos',
-        path: '/events'
+        path: routes.events
     },
     {
         label: 'Comunidade',
-        path: '/community'
+        path: routes.community
     },
     {
         label: 'Reservas',
-        path: '/reservations'
+        path: routes.reservations
     }
 ]
 
-export default function NavBar () {
-    const [isOpen, setIsOpen] = useState(true)
+export default function SideBar () {
+    const [isOpen, setIsOpen] = useState(isBreakpointLowOrEqual('md') ? true : false)
     const toggleOpen = () => setIsOpen(!isOpen)
     const path = usePathname()
     return(
-        <nav className={`flex ${isOpen ? "bg-background absolute w-full h-full" : 'static h-fit'}  md:relative md:w-fit flex-col px-6 py-4 md:py-8 space-y-16 z-20`}>
+        <aside className={`flex ${isOpen ? "bg-background absolute w-full h-full" : 'static h-fit'}  md:relative md:w-fit flex-col px-6 py-4 md:py-8 space-y-16 z-20`}>
             <section className={`flex flex-col space-y-4`}>
                 <div className="flex w-full justify-between">
                     <SideBarButton className={`md:absolute -right-4`} isOpen={isOpen} onClick={toggleOpen}/>
@@ -39,6 +41,6 @@ export default function NavBar () {
             <ul className={`flex flex-col space-y-4 overflow-y-auto ${!isOpen && "hidden"}`}>
                 { navItems.map((item) => <NavItem key={item.label} label={item.label} path={item.path} selected={path === item.path} />) }
             </ul>
-        </nav>
+        </aside>
     )
 }
