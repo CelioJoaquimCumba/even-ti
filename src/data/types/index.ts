@@ -1,5 +1,3 @@
-import { SeparatorConfig } from "tailwindcss/types/config"
-
 export interface EventLite {
     id: string,
     community: string,
@@ -16,16 +14,15 @@ export interface Event extends EventLite {
     tickets: number,
     background: string,
     objectives: string[],
-    speakers: Speaker[],
-    organizers: Organizers[],
-    partners: Partners[]
+    organizers: Organizer[],
+    partners: Partner[]
 }
-interface Organizers {
+export interface Organizer {
     id: string,
     name: string,
     image: string
 }
-interface Partners {
+export interface Partner {
     id: string,
     name: string,
     image: string
