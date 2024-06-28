@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model Event {
+  id           String          @id @default(uuid())
+  community    String
+  title        String
+  logo         String
+  date         DateTime
+  time         String
+  location     String
+  description  String
+  tickets      Int?
+  background   String
+  objectives   String[]        // Prisma supports arrays with native types
+  organizers   EventOrganizer[]
+  partners     EventPartner[]
+  speakers     EventSpeaker[]
+}
+
+model EventOrganizer {
+  id          String @id @default(uuid())
+  eventId     String
+  organizerId String
+
+  event       Event     @relation(fields: [eventId], references: [id])
+  organizer   Organizer @relation(fields: [organizerId], references: [id])
+}
+
+model EventPartner {
+  id        String @id @default(uuid())
+  eventId   String
+  partnerId String
+
+  event     Event   @relation(fields: [eventId], references: [id])
+  partner   Partner @relation(fields: [partnerId], references: [id])
+}
+
+model EventSpeaker {
+  id        String @id @default(uuid())
+  eventId   String
+  speakerId String
+
+  event     Event   @relation(fields: [eventId], references: [id])
+  speaker   User @relation(fields: [speakerId], references: [id])
+}
+
+model Organizer {
+  id     String           @id @default(uuid())
+  name   String
+  image  String
+  events EventOrganizer[]
+}
+
+model Partner {
+  id     String           @id @default(uuid())
+  name   String
+  image  String
+  events EventPartner[]
+}
+
+model User {
+  id       String @id @default(uuid())
+  name     String
+  email    String @unique
+  password String
+  image  String
+  events EventSpeaker[]
+}

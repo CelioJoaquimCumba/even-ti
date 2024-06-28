@@ -3,6 +3,7 @@ import { Button } from "../atoms/button";
 import { Input } from "../atoms/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../atoms/select";
 import { MixerHorizontalIcon } from '@radix-ui/react-icons'
+import { usePage } from "@/app/providers/TitleContext";
 
 const filters = [
     {
@@ -82,7 +83,8 @@ interface selectedFilters {
     optionId: string
 }
 export function ListingHeader () {
-    const [searchInput, setSearchInput] = useState('')
+    const { setSearch,setPage } = usePage()
+    const [ searchInput, setSearchInput ] = useState('')
     const [selectedFilters, setSelectedFilters] = useState<selectedFilters[]>([])
     const [isOpen, setIsOpen] = useState(false)
 
@@ -99,6 +101,8 @@ export function ListingHeader () {
     }
     const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        setSearch(searchInput)
+        setPage(1)
     }
     return (
         <div className="flex flex-row flex-wrap p-4 bg-background rounded-md gap-8">

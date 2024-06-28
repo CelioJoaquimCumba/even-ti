@@ -1,69 +1,92 @@
 'use client'
 import Image from "next/image";
-import { useTitle } from "@/app/providers/TitleContext";
-import { useEffect } from "react";
+import { usePage } from "@/app/providers/TitleContext";
+import { useEffect, useState } from "react";
 import { EventCard } from "@/app/components/molecules/event-card";
 import { EventLite } from "@/data/types";
 import dataWaveEvent from '@/../assets/images/datawave-event.png'
 import profile from '/@/../assets/images/profile.png'
+import { convertDate } from "@/lib/utils";
+import { EventCardLoader } from "../components/molecules/event-card-loader";
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/app/components/atoms/pagination";
 
-const events: Array<EventLite> = [
-  {
-    id: '1',
-    community: "MozDevz",
-    title: "DataWave",
-    logo: dataWaveEvent.src,
-    date: "05 de Junho",
-    time: "08:00 - 17:00",
-    location: "São Paulo, SP",
-    tickets: 10,
-    description: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Autem pariatur quia, dignissimos porro magni dolorum velit earum tenetur alias voluptatem, eligendi eos illum rerum facilis eaque fuga! Libero, qui consectetur. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Libero sunt laborum architecto dolorem quas magni culpa est, nemo magnam tempore, delectus nostrum odit vel dignissimos recusandae voluptatem, vitae dolore quaerat.",
-    speakers: [
-      {
-        id: '1',
-        name: "Celio Cumba",
-        image: profile.src
-      },
-      {
-        id: '2',
-        name: "Name Surname",
-        image: profile.src
-      }
-    ]
-  }, 
-  {
-    id: '2',
-    community: "MozDevz",
-    title: "DataWave",
-    logo: dataWaveEvent.src,
-    date: "05 de Junho",
-    time: "08:00 - 17:00",
-    location: "São Paulo, SP",
-    tickets: 10,
-    description: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Autem pariatur quia, dignissimos porro magni dolorum velit earum tenetur alias voluptatem, eligendi eos illum rerum facilis eaque fuga! Libero, qui consectetur. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Libero sunt laborum architecto dolorem quas magni culpa est, nemo magnam tempore, delectus nostrum odit vel dignissimos recusandae voluptatem, vitae dolore quaerat.",
-    speakers: [
-      {
-        id: '1',
-        name: "Celio Cumba",
-        image: profile.src
-      },
-      {
-        id: '2',
-        name: "Name Surname",
-        image: profile.src
-      }
-    ]
-  }
-]
+interface PaginationMeta {
+  totalCount: number
+  page: number
+  pageSize: number
+  totalPages: number
+}
 
 export default function Home() {
-  const {setTitle} = useTitle()
+  const [isLoading, setIsLoading] = useState(true)
+  const [events, setEvents] = useState<EventLite[]>()
+  const [meta, setMeta] = useState<PaginationMeta>({
+    totalCount: 0,
+    page: 0,
+    pageSize: 0,
+    totalPages: 0
+  })
+  const {setTitle, search, page, setPage} = usePage()
   useEffect(() => {
     setTitle('Events')
   })
+  useEffect(() => {
+    (async function () {
+      try {
+        setIsLoading(true)
+        const response = await fetch(`/api/event?${ search && new URLSearchParams({search}) + '&'}${ new URLSearchParams({page: page.toString()})}`, {
+          method: "GET",
+        });
+        const data = await response.json();
+        setMeta({
+          totalCount: data.totalCount,
+          page: data.page,
+          pageSize: data.pageSize,
+          totalPages: data.totalPages
+        })
+        const responseEvents : EventLite[] = data.events.map((event: any) => ({
+          ...event,
+          date: convertDate(event.date.toString()),
+          speakers: event.speakers.map((speaker: any) => ({
+            id: speaker.speaker.id,
+            name: speaker.speaker.name,
+            image: speaker.speaker.image
+          }))
+        }))
+        setEvents(responseEvents)
+      } catch (error) {
+        console.log(error)
+      } finally {
+        setIsLoading(false)
+      }
+    })()
+  }, [search, page])
   return (
     <main className="flex w-full h-full flex-col items-center gap-2 md:gap-6 bg-white rounded-2xl overflow-y-auto">
-      {events.map((event: EventLite) => <EventCard key={event.id} event={event} />)}
+      {
+        isLoading ? [1,2].map((_event, index) => <EventCardLoader key={index} />)  : !events || events.length === 0 ?
+        'Resultados não encontrados' :
+        <>
+          <div className="flex flex-col h-full w-full gap-2 md:gap-6 overflow-y-auto ">
+            {events.map((event: EventLite) => <EventCard key={event.id} event={event} />)}
+          </div>
+          <Pagination >
+            <PaginationContent>
+              { meta.page > 1 && <PaginationItem>
+                <PaginationPrevious onClick={() => setPage(meta.page - 1)} />
+              </PaginationItem>}
+              {
+                [...Array(meta.totalPages)].map((_, index) => <PaginationItem key={index + 1}>
+                  <PaginationLink isActive={index + 1 === meta.page} onClick={() => setPage(index + 1)}>{index + 1}</PaginationLink>
+                </PaginationItem>)
+              }
+              { meta.page < meta.totalPages && <PaginationItem>
+                <PaginationNext onClick={() => setPage(meta.page + 1)} />
+              </PaginationItem>}
+            </PaginationContent>
+          </Pagination>
+        </>
+      }
     </main>
   );
 }

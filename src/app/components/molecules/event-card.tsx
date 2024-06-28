@@ -24,7 +24,7 @@ export function EventCard(props: { event: EventLite }) {
                     <h2>{date.split('de')[1]}</h2>
                     <h3>{date.split('de')[0]}</h3>
                 </div>
-                <Image src={image} alt="datawave-event" width={200} height={200} className={`flex flex-col ${isOpen ? "w-80 aspect-[3/4]" : "w-40 h-40 aspect-square"} justify-center items-center border rounded-3xl`}/>
+                <Image unoptimized src={image} alt="datawave-event" width={200} height={200} className={`flex flex-col ${isOpen ? "w-80 aspect-[3/4]" : "w-40 h-40 aspect-square bg-cover"} justify-center items-center border rounded-3xl`}/>
                 <section className="flex flex-col space-y-2">
                     <div className="flex justify-between w-full">
                         <h2 className="text-base font-normal">{community}</h2>
