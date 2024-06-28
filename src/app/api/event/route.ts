@@ -11,6 +11,28 @@ export async function GET(
   res: NextApiResponse,
 ) {
   const search = req.nextUrl.searchParams.get('search') || ''
+  const page = Number(req.nextUrl.searchParams.get('page')) || 1;
+  const pageSize = 10;
+  const totalCount = await prisma.event.count({
+    where: {
+      OR: [
+        {
+          title: {
+            contains: search,
+            mode: 'insensitive'
+          }
+        },
+        {
+          community: {
+            contains: search,
+            mode: 'insensitive'
+          }
+        }
+      ]
+    }
+  });
+  const skip = (page -1) * pageSize
+  const take = pageSize
   const eventsWithSpeakers = await prisma.event.findMany({
     where: {
       OR: [
@@ -35,6 +57,15 @@ export async function GET(
         }
       }
     },
+    skip: skip,
+    take: take,
   });
-  return NextResponse.json(eventsWithSpeakers)
+  const response = {
+    events: eventsWithSpeakers,
+    totalCount: totalCount,
+    page: page,
+    pageSize: pageSize,
+    totalPages: Math.ceil(totalCount / pageSize)
+  }
+  return NextResponse.json(response)
 }

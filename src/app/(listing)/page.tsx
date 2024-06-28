@@ -8,11 +8,25 @@ import dataWaveEvent from '@/../assets/images/datawave-event.png'
 import profile from '/@/../assets/images/profile.png'
 import { convertDate } from "@/lib/utils";
 import { EventCardLoader } from "../components/molecules/event-card-loader";
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/app/components/atoms/pagination";
+
+interface PaginationMeta {
+  totalCount: number
+  page: number
+  pageSize: number
+  totalPages: number
+}
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true)
   const [events, setEvents] = useState<EventLite[]>()
-  const {setTitle, search} = usePage()
+  const [meta, setMeta] = useState<PaginationMeta>({
+    totalCount: 0,
+    page: 0,
+    pageSize: 0,
+    totalPages: 0
+  })
+  const {setTitle, search, page, setPage} = usePage()
   useEffect(() => {
     setTitle('Events')
   })
@@ -20,11 +34,17 @@ export default function Home() {
     (async function () {
       try {
         setIsLoading(true)
-        const events = await fetch(`/api/event?${ new URLSearchParams({search})}`, {
+        const response = await fetch(`/api/event?${ search && new URLSearchParams({search}) + '&'}${ new URLSearchParams({page: page.toString()})}`, {
           method: "GET",
         });
-        const data = await events.json();
-        const responseEvents : EventLite[] = data.map((event: any) => ({
+        const data = await response.json();
+        setMeta({
+          totalCount: data.totalCount,
+          page: data.page,
+          pageSize: data.pageSize,
+          totalPages: data.totalPages
+        })
+        const responseEvents : EventLite[] = data.events.map((event: any) => ({
           ...event,
           date: convertDate(event.date.toString()),
           speakers: event.speakers.map((speaker: any) => ({
@@ -40,10 +60,33 @@ export default function Home() {
         setIsLoading(false)
       }
     })()
-  }, [search])
+  }, [search, page])
   return (
     <main className="flex w-full h-full flex-col items-center gap-2 md:gap-6 bg-white rounded-2xl overflow-y-auto">
-      {isLoading ? [1,2].map((_event, index) => <EventCardLoader key={index} />)  : !events || events.length === 0 ? 'Resultados não encontrados' : events.map((event: EventLite) => <EventCard key={event.id} event={event} />)}
+      {
+        isLoading ? [1,2].map((_event, index) => <EventCardLoader key={index} />)  : !events || events.length === 0 ?
+        'Resultados não encontrados' :
+        <>
+          <div className="flex flex-col h-full w-full gap-2 md:gap-6 overflow-y-auto ">
+            {events.map((event: EventLite) => <EventCard key={event.id} event={event} />)}
+          </div>
+          <Pagination >
+            <PaginationContent>
+              { meta.page > 1 && <PaginationItem>
+                <PaginationPrevious onClick={() => setPage(meta.page - 1)} />
+              </PaginationItem>}
+              {
+                [...Array(meta.totalPages)].map((_, index) => <PaginationItem key={index + 1}>
+                  <PaginationLink isActive={index + 1 === meta.page} onClick={() => setPage(index + 1)}>{index + 1}</PaginationLink>
+                </PaginationItem>)
+              }
+              { meta.page < meta.totalPages && <PaginationItem>
+                <PaginationNext onClick={() => setPage(meta.page + 1)} />
+              </PaginationItem>}
+            </PaginationContent>
+          </Pagination>
+        </>
+      }
     </main>
   );
 }
