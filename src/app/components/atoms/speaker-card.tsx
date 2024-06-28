@@ -12,7 +12,7 @@ export function SpeakerCard (props: {speaker: Speaker, className?: string}) {
             props.className
         )} >
             <CardHeader className="p-0">
-                <Image src={image} width={100} height={100} alt={`profile-${name}`} className="w-16 h-16 rounded-full" />
+                <Image unoptimized src={image} width={100} height={100} alt={`profile-${name}`} className="w-16 h-16 rounded-full bg-cover" />
             </CardHeader>
             <CardContent className="p-0">
                 <span>{name}</span>

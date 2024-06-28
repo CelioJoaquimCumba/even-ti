@@ -6,6 +6,7 @@ import { EventCard } from "@/app/components/molecules/event-card";
 import { EventLite } from "@/data/types";
 import dataWaveEvent from '@/../assets/images/datawave-event.png'
 import profile from '/@/../assets/images/profile.png'
+import { convertDate } from "@/lib/utils";
 
 const eventsDummy: Array<EventLite> = [
   {
@@ -70,14 +71,13 @@ export default function Home() {
       const data = await events.json();
       const responseEvents : EventLite[] = data.map((event: any) => ({
         ...event,
-        logo: dataWaveEvent.src,
+        date: convertDate(event.date.toString()),
         speakers: event.speakers.map((speaker: any) => ({
           id: speaker.speaker.id,
           name: speaker.speaker.name,
-          image: profile.src
+          image: speaker.speaker.image
         }))
       }))
-      console.log(responseEvents)
       setEvents(responseEvents)
     })()
   }, [])
