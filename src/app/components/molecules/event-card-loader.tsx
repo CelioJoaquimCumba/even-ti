@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 
 export function EventCardLoader() {
     return (
-        <Card className="flex w-full bg-slate-100 animate-pulse items-center p-4 rounded-2xl gap-6">
+        <Card className="flex flex-col justify-start items-start md:flex-row w-full bg-slate-100 animate-pulse md:items-center p-4 rounded-2xl gap-6">
             <CardContent className="flex space-y-2 p-0 items-center gap-6">
                 <div className={`hidden md:flex md:flex-col w-40 aspect-square bg-slate-300  rounded-3xl`}></div>
                 <div className="w-40 aspect-square bg-slate-300  rounded-3xl"></div>

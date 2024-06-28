@@ -13,7 +13,8 @@ export const getBreakpoint = () => {
         if(width < breakpoints.lg) return 'lg'
         if(width < breakpoints.xl) return 'xl'
         return '2xl'
+    } else {
+        return ''
     }
-    return ''
 }
-export const isBreakpointLowOrEqual = (bp: keyof typeof breakpoints) => getBreakpoint() <= bp
+export const isBreakpointLowOrEqual = (bp: keyof typeof breakpoints) => getBreakpoint() && getBreakpoint() <= bp
