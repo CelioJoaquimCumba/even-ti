@@ -20,8 +20,8 @@ export default function Home() {
     (async function () {
       try {
         setIsLoading(true)
-        const events = await fetch(`/api/event`, {
-          method: "GET"
+        const events = await fetch(`/api/event?${ new URLSearchParams({search})}`, {
+          method: "GET",
         });
         const data = await events.json();
         const responseEvents : EventLite[] = data.map((event: any) => ({
@@ -40,10 +40,10 @@ export default function Home() {
         setIsLoading(false)
       }
     })()
-  }, [])
+  }, [search])
   return (
     <main className="flex w-full h-full flex-col items-center gap-2 md:gap-6 bg-white rounded-2xl overflow-y-auto">
-      {isLoading ? [1,2].map((_event, index) => <EventCardLoader key={index} />)  : !events ? 'Nao temos eventos para mostrar' : events.map((event: EventLite) => <EventCard key={event.id} event={event} />)}
+      {isLoading ? [1,2].map((_event, index) => <EventCardLoader key={index} />)  : !events || events.length === 0 ? 'Resultados não encontrados' : events.map((event: EventLite) => <EventCard key={event.id} event={event} />)}
     </main>
   );
 }

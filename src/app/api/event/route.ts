@@ -7,10 +7,27 @@ import { EventLite } from '@/data/types'
 // Required fields in body: title
 // Optional fields in body: content
 export async function GET(
-  req: NextApiRequest,
+  req: NextRequest,
   res: NextApiResponse,
 ) {
+  const search = req.nextUrl.searchParams.get('search') || ''
   const eventsWithSpeakers = await prisma.event.findMany({
+    where: {
+      OR: [
+        {
+          title: {
+          contains: search,
+          mode: 'insensitive'
+          }
+        },
+        {
+          community: {
+            contains: search,
+            mode: 'insensitive'
+          }
+        }
+      ]
+    },
     include: {
       speakers: {
         include: {
