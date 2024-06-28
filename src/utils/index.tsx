@@ -6,11 +6,14 @@ export enum breakpoints{
     '2xl' = 1536
 }
 export const getBreakpoint = () => {
-    var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
-    if(width < breakpoints.sm) return 'sm'
-    if(width < breakpoints.md) return 'md'
-    if(width < breakpoints.lg) return 'lg'
-    if(width < breakpoints.xl) return 'xl'
-    return '2xl'
+    if (typeof window !== "undefined") {
+        var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+        if(width < breakpoints.sm) return 'sm'
+        if(width < breakpoints.md) return 'md'
+        if(width < breakpoints.lg) return 'lg'
+        if(width < breakpoints.xl) return 'xl'
+        return '2xl'
+    }
+    return ''
 }
 export const isBreakpointLowOrEqual = (bp: keyof typeof breakpoints) => getBreakpoint() <= bp

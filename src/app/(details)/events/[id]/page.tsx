@@ -65,7 +65,6 @@ export default function EventPage() {
     const {title, description, background, logo, objectives, speakers, organizers, partners, tickets, location, date, time} = event
     const router = useRouter()
     const handleCommunity = (id: string) => {
-        console.log('here')
         router.push(`/community/${id}`)
     }
     return (

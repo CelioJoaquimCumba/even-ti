@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { NextResponse, NextRequest } from 'next/server';
 import prisma from '../../../lib/prisma'
 import { EventLite } from '@/data/types'
 
@@ -9,7 +10,14 @@ export async function GET(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const events = await prisma.event.findMany()
-  console.log(events)
-  return Response.json(events)
+  const eventsWithSpeakers = await prisma.event.findMany({
+    include: {
+      speakers: {
+        include: {
+          speaker: true
+        }
+      }
+    },
+  });
+  return NextResponse.json(eventsWithSpeakers)
 }

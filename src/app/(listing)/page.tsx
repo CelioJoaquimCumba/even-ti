@@ -7,7 +7,7 @@ import { EventLite } from "@/data/types";
 import dataWaveEvent from '@/../assets/images/datawave-event.png'
 import profile from '/@/../assets/images/profile.png'
 
-const events: Array<EventLite> = [
+const eventsDummy: Array<EventLite> = [
   {
     id: '1',
     community: "MozDevz",
@@ -57,7 +57,7 @@ const events: Array<EventLite> = [
 ]
 
 export default function Home() {
-  // const [events, setEvents] = useState([])
+  const [events, setEvents] = useState<EventLite[]>(eventsDummy)
   const {setTitle} = useTitle()
   useEffect(() => {
     setTitle('Events')
@@ -67,7 +67,18 @@ export default function Home() {
       const events = await fetch(`/api/event`, {
         method: "GET"
       });
-      console.log(events)
+      const data = await events.json();
+      const responseEvents : EventLite[] = data.map((event: any) => ({
+        ...event,
+        logo: dataWaveEvent.src,
+        speakers: event.speakers.map((speaker: any) => ({
+          id: speaker.speaker.id,
+          name: speaker.speaker.name,
+          image: profile.src
+        }))
+      }))
+      console.log(responseEvents)
+      setEvents(responseEvents)
     })()
   }, [])
   return (
