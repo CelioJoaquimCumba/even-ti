@@ -1,5 +1,5 @@
 'use client'
-import { TitleProvider } from './providers/TitleContext';
+import { PageProvider } from './providers/TitleContext';
 
 
 export default function RootLayout({
@@ -8,12 +8,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <TitleProvider>
+    <PageProvider>
       <html lang="en">
         <body suppressHydrationWarning={true}>
           {children}
         </body>
       </html>
-    </TitleProvider>
+    </PageProvider>
   );
 }

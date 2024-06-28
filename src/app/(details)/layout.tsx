@@ -1,7 +1,7 @@
 'use client'
 import { Inter } from 'next/font/google';
 import SideBar from '@/app/components/molecules/side-bar';
-import { useTitle, TitleProvider } from '@/app/providers/TitleContext';
+import { usePage, PageProvider } from '@/app/providers/TitleContext';
 import '@/app/globals.css'
 import { ListingHeader } from '@/app/components/molecules/listing-header';
 import { Button } from '@/app/components/atoms/button';
@@ -41,12 +41,12 @@ export default function ListingLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <TitleProvider>
+    <PageProvider>
       <html lang="en">
         <body suppressHydrationWarning={true}>
           <LayoutContent>{children}</LayoutContent>
         </body>
       </html>
-    </TitleProvider>
+    </PageProvider>
   );
 }

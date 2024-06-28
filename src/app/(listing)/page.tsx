@@ -1,6 +1,6 @@
 'use client'
 import Image from "next/image";
-import { useTitle } from "@/app/providers/TitleContext";
+import { usePage } from "@/app/providers/TitleContext";
 import { useEffect, useState } from "react";
 import { EventCard } from "@/app/components/molecules/event-card";
 import { EventLite } from "@/data/types";
@@ -9,59 +9,10 @@ import profile from '/@/../assets/images/profile.png'
 import { convertDate } from "@/lib/utils";
 import { EventCardLoader } from "../components/molecules/event-card-loader";
 
-const eventsDummy: Array<EventLite> = [
-  {
-    id: '1',
-    community: "MozDevz",
-    title: "DataWave",
-    logo: dataWaveEvent.src,
-    date: "05 de Junho",
-    time: "08:00 - 17:00",
-    location: "São Paulo, SP",
-    tickets: 10,
-    description: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Autem pariatur quia, dignissimos porro magni dolorum velit earum tenetur alias voluptatem, eligendi eos illum rerum facilis eaque fuga! Libero, qui consectetur. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Libero sunt laborum architecto dolorem quas magni culpa est, nemo magnam tempore, delectus nostrum odit vel dignissimos recusandae voluptatem, vitae dolore quaerat.",
-    speakers: [
-      {
-        id: '1',
-        name: "Celio Cumba",
-        image: profile.src
-      },
-      {
-        id: '2',
-        name: "Name Surname",
-        image: profile.src
-      }
-    ]
-  },
-  {
-    id: '2',
-    community: "MozDevz",
-    title: "DataWave",
-    logo: dataWaveEvent.src,
-    date: "05 de Junho",
-    time: "08:00 - 17:00",
-    location: "São Paulo, SP",
-    tickets: 10,
-    description: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Autem pariatur quia, dignissimos porro magni dolorum velit earum tenetur alias voluptatem, eligendi eos illum rerum facilis eaque fuga! Libero, qui consectetur. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Libero sunt laborum architecto dolorem quas magni culpa est, nemo magnam tempore, delectus nostrum odit vel dignissimos recusandae voluptatem, vitae dolore quaerat.",
-    speakers: [
-      {
-        id: '1',
-        name: "Celio Cumba",
-        image: profile.src
-      },
-      {
-        id: '2',
-        name: "Name Surname",
-        image: profile.src
-      }
-    ]
-  }
-]
-
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true)
   const [events, setEvents] = useState<EventLite[]>()
-  const {setTitle} = useTitle()
+  const {setTitle, search} = usePage()
   useEffect(() => {
     setTitle('Events')
   })

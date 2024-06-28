@@ -1,7 +1,7 @@
 'use client'
 import { Inter } from 'next/font/google';
 import SideBar from '@/app/components/molecules/side-bar';
-import { useTitle, TitleProvider } from '@/app/providers/TitleContext';
+import { usePage, PageProvider } from '@/app/providers/TitleContext';
 import '@/app/globals.css'
 import { ListingHeader } from '@/app/components/molecules/listing-header';
 
@@ -9,7 +9,7 @@ import { ListingHeader } from '@/app/components/molecules/listing-header';
 const inter = Inter({ subsets: ['latin'] });
 
 const LayoutContent: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { title } = useTitle();
+  const { title } = usePage();
   return (
     <div className={`flex flex-col md:flex-row overflow-hidden h-screen w-screen ${inter.className}`}>
       <SideBar />
@@ -30,12 +30,12 @@ export default function ListingLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <TitleProvider>
+    <PageProvider>
       <html lang="en">
         <body suppressHydrationWarning={true}>
           <LayoutContent>{children}</LayoutContent>
         </body>
       </html>
-    </TitleProvider>
+    </PageProvider>
   );
 }
