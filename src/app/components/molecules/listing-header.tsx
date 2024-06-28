@@ -84,6 +84,7 @@ interface selectedFilters {
 }
 export function ListingHeader () {
     const { search, setSearch } = usePage()
+    const [ searchInput, setSearchInput ] = useState('')
     const [selectedFilters, setSelectedFilters] = useState<selectedFilters[]>([])
     const [isOpen, setIsOpen] = useState(false)
 
@@ -100,11 +101,12 @@ export function ListingHeader () {
     }
     const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        setSearch(searchInput)
     }
     return (
         <div className="flex flex-row flex-wrap p-4 bg-background rounded-md gap-8">
             <form className="flex grow-[2] items-center space-x-2" onSubmit={handleSearch}>
-                <Input type="text" placeholder="Pesquise o evento" value={search} onChange={(e) => setSearch(e.target.value)} />
+                <Input type="text" placeholder="Pesquise o evento" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} />
                 <Button type="submit">Pesquisar</Button>
                 <Button variant={isOpen ? 'default' : 'outline'} size={'icon'} className={`rounded-full px-3 md:hidden`} onClick={() => setIsOpen(!isOpen)}>
                     <MixerHorizontalIcon/>
