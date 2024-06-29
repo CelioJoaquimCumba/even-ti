@@ -7,17 +7,18 @@ import { SewingPinIcon } from '@radix-ui/react-icons'
 import { Button } from "../atoms/button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { CommunityLite } from "@/data/types";
 
-export function CommunityCard(props: { community: any }) {
-    const { id, community, logo: image, location, description } = props.community
+export function CommunityCard(props: { community: CommunityLite }) {
+    const { id, name, image, location, description } = props.community
     const router = useRouter()
     return (
-        <Card className={`flex flex-col h-fit space-y-2 md:flex-row w-full hover:bg-gray-50 justify-between p-4 rounded-2xl gap-2 cursor-pointer`} onClick={() => router.push(`/events/${id}`)}>
+        <Card className={`flex flex-col h-fit space-y-2 md:flex-row w-full hover:bg-gray-50 justify-between p-4 rounded-2xl gap-2 cursor-pointer`} onClick={() => router.push(`/community/${id}`)}>
             <CardContent className="flex flex-wrap md:flex-nowrap gap-6 p-0 ">
-                <Image unoptimized src={image} alt={`${community}-logo`} width={200} height={200} className={`flex flex-col w-full md:w-40 aspect-[4/3] md:aspect-square bg-cover justify-center items-center border rounded-3xl`}/>
+                <Image unoptimized src={image} alt={`${name}-logo`} width={200} height={200} className={`flex flex-col w-full md:w-40 aspect-[4/3] md:aspect-square bg-cover justify-center items-center border rounded-3xl`}/>
                 <article className="flex flex-col justify-between h-full gap-2">
                     <section className="flex flex-col space-y-2">
-                        <h2 className="text-lg font-medium">{community}</h2>
+                        <h2 className="text-lg font-medium">{name}</h2>
                         <p className={`flex text-primary`}>
                             {description}
                         </p>

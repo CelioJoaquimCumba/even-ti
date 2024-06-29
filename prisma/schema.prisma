@@ -56,7 +56,21 @@ model Community {
   id     String           @id @default(uuid())
   name   String
   image  String
+  location String
+  description String
+  url String
+  tagLine String
   events EventOrganizer[]
+  members CommunityMember[]
+}
+
+model CommunityMember {
+  id        String @id @default(uuid())
+  communityId   String
+  memberId String
+
+  community     Community   @relation(fields: [communityId], references: [id])
+  member   User @relation(fields: [memberId], references: [id])
 }
 
 model Partner {
@@ -72,5 +86,6 @@ model User {
   email    String @unique
   password String
   image  String
+  communities CommunityMember[]
   events EventSpeaker[]
 }
