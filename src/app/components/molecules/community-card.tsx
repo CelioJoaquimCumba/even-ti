@@ -2,14 +2,9 @@
 
 import Image from "next/image";
 import { Card, CardContent, CardFooter } from "../atoms/card";
-import DataWaveEvent from "@/../assets/images/datawave-event.png"
 import { Badge } from "../atoms/badge";
-import { ClockIcon, SewingPinIcon, CalendarIcon } from '@radix-ui/react-icons'
+import { SewingPinIcon } from '@radix-ui/react-icons'
 import { Button } from "../atoms/button";
-import { ChevronDown, ChevronUp, Router } from "lucide-react";
-import { useState } from "react";
-import { SpeakerCard } from "../atoms/speaker-card";
-import { EventLite } from "@/data/types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -22,7 +17,7 @@ export function CommunityCard(props: { community: any }) {
                 <Image unoptimized src={image} alt={`${community}-logo`} width={200} height={200} className={`flex flex-col w-full md:w-40 aspect-[4/3] md:aspect-square bg-cover justify-center items-center border rounded-3xl`}/>
                 <article className="flex flex-col justify-between h-full gap-2">
                     <section className="flex flex-col space-y-2">
-                        <h2 className="text-base font-normal">{community}</h2>
+                        <h2 className="text-lg font-medium">{community}</h2>
                         <p className={`flex text-primary`}>
                             {description}
                         </p>

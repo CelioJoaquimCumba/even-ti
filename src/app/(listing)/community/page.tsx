@@ -4,6 +4,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import { usePage } from "@/app/providers/TitleContext";
 import { useState, useEffect } from "react";
 import { PaginationMeta } from "@/data/types";
+import { CommunityCardLoader } from "@/app/components/molecules/community-card-loader";
 
 
 const communities = [
@@ -30,7 +31,7 @@ export default function CommunityPage ()  {
     return (
         <main className="flex w-full h-full flex-col items-center gap-2 md:gap-6 bg-white rounded-2xl overflow-y-auto">
         {
-            isLoading ? 'loading'  : !communities || communities.length === 0 ?
+            isLoading ? <div className="grid grid-cols-1 md:grid-cols-2 h-full w-full gap-2 md:gap-6 overflow-y-auto">{[1,2,3].map((_event, index) => <CommunityCardLoader key={index} />) }</div>  : !communities || communities.length === 0 ?
             'Resultados não encontrados' :
             <>
             <div className="grid grid-cols-1 md:grid-cols-2 h-full w-full gap-2 md:gap-6 overflow-y-auto ">
