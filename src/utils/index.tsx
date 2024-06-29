@@ -14,6 +14,9 @@ export const getBreakpoint = () => {
         if(width < breakpoints.xl) return 'xl'
         return '2xl'
     }
-    return ''
+    return 'sm'
 }
-export const isBreakpointLowOrEqual = (bp: keyof typeof breakpoints) => getBreakpoint() <= bp
+export const isBreakpointLowOrEqual = (bp: keyof typeof breakpoints) => {
+    const breakpoint = getBreakpoint()
+    return breakpoint <= bp
+}

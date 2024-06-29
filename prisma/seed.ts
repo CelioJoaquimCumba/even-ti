@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 const SALT = 10;
 
-const organizers = [
+const communities = [
   {
     id: '410544b2-4001-4271-9855-fec4b6a6442a',
     name: 'John Doe',
@@ -31,7 +31,7 @@ const users = [
     name: 'Celio Cumba',
     email: 'celio.joaquim.cumba@gmail.com',
     password: 'Password123.',
-    image: 'https://via.placeholder.com/150',
+    image: 'https://firebasestorage.googleapis.com/v0/b/even-ti.appspot.com/o/users%2Fcelio.joaquim.cumba%40gmail.com%2Fprofile.jpg?alt=media&token=7e17e7e4-bc40-4ac0-bd9c-245d58bbd846',
   },
 ];
 
@@ -41,8 +41,8 @@ const events = [
     id: "410544b2-4001-4271-9875-fec4b6a6442b",
     community: "MozDevz",
     location: "Maputo, Incubadora do ...",
-    background: "DataWaveBackground.src",
-    logo: "DataWaveEvent.src",
+    background: "https://firebasestorage.googleapis.com/v0/b/even-ti.appspot.com/o/events%2Fdatawave%2Fdatawave-background.png?alt=media&token=138071c4-1907-48d1-8248-e030fdc64668",
+    logo: "https://firebasestorage.googleapis.com/v0/b/even-ti.appspot.com/o/events%2Fdatawave%2Fdatawave.png?alt=media&token=631665e6-12da-4843-960d-b0a83031e98f",
     title: "DataWave",
     date: "2023-06-05T00:00:00.000Z",
     time: "08:00 - 17:00",
@@ -80,9 +80,9 @@ async function seed() {
     await prisma.$connect();
 
     // Seed Organizers
-    for (const organizer of organizers) {
-      await prisma.organizer.create({
-        data: organizer,
+    for (const community of communities) {
+      await prisma.community.create({
+        data: community,
       });
     }
 

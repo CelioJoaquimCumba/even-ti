@@ -31,7 +31,7 @@ model EventOrganizer {
   organizerId String
 
   event       Event     @relation(fields: [eventId], references: [id])
-  organizer   Organizer @relation(fields: [organizerId], references: [id])
+  community   Community @relation(fields: [organizerId], references: [id])
 }
 
 model EventPartner {
@@ -52,7 +52,7 @@ model EventSpeaker {
   speaker   User @relation(fields: [speakerId], references: [id])
 }
 
-model Organizer {
+model Community {
   id     String           @id @default(uuid())
   name   String
   image  String
