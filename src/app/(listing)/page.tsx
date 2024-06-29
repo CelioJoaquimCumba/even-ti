@@ -1,21 +1,11 @@
 'use client'
-import Image from "next/image";
 import { usePage } from "@/app/providers/TitleContext";
 import { useEffect, useState } from "react";
 import { EventCard } from "@/app/components/molecules/event-card";
-import { EventLite } from "@/data/types";
-import dataWaveEvent from '@/../assets/images/datawave-event.png'
-import profile from '/@/../assets/images/profile.png'
+import { EventLite, PaginationMeta } from "@/data/types";
 import { convertDate } from "@/lib/utils";
 import { EventCardLoader } from "../components/molecules/event-card-loader";
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/app/components/atoms/pagination";
-
-interface PaginationMeta {
-  totalCount: number
-  page: number
-  pageSize: number
-  totalPages: number
-}
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/app/components/atoms/pagination";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true)
@@ -28,7 +18,7 @@ export default function Home() {
   })
   const {setTitle, search, page, setPage} = usePage()
   useEffect(() => {
-    setTitle('Events')
+    setTitle('Eventos')
   })
   useEffect(() => {
     (async function () {

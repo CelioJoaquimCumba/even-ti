@@ -32,3 +32,11 @@ export interface Speaker {
     name: string,
     image: string
 }
+
+
+export interface PaginationMeta {
+  totalCount: number
+  page: number
+  pageSize: number
+  totalPages: number
+}
