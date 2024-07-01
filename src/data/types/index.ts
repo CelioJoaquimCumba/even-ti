@@ -12,6 +12,7 @@ export interface EventLite {
 }
 export interface Event extends EventLite {
     tickets: number,
+    tagLine: string,
     background: string,
     objectives: string[],
     organizers: Organizer[],

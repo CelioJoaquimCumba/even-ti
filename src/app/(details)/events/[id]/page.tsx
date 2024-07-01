@@ -88,7 +88,7 @@ export default function EventPage({params}: {params: {id: string}}) {
                     <section className={`flex flex-col self-stretch rounded-md justify-center items-center text-white text-center gap-4 bg-cover`} style={{ backgroundImage: `url(${event.background})` }} >
                         <div className="flex flex-col flex-grow self-stretch rounded-md justify-center items-center gap-4 bg-black bg-opacity-50 py-24">
                             <h2 className="text-2xl md:text-5xl">{event.title}</h2>
-                            <p className="md:text-2xl">Explorando o Potencial da Ciência de Dados e Inteligência Artificial</p>
+                            <p className="md:text-2xl">{event.tagLine}</p>
                             <p className="md:text-xl">{event.date}, {event.time}</p>
                             <p className="md:text-xl">{event.location}</p>
                             <Button variant={"secondary"}>Reservar bilhete</Button>
