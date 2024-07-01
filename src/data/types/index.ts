@@ -32,3 +32,18 @@ export interface Speaker {
     name: string,
     image: string
 }
+export interface CommunityLite {
+    id: string,
+    name: string,
+    location: string,
+    image: string,
+    description: string
+}
+
+
+export interface PaginationMeta {
+  totalCount: number
+  page: number
+  pageSize: number
+  totalPages: number
+}

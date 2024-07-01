@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { Card, CardContent, CardFooter } from "../atoms/card";
-import DataWaveEvent from "@/../assets/images/datawave-event.png"
 import { Badge } from "../atoms/badge";
 import { ClockIcon, SewingPinIcon, CalendarIcon } from '@radix-ui/react-icons'
 import { Button } from "../atoms/button";

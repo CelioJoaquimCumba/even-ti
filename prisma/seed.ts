@@ -7,13 +7,12 @@ const SALT = 10;
 const communities = [
   {
     id: '410544b2-4001-4271-9855-fec4b6a6442a',
-    name: 'John Doe',
-    image: 'https://via.placeholder.com/150',
-  },
-  {
-    id: 'd6e15727-9fe1-4961-8c5b-ea44a9bd81aa',
-    name: 'Jane Doe',
-    image: 'https://via.placeholder.com/150',
+    name: "MozDevz",
+    location: "Maputo, Mozambique",
+    image: "https://firebasestorage.googleapis.com/v0/b/even-ti.appspot.com/o/communities%2Fmozdevz%2Fmozdevz.png?alt=media&token=98274d48-f24a-4859-a272-f85974f7ac35",
+    description: "MozDevz Community is a community of MozDevz contributors. We are always looking for new contributors. Join us and get your questions answered!",
+    url: 'https://www.mozdevz.org/',
+    tagLine: 'Impactamos milhares de devz e impulsionamos carreiras'
   },
 ];
 
@@ -56,6 +55,14 @@ const eventOrganizers = [
     id: "410544b2-4001-4271-9855-cec4b6a6442b",
     eventId: "410544b2-4001-4271-9875-fec4b6a6442b",
     organizerId: "410544b2-4001-4271-9855-fec4b6a6442a",
+  },
+];
+
+const communityMembers = [
+  {
+    id: "410544b2-4001-4271-9855-fec4b6a6446b",
+    communityId: "410544b2-4001-4271-9875-fec4b6a6442a",
+    memberId: "410544b2-4001-4271-9855-fec4b6a6442b",
   },
 ];
 
@@ -126,6 +133,13 @@ async function seed() {
     for (const eventSpeaker of eventSpeakers) {
       await prisma.eventSpeaker.create({
         data: eventSpeaker,
+      });
+    }
+
+    // Seed CommunityMembers
+    for (const communityMember of communityMembers) {
+      await prisma.communityMember.create({
+        data: communityMember,
       });
     }
 
