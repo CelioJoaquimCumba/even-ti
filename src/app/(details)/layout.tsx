@@ -1,29 +1,31 @@
 'use client'
-import { Inter } from 'next/font/google';
-import SideBar from '@/app/components/molecules/side-bar';
-import { PageProvider } from '@/app/providers/TitleContext';
+import SideBar from '@/app/components/molecules/side-bar'
 import '@/app/globals.css'
-import { useRouter } from 'next/navigation';
+import { PageProvider } from '@/app/providers/TitleContext'
+import { Inter } from 'next/font/google'
 
+const inter = Inter({ subsets: ['latin'] })
 
-const inter = Inter({ subsets: ['latin'] });
-
-const LayoutContent: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const {title} = {
-    title: 'Data Wave'
+const LayoutContent: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const { title } = {
+    title: 'Data Wave',
   }
   return (
-    <div className={`flex flex-col md:flex-row overflow-hidden h-dvh w-screen ${inter.className}`}>
+    <div
+      className={`flex flex-col md:flex-row overflow-hidden h-dvh w-screen ${inter.className}`}
+    >
       <SideBar />
       {children}
     </div>
-  );
-};
+  )
+}
 
 export default function ListingLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
     <PageProvider>
@@ -33,5 +35,5 @@ export default function ListingLayout({
         </body>
       </html>
     </PageProvider>
-  );
+  )
 }

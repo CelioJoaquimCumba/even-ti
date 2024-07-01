@@ -1,152 +1,197 @@
 'use client'
 
-import { Button } from "@/app/components/atoms/button";
+import { Button } from '@/app/components/atoms/button'
 
-import DataWaveBackground from "@/../assets/images/datawave-backgrond.png"
-import DataWaveEvent from "@/../assets/images/datawave-event.png"
-import MozDevzLogo from "@/../assets/images/mozdevz-logo.png"
-import Profile from "@/../assets/images/profile.png"
-import Image from "next/image";
-import { Card, CardContent } from "@/app/components/atoms/card";
-import { SpeakerCard } from "@/app/components/atoms/speaker-card";
-import { useRouter } from "next/navigation";
-import { Event } from "@/data/types";
-import { ChevronLeft } from 'lucide-react';
-import { useEffect, useState } from "react";
-import { convertDate } from "@/lib/utils";
+import { Card, CardContent } from '@/app/components/atoms/card'
+import { SpeakerCard } from '@/app/components/atoms/speaker-card'
+import { Event } from '@/data/types'
+import { convertDate } from '@/lib/utils'
+import { ChevronLeft } from 'lucide-react'
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
-export default function EventPage({params}: {params: {id: string}}) {
-    const [event, setEvent] = useState<Event>()
-    const router = useRouter()
-    const { id } = params
-    const [loading, setLoading] = useState(true)
-    const handleCommunity = (id: string) => {
-        router.push(`/community/${id}`)
-    }
-    useEffect(() => {
-        (async function () {
-        try {
-            setLoading(true)
-            const response = await fetch(`/api/event/${id}`, {
-            method: "GET",
-            });
-            const data = await response.json();
-            const responseEvent : Event = {
-                ...data.event,
-                date: convertDate(data.event.date),
-                speakers: data.event.speakers.map((speaker: any) => ({
-                id: speaker.speaker.id,
-                name: speaker.speaker.name,
-                image: speaker.speaker.image
-                })),
-                organizers: data.event.organizers.map((organizer: any) => ({
-                id: organizer.community.id,
-                name: organizer.community.name,
-                image: organizer.community.image
-                })),
-                partners: data.event.partners.map((partner: any) => ({
-                id: partner.partner.id,
-                name: partner.partner.name,
-                image: partner.partner.image
-                })),
-            }
-            console.log(responseEvent)
-            setEvent(responseEvent)
-        } catch (error) {
-            console.log(error)
-        } finally {
-            setLoading(false)
+export default function EventPage({ params }: { params: { id: string } }) {
+  const [event, setEvent] = useState<Event>()
+  const router = useRouter()
+  const { id } = params
+  const [loading, setLoading] = useState(true)
+  const handleCommunity = (id: string) => {
+    router.push(`/community/${id}`)
+  }
+  useEffect(() => {
+    ;(async function () {
+      try {
+        setLoading(true)
+        const response = await fetch(`/api/event/${id}`, {
+          method: 'GET',
+        })
+        const data = await response.json()
+        const responseEvent: Event = {
+          ...data.event,
+          date: convertDate(data.event.date),
+          speakers: data.event.speakers.map((speaker: any) => ({
+            id: speaker.speaker.id,
+            name: speaker.speaker.name,
+            image: speaker.speaker.image,
+          })),
+          organizers: data.event.organizers.map((organizer: any) => ({
+            id: organizer.community.id,
+            name: organizer.community.name,
+            image: organizer.community.image,
+          })),
+          partners: data.event.partners.map((partner: any) => ({
+            id: partner.partner.id,
+            name: partner.partner.name,
+            image: partner.partner.image,
+          })),
         }
-        })()
-    }, [id])
-    return (
-        <div className="flex flex-col pt-2 pb-8 px-6 bg-secondary overflow-hidden w-full h-full gap-2 md:gap-6">
-        { !loading && event && <header className='flex self-stretch justify-between'>
-            <div className='flex items-center gap-2'>
-            <Button variant={"outline"} size={"icon"} className={`rounded-full md:flex`} onClick={() => router.back()}>
-                <ChevronLeft/>
+        console.log(responseEvent)
+        setEvent(responseEvent)
+      } catch (error) {
+        console.log(error)
+      } finally {
+        setLoading(false)
+      }
+    })()
+  }, [id])
+  return (
+    <div className="flex flex-col pt-2 pb-8 px-6 bg-secondary overflow-hidden w-full h-full gap-2 md:gap-6">
+      {!loading && event && (
+        <header className="flex self-stretch justify-between">
+          <div className="flex items-center gap-2">
+            <Button
+              variant={'outline'}
+              size={'icon'}
+              className={`rounded-full md:flex`}
+              onClick={() => router.back()}
+            >
+              <ChevronLeft />
             </Button>
             <h1 className="text-lg md:text-2xl text-gray-700">{event.title}</h1>
+          </div>
+          <Button className="px-8 py-4">Reservar bilhete</Button>
+        </header>
+      )}
+      <main className="flex flex-grow overflow-hidden p-2 md:p-4 bg-white rounded-md">
+        {loading ? (
+          <section
+            className={`flex flex-col self-stretch w-full animate-pulse rounded-md justify-center items-center text-white text-center gap-4 bg-cover`}
+          >
+            <div className="flex flex-col flex-grow self-stretch rounded-md justify-center items-center gap-4  py-24">
+              <h2 className="bg-gray-200 animate-pulse h-6 rounded-full w-32"></h2>
+              <p className=" bg-gray-200 animate-pulse h-8 rounded-full w-64 md:w-96"></p>
+              <p className="bg-gray-200 animate-pulse h-6 rounded-full w-40"></p>
+              <p className="bg-gray-200 animate-pulse h-6 rounded-full w-32"></p>
+              <p className="bg-gray-200 animate-pulse h-6 rounded-full w-64"></p>
+              <p className="bg-gray-200 animate-pulse h-6 rounded-full w-48"></p>
             </div>
-            <Button className='px-8 py-4'>Reservar bilhete</Button>
-        </header>}
-        <main className="flex flex-grow overflow-hidden p-2 md:p-4 bg-white rounded-md">
-            {loading ?
-                <section className={`flex flex-col self-stretch w-full animate-pulse rounded-md justify-center items-center text-white text-center gap-4 bg-cover`} >
-                    <div className="flex flex-col flex-grow self-stretch rounded-md justify-center items-center gap-4  py-24">
-                        <h2 className="bg-gray-200 animate-pulse h-6 rounded-full w-32"></h2>
-                        <p className=" bg-gray-200 animate-pulse h-8 rounded-full w-64 md:w-96"></p>
-                        <p className="bg-gray-200 animate-pulse h-6 rounded-full w-40"></p>
-                        <p className="bg-gray-200 animate-pulse h-6 rounded-full w-32"></p>
-                        <p className="bg-gray-200 animate-pulse h-6 rounded-full w-64"></p>
-                        <p className="bg-gray-200 animate-pulse h-6 rounded-full w-48"></p>
+          </section>
+        ) : !event ? (
+          'Algo de errado não está certo.'
+        ) : (
+          <div className="flex flex-col flex-grow self-stretch overflow-auto gap-4 md:gap-16">
+            <section
+              className={`flex flex-col self-stretch rounded-md justify-center items-center text-white text-center gap-4 bg-cover`}
+              style={{ backgroundImage: `url(${event.background})` }}
+            >
+              <div className="flex flex-col flex-grow self-stretch rounded-md justify-center items-center gap-4 bg-black bg-opacity-50 py-24">
+                <h2 className="text-2xl md:text-5xl">{event.title}</h2>
+                <p className="md:text-2xl">
+                  Explorando o Potencial da Ciência de Dados e Inteligência
+                  Artificial
+                </p>
+                <p className="md:text-xl">
+                  {event.date}, {event.time}
+                </p>
+                <p className="md:text-xl">{event.location}</p>
+                <Button variant={'secondary'}>Reservar bilhete</Button>
+                <i>{event.tickets} bilhetes restantes</i>
+              </div>
+            </section>
+            <section className="flex flex-col gap-2 md:px-20">
+              <h3 className="text-xl font-medium">O que é {event.title}</h3>
+              <div className="flex flex-col md:flex-row gap-8 items-center justify-center">
+                <Image
+                  unoptimized
+                  src={event.logo}
+                  alt={event.title}
+                  width={300}
+                  height={300}
+                  className=" w-full md:w-72 rounded-md"
+                />
+                <p className="md:text-lg">{event.description}</p>
+              </div>
+            </section>
+            <section className="flex flex-col gap-2 md:px-20">
+              <h3 className="text-xl font-medium">Objectivos do evento</h3>
+              <div className="flex flex-col md:flex-row gap-2 ">
+                {event.objectives.map((objective, index) => (
+                  <Card
+                    key={index}
+                    className="p-2 flex justify-center items-center"
+                  >
+                    <CardContent>{objective}</CardContent>
+                  </Card>
+                ))}
+              </div>
+            </section>
+            <section className="flex flex-col gap-2 md:px-20">
+              <h3 className="text-xl font-medium">Speakers</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2 ">
+                {event.speakers.map((speaker, index) => (
+                  <SpeakerCard
+                    className="w-full"
+                    key={index}
+                    speaker={{
+                      id: speaker.id,
+                      name: speaker.name,
+                      image: speaker.image,
+                    }}
+                  />
+                ))}
+              </div>
+            </section>
+            <section className="flex flex-col gap-2 md:px-20">
+              <h3 className="text-xl font-medium">{`Organizador${event.organizers.length > 1 ? 'es' : ''}`}</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2 ">
+                {event.organizers.map((organizer, index) => (
+                  <div
+                    key={organizer.id}
+                    style={{ backgroundImage: `url(${organizer.image})` }}
+                    className=" w-full md:w-72 aspect-[4/3] bg-cover bg-center rounded-md"
+                  >
+                    <div className="flex w-full h-full justify-end items-end bg-black bg-opacity-10 p-4 ">
+                      <Button
+                        variant={'secondary'}
+                        onClick={() => handleCommunity(organizer.id)}
+                      >
+                        Ver Comunidade
+                      </Button>
                     </div>
-                </section>
-            :
-            !event ? 'Algo de errado não está certo.' :
-                <div className="flex flex-col flex-grow self-stretch overflow-auto gap-4 md:gap-16">
-                    <section className={`flex flex-col self-stretch rounded-md justify-center items-center text-white text-center gap-4 bg-cover`} style={{ backgroundImage: `url(${event.background})` }} >
-                        <div className="flex flex-col flex-grow self-stretch rounded-md justify-center items-center gap-4 bg-black bg-opacity-50 py-24">
-                            <h2 className="text-2xl md:text-5xl">{event.title}</h2>
-                            <p className="md:text-2xl">Explorando o Potencial da Ciência de Dados e Inteligência Artificial</p>
-                            <p className="md:text-xl">{event.date}, {event.time}</p>
-                            <p className="md:text-xl">{event.location}</p>
-                            <Button variant={"secondary"}>Reservar bilhete</Button>
-                            <i>{event.tickets} bilhetes restantes</i>
-                        </div>
-                    </section>
-                    <section className="flex flex-col gap-2 md:px-20">
-                        <h3 className="text-xl font-medium">O que é  {event.title}</h3>
-                        <div className="flex flex-col md:flex-row gap-8 items-center justify-center">
-                            <Image unoptimized src={event.logo} alt={event.title} width={300} height={300} className=" w-full md:w-72 rounded-md" />
-                            <p className="md:text-lg">
-                                {event.description}
-                            </p>
-                        </div>
-                    </section>
-                    <section className="flex flex-col gap-2 md:px-20">
-                        <h3 className="text-xl font-medium">Objectivos do evento</h3>
-                        <div className="flex flex-col md:flex-row gap-2 ">
-                            {event.objectives.map((objective, index) => (
-                                <Card key={index} className="p-2 flex justify-center items-center">
-                                    <CardContent>
-                                    {objective}
-                                    </CardContent>
-                                </Card>
-                            ))}
-                        </div>
-                    </section>
-                    <section className="flex flex-col gap-2 md:px-20">
-                        <h3 className="text-xl font-medium">Speakers</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 ">
-                            {event.speakers.map((speaker, index) => (
-                                <SpeakerCard className="w-full" key={index} speaker={{id: speaker.id,name: speaker.name, image: speaker.image}} />
-                            ))}
-                        </div>
-                    </section>
-                    <section className="flex flex-col gap-2 md:px-20">
-                        <h3 className="text-xl font-medium">{`Organizador${event.organizers.length > 1 ? 'es' : ''}`}</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 ">
-                            {event.organizers.map((organizer, index) => (
-                                <div key={organizer.id} style={{ backgroundImage: `url(${organizer.image})` }} className=" w-full md:w-72 aspect-[4/3] bg-cover bg-center rounded-md">
-                                    <div className="flex w-full h-full justify-end items-end bg-black bg-opacity-10 p-4 ">
-                                        <Button variant={"secondary"} onClick={() => handleCommunity(organizer.id)}>Ver Comunidade</Button>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </section>
-                    <section className="flex flex-col gap-2 md:px-20">
-                        <h3 className="text-xl font-medium">{`Parceiro${event.partners.length > 1 ? 's' : ''}`}</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 ">
-                            {event.partners.map((partner, index) => (
-                                <Image unoptimized key={partner.id} src={partner.image} alt={partner.name} width={300} height={300} className=" w-full md:w-72 rounded-md" />
-                            ))}
-                        </div>
-                    </section>
-                </div>
-            }
-        </main>
-      </div>
-    );
+                  </div>
+                ))}
+              </div>
+            </section>
+            <section className="flex flex-col gap-2 md:px-20">
+              <h3 className="text-xl font-medium">{`Parceiro${event.partners.length > 1 ? 's' : ''}`}</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2 ">
+                {event.partners.map((partner, index) => (
+                  <Image
+                    unoptimized
+                    key={partner.id}
+                    src={partner.image}
+                    alt={partner.name}
+                    width={300}
+                    height={300}
+                    className=" w-full md:w-72 rounded-md"
+                  />
+                ))}
+              </div>
+            </section>
+          </div>
+        )}
+      </main>
+    </div>
+  )
 }
