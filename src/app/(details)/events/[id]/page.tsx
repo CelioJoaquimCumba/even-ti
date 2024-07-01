@@ -1,11 +1,6 @@
 'use client'
 
 import { Button } from "@/app/components/atoms/button";
-
-import DataWaveBackground from "@/../assets/images/datawave-backgrond.png"
-import DataWaveEvent from "@/../assets/images/datawave-event.png"
-import MozDevzLogo from "@/../assets/images/mozdevz-logo.png"
-import Profile from "@/../assets/images/profile.png"
 import Image from "next/image";
 import { Card, CardContent } from "@/app/components/atoms/card";
 import { SpeakerCard } from "@/app/components/atoms/speaker-card";

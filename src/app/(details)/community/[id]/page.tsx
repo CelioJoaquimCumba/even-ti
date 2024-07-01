@@ -2,7 +2,6 @@
 
 import { Button } from "@/app/components/atoms/button";
 import Image from "next/image";
-import { Card, CardContent } from "@/app/components/atoms/card";
 import { SpeakerCard } from "@/app/components/atoms/speaker-card";
 import { useRouter } from "next/navigation";
 import { Community } from "@/data/types";
