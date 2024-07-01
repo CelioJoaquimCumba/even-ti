@@ -56,12 +56,23 @@ model Community {
   id     String           @id @default(uuid())
   name   String
   image  String
+  background String
   location String
   description String
   url String
   tagLine String
   events EventOrganizer[]
   members CommunityMember[]
+  partners     CommunityPartner[]
+}
+
+model CommunityPartner {
+  id        String @id @default(uuid())
+  communityId   String
+  partnerId String
+
+  community     Community   @relation(fields: [communityId], references: [id])
+  partner   Partner @relation(fields: [partnerId], references: [id])
 }
 
 model CommunityMember {
@@ -78,6 +89,7 @@ model Partner {
   name   String
   image  String
   events EventPartner[]
+  communities CommunityPartner[]
 }
 
 model User {

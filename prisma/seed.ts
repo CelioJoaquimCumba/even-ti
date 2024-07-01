@@ -1,3 +1,4 @@
+import { Community } from '@/data/types';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 
@@ -6,10 +7,11 @@ const SALT = 10;
 
 const communities = [
   {
-    id: '410544b2-4001-4271-9855-fec4b6a6442a',
+    id: '410544b2-4001-7271-9855-fec4b6a6442a',
     name: "MozDevz",
     location: "Maputo, Mozambique",
     image: "https://firebasestorage.googleapis.com/v0/b/even-ti.appspot.com/o/communities%2Fmozdevz%2Fmozdevz.png?alt=media&token=98274d48-f24a-4859-a272-f85974f7ac35",
+    background: "https://firebasestorage.googleapis.com/v0/b/even-ti.appspot.com/o/communities%2Fmozdevz%2Fmozdevz-background.png?alt=media&token=769a69ce-b192-48a1-876e-d52ba14c1d11",
     description: "MozDevz Community is a community of MozDevz contributors. We are always looking for new contributors. Join us and get your questions answered!",
     url: 'https://www.mozdevz.org/',
     tagLine: 'Impactamos milhares de devz e impulsionamos carreiras'
@@ -54,14 +56,14 @@ const eventOrganizers = [
   {
     id: "410544b2-4001-4271-9855-cec4b6a6442b",
     eventId: "410544b2-4001-4271-9875-fec4b6a6442b",
-    organizerId: "410544b2-4001-4271-9855-fec4b6a6442a",
+    organizerId: "410544b2-4001-7271-9855-fec4b6a6442a",
   },
 ];
 
 const communityMembers = [
   {
     id: "410544b2-4001-4271-9855-fec4b6a6446b",
-    communityId: "410544b2-4001-4271-9875-fec4b6a6442a",
+    communityId: "410544b2-4001-7271-9855-fec4b6a6442a",
     memberId: "410544b2-4001-4271-9855-fec4b6a6442b",
   },
 ];
@@ -70,6 +72,13 @@ const eventPartners = [
   {
     id: "410544b2-4001-4271-9855-eec4b6a6442b",
     eventId: "410544b2-4001-4271-9875-fec4b6a6442b",
+    partnerId: "410544b2-4001-4271-9855-fec4b6a6442c",
+  },
+];
+const communityPartners = [
+  {
+    id: "410544b2-4001-4271-9855-eec4b6a6442b",
+    communityId: "410544b2-4001-7271-9855-fec4b6a6442a",
     partnerId: "410544b2-4001-4271-9855-fec4b6a6442c",
   },
 ];
@@ -86,7 +95,7 @@ async function seed() {
   try {
     await prisma.$connect();
 
-    // Seed Organizers
+    // Seed Communities
     for (const community of communities) {
       await prisma.community.create({
         data: community,
@@ -127,6 +136,13 @@ async function seed() {
       await prisma.eventPartner.create({
         data: eventPartner,
       });
+    }
+
+    //Seed CommunityPartners
+    for(const communityPartner of communityPartners) {
+      await prisma.communityPartner.create({
+        data: communityPartner
+      })
     }
 
     // Seed EventSpeakers
