@@ -2,7 +2,6 @@
 
 import { Button } from "@/app/components/atoms/button";
 import Image from "next/image";
-import { Card, CardContent } from "@/app/components/atoms/card";
 import { SpeakerCard } from "@/app/components/atoms/speaker-card";
 import { useRouter } from "next/navigation";
 import { Community } from "@/data/types";
@@ -83,7 +82,7 @@ export default function CommunityPage({params}: {params: {id: string}}) {
                             <h2 className="text-2xl md:text-5xl">{community.name}</h2>
                             <p className="md:text-2xl">{community.tagLine}</p>
                             { community.url &&
-                            <Button className="gap-2" variant={"default"} onClick={() => window.location.assign(community.url)}>
+                            <Button className="gap-2" variant={"default"} onClick={() => window.open(community.url, '_blank')}>
                                 <ExternalLinkIcon />
                                 visite-nos
                             </Button>}

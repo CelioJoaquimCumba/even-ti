@@ -12,6 +12,7 @@ model Event {
   id           String          @id @default(uuid())
   community    String
   title        String
+  tagLine      String
   logo         String
   date         DateTime
   time         String

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { NextResponse, NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma'
 
 // POST /api/post

@@ -1,4 +1,3 @@
-import { Community } from '@/data/types';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 
@@ -45,6 +44,7 @@ const events = [
     background: "https://firebasestorage.googleapis.com/v0/b/even-ti.appspot.com/o/events%2Fdatawave%2Fdatawave-background.png?alt=media&token=138071c4-1907-48d1-8248-e030fdc64668",
     logo: "https://firebasestorage.googleapis.com/v0/b/even-ti.appspot.com/o/events%2Fdatawave%2Fdatawave.png?alt=media&token=631665e6-12da-4843-960d-b0a83031e98f",
     title: "DataWave",
+    tagLine: "Explorando o Potencial da Ciência de Dados e Inteligência Artificial",
     date: "2023-06-05T00:00:00.000Z",
     time: "08:00 - 17:00",
     description: "Data Wave é uma conferência sobre Dados e ramo de Inteligência Artificial que irá contar com painéis, palestras e sessões práticas denominadas codelabs, de modo a garantir que os participantes possam ter uma contextualização sobre a relevância do campo de ciência de dados, entender conceitos básicos e poder criar os seus primeiros modelos.",
