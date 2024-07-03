@@ -1,37 +1,31 @@
 'use client'
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 
-interface PageContextType {
+interface TitleContextType {
   title: string;
   setTitle: (title: string) => void;
-  search: string;
-  setSearch: (search: string) => void;
-  page: number;
-  setPage: (page: number) => void;
 }
 
-const PageContext = createContext<PageContextType | undefined>(undefined);
+const TitleContext = createContext<TitleContextType | undefined>(undefined);
 
-interface PageProviderProps {
+interface TitleProviderProps {
   children: ReactNode;
 }
 
-export const PageProvider: React.FC<PageProviderProps> = ({ children }) => {
+export const TitleProvider: React.FC<TitleProviderProps> = ({ children }) => {
   const [title, setTitle] = useState('Title');
-  const [search, setSearch] = useState('');
-  const [page, setPage] = useState(1);
 
   return (
-    <PageContext.Provider value={{ title, setTitle, search, setSearch, page, setPage }}>
+    <TitleContext.Provider value={{ title, setTitle }}>
       {children}
-    </PageContext.Provider>
+    </TitleContext.Provider>
   );
 };
 
-export const usePage = (): PageContextType => {
-  const context = useContext(PageContext);
+export const useTitle = (): TitleContextType => {
+  const context = useContext(TitleContext);
   if (!context) {
-    throw new Error('usePage must be used within a PageProvider');
+    throw new Error('useTitle must be used within a TitleProvider');
   }
   return context;
 };
