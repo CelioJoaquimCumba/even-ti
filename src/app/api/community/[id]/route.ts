@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { NextResponse, NextRequest } from 'next/server';
+import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 
 // POST /api/post
@@ -8,34 +8,35 @@ import prisma from '@/lib/prisma'
 export async function GET(
   req: NextApiRequest,
   { params }: { params: { id: string } },
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   res: NextApiResponse,
 ) {
-  const {id} = params
+  const { id } = params
   const Community = await prisma.community.findFirst({
     where: {
-      id
+      id,
     },
     include: {
       members: {
         include: {
-          member: true
-        }
+          member: true,
+        },
       },
       events: {
         include: {
-          event: true
+          event: true,
         },
-        take: 3
+        take: 3,
       },
       partners: {
         include: {
-          partner: true
-        }
-      }
+          partner: true,
+        },
+      },
     },
-  });
+  })
   const response = {
-    community: Community
+    community: Community,
   }
   return NextResponse.json(response)
 }
