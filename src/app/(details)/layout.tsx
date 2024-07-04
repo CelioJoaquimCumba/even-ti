@@ -9,9 +9,6 @@ const inter = Inter({ subsets: ['latin'] })
 const LayoutContent: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const { title } = {
-    title: 'Data Wave',
-  }
   return (
     <div
       className={`flex flex-col md:flex-row overflow-hidden h-dvh w-screen ${inter.className}`}

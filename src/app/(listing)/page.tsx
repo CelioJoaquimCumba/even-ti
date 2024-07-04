@@ -14,8 +14,6 @@ import { convertDate } from '@/lib/utils'
 import { useEffect, useState } from 'react'
 import { EventCardLoader } from '../components/molecules/event-card-loader'
 
-
-
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true)
   const [events, setEvents] = useState<EventLite[]>()
@@ -46,9 +44,11 @@ export default function Home() {
           pageSize: data.pageSize,
           totalPages: data.totalPages,
         })
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const responseEvents: EventLite[] = data.events.map((event: any) => ({
           ...event,
           date: convertDate(event.date.toString()),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           speakers: event.speakers.map((speaker: any) => ({
             id: speaker.speaker.id,
             name: speaker.speaker.name,
