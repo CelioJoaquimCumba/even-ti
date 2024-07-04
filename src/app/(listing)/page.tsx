@@ -9,17 +9,12 @@ import {
 } from '@/app/components/atoms/pagination'
 import { EventCard } from '@/app/components/molecules/event-card'
 import { usePage } from '@/app/providers/TitleContext'
-import { EventLite } from '@/data/types'
+import { EventLite, PaginationMeta } from '@/data/types'
 import { convertDate } from '@/lib/utils'
 import { useEffect, useState } from 'react'
 import { EventCardLoader } from '../components/molecules/event-card-loader'
 
-interface PaginationMeta {
-  totalCount: number
-  page: number
-  pageSize: number
-  totalPages: number
-}
+
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true)
@@ -32,7 +27,7 @@ export default function Home() {
   })
   const { setTitle, search, page, setPage } = usePage()
   useEffect(() => {
-    setTitle('Events')
+    setTitle('Eventos')
   })
   useEffect(() => {
     ;(async function () {

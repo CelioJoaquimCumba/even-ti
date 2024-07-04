@@ -6,14 +6,14 @@ const SALT = 10
 
 const communities = [
   {
-    id: '410544b2-4001-4271-9855-fec4b6a6442a',
-    name: 'John Doe',
-    image: 'https://via.placeholder.com/150',
-  },
-  {
-    id: 'd6e15727-9fe1-4961-8c5b-ea44a9bd81aa',
-    name: 'Jane Doe',
-    image: 'https://via.placeholder.com/150',
+    id: '410544b2-4001-7271-9855-fec4b6a6442a',
+    name: "MozDevz",
+    location: "Maputo, Mozambique",
+    image: "https://firebasestorage.googleapis.com/v0/b/even-ti.appspot.com/o/communities%2Fmozdevz%2Fmozdevz.png?alt=media&token=98274d48-f24a-4859-a272-f85974f7ac35",
+    background: "https://firebasestorage.googleapis.com/v0/b/even-ti.appspot.com/o/communities%2Fmozdevz%2Fmozdevz-background.png?alt=media&token=769a69ce-b192-48a1-876e-d52ba14c1d11",
+    description: "MozDevz Community is a community of MozDevz contributors. We are always looking for new contributors. Join us and get your questions answered!",
+    url: 'https://www.mozdevz.org/',
+    tagLine: 'Impactamos milhares de devz e impulsionamos carreiras'
   },
 ]
 
@@ -46,6 +46,7 @@ const events = [
       'https://firebasestorage.googleapis.com/v0/b/even-ti.appspot.com/o/events%2Fdatawave%2Fdatawave-background.png?alt=media&token=138071c4-1907-48d1-8248-e030fdc64668',
     logo: 'https://firebasestorage.googleapis.com/v0/b/even-ti.appspot.com/o/events%2Fdatawave%2Fdatawave.png?alt=media&token=631665e6-12da-4843-960d-b0a83031e98f',
     title: 'DataWave',
+    tagLine: 'Explorando o Potencial da Ciência de Dados e Inteligência Artificial',
     date: '2023-06-05T00:00:00.000Z',
     time: '08:00 - 17:00',
     description:
@@ -62,7 +63,15 @@ const eventOrganizers = [
   {
     id: '410544b2-4001-4271-9855-cec4b6a6442b',
     eventId: '410544b2-4001-4271-9875-fec4b6a6442b',
-    organizerId: '410544b2-4001-4271-9855-fec4b6a6442a',
+    organizerId: '410544b2-4001-7271-9855-fec4b6a6442a',
+  },
+];
+
+const communityMembers = [
+  {
+    id: '410544b2-4001-4271-9855-fec4b6a6446b',
+    communityId: '410544b2-4001-7271-9855-fec4b6a6442a',
+    memberId: '410544b2-4001-4271-9855-fec4b6a6442b',
   },
 ]
 
@@ -72,7 +81,14 @@ const eventPartners = [
     eventId: '410544b2-4001-4271-9875-fec4b6a6442b',
     partnerId: '410544b2-4001-4271-9855-fec4b6a6442c',
   },
-]
+];
+const communityPartners = [
+  {
+    id: "410544b2-4001-4271-9855-eec4b6a6442b",
+    communityId: "410544b2-4001-7271-9855-fec4b6a6442a",
+    partnerId: "410544b2-4001-4271-9855-fec4b6a6442c",
+  },
+];
 
 const eventSpeakers = [
   {
@@ -86,7 +102,7 @@ async function seed() {
   try {
     await prisma.$connect()
 
-    // Seed Organizers
+    // Seed Communities
     for (const community of communities) {
       await prisma.community.create({
         data: community,
@@ -129,11 +145,39 @@ async function seed() {
       })
     }
 
+    //Seed CommunityPartners
+    for(const communityPartner of communityPartners) {
+      await prisma.communityPartner.create({
+        data: communityPartner
+      })
+    }
+
+    //Seed CommunityPartners
+    for(const communityPartner of communityPartners) {
+      await prisma.communityPartner.create({
+        data: communityPartner
+      })
+    }
+
     // Seed EventSpeakers
     for (const eventSpeaker of eventSpeakers) {
       await prisma.eventSpeaker.create({
         data: eventSpeaker,
       })
+    }
+
+    // Seed CommunityMembers
+    for (const communityMember of communityMembers) {
+      await prisma.communityMember.create({
+        data: communityMember,
+      })
+    }
+
+    // Seed CommunityMembers
+    for (const communityMember of communityMembers) {
+      await prisma.communityMember.create({
+        data: communityMember,
+      });
     }
 
     console.log('Database seeded successfully')

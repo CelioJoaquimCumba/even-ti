@@ -12,7 +12,7 @@ import { EventLite } from "@/data/types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-export function EventCard(props: { event: EventLite }) {
+export function EventCardLite(props: { event: EventLite }) {
     const { id, community, title, logo: image, date, time, location, description, speakers, tickets } = props.event
     const [isOpen, setIsOpen] = useState(false)
     const router = useRouter()
@@ -27,9 +27,6 @@ export function EventCard(props: { event: EventLite }) {
                 <section className="flex flex-col space-y-2">
                     <div className="flex justify-between w-full">
                         <h2 className="text-base font-normal">{community}</h2>
-                        <Button variant={"outline"} size={"icon"} className={`rounded-full hidden md:flex ${!isOpen && "md:hidden"}`} onClick={(e) => {setIsOpen(!isOpen); e.stopPropagation()} }>
-                            <ChevronUp/>
-                        </Button>
                     </div>
                         <h2 className="text-lg font-medium">{title}</h2>
                     <ul className={`flex flex-col ${isOpen ? "md:flex-row md:flex-wrap" : "md:flex-col"} gap-2`}>
@@ -49,22 +46,10 @@ export function EventCard(props: { event: EventLite }) {
                     <p className={`${isOpen && "md:block"} hidden text-primary`}>
                         {description}
                     </p>
-                    <section className={`hidden flex-col ${isOpen  && "md:flex"}`}>
-                        <h3>Speakers:</h3>
-                        <div className="flex gap-2 flex-wrap">
-                            {speakers.map((speaker) => <SpeakerCard key={speaker.id} speaker={speaker}/> )}
-                        </div>
-                    </section>
                 </section>
             </CardContent>
             <CardFooter className={`flex flex-col justify-between items-end p-0`}>
-                <Button variant={"outline"} size={"icon"} className={`rounded-full hidden md:flex ${isOpen && "md:hidden"}`} onClick={(e) => {setIsOpen(!isOpen); e.stopPropagation()}}>
-                    <ChevronDown/>
-                </Button>
                 <div className="flex gap-2 w-full">
-                    <Link href={`/event/${props.event.id}`} className={`w-full md:w-fit whitespace-pre-line hidden ${isOpen && "md:flex"}`}>
-                        <Button variant={'outline'} className="w-full md:w-fit whitespace-pre-line px-8 py-4">Ver mais detalhes</Button>
-                    </Link>
                     <Button variant={'default'} className="w-full md:w-fit whitespace-pre-line px-8 py-4">Reservar Bilhete {tickets && `(${tickets} disponiveis)`}</Button>
                 </div>
             </CardFooter>

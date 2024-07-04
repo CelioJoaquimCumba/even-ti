@@ -1,9 +1,9 @@
 import Image from "next/image"
 import Profile from "@/../assets/images/profile.png"
 import { Card, CardContent, CardHeader } from "./card"
-import { Speaker } from "@/data/types"
+import { User } from "@/data/types"
 import { cn } from "@/lib/utils"
-export function SpeakerCard (props: {speaker: Speaker, className?: string}) {
+export function SpeakerCard (props: {speaker: User, className?: string}) {
     const { name, image } = props.speaker
 
     return (

@@ -1,5 +1,6 @@
 'use client'
 import { PageProvider } from './providers/TitleContext';
+import { UserProvider } from '@auth0/nextjs-auth0/client'
 
 
 export default function RootLayout({
@@ -10,9 +11,11 @@ export default function RootLayout({
   return (
     <PageProvider>
       <html lang="en">
-        <body suppressHydrationWarning={true}>
-          {children}
-        </body>
+        <UserProvider>
+          <body suppressHydrationWarning={true}>
+            {children}
+          </body>
+        </UserProvider>
       </html>
     </PageProvider>
   );

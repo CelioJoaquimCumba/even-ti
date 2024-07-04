@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import prisma from '@/lib/prisma'
 
 // POST /api/post
@@ -11,20 +11,21 @@ export async function GET(
   res: NextApiResponse,
 ) {
   const {id} = params
-  const eventsWithSpeakers = await prisma.event.findFirst({
+  const Community = await prisma.community.findFirst({
     where: {
       id
     },
     include: {
-      speakers: {
+      members: {
         include: {
-          speaker: true
+          member: true
         }
       },
-      organizers: {
+      events: {
         include: {
-          community: true
-        }
+          event: true
+        },
+        take: 3
       },
       partners: {
         include: {
@@ -34,7 +35,7 @@ export async function GET(
     },
   });
   const response = {
-    event: eventsWithSpeakers
+    community: Community
   }
   return NextResponse.json(response)
 }
