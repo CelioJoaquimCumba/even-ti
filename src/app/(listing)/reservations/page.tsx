@@ -38,7 +38,6 @@ export default function Home() {
           },
         )
         const data = await response.json()
-        console.log(data)
         setMeta({
           totalCount: data.totalCount,
           page: data.page,
