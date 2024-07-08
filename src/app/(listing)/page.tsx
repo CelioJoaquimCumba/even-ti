@@ -8,7 +8,7 @@ import {
   PaginationPrevious,
 } from '@/app/components/atoms/pagination'
 import { EventCard } from '@/app/components/molecules/event-card'
-import { usePage } from '@/app/providers/TitleContext'
+import { usePage } from '@/app/providers/PageContext'
 import { EventLite, PaginationMeta } from '@/data/types'
 import { convertDate } from '@/lib/utils'
 import { useEffect, useState } from 'react'
