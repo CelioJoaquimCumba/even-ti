@@ -13,8 +13,10 @@ import { PaginationMeta, Reservation } from '@/data/types'
 import { convertDate } from '@/lib/utils'
 import { useEffect, useState } from 'react'
 import { EventCardLoader } from '@/app/components/molecules/event-card-loader'
+import { useUser } from '@auth0/nextjs-auth0/client'
 
 export default function Home() {
+  const { user } = useUser()
   const [isLoading, setIsLoading] = useState(true)
   const [reservations, setReservations] = useState<Reservation[]>()
   const [meta, setMeta] = useState<PaginationMeta>({
@@ -30,9 +32,10 @@ export default function Home() {
   useEffect(() => {
     ;(async function () {
       try {
+        if (!user) return
         setIsLoading(true)
         const response = await fetch(
-          `/api/reservation?${search && new URLSearchParams({ search }) + '&'}${new URLSearchParams({ page: page.toString() })}`,
+          `/api/reservation?${user && user.sub && new URLSearchParams({ userId: user.sub.toString().replace('auth0|', '') }) + '&'}${search && new URLSearchParams({ search }) + '&'}${new URLSearchParams({ page: page.toString() })}`,
           {
             method: 'GET',
           },
@@ -61,7 +64,7 @@ export default function Home() {
         setIsLoading(false)
       }
     })()
-  }, [search, page])
+  }, [search, page, user])
   return (
     <main className="flex w-full h-full flex-col gap-2 md:gap-6 bg-white rounded-2xl overflow-y-auto">
       {isLoading ? (
