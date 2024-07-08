@@ -8,7 +8,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/app/components/atoms/pagination'
-import { usePage } from '@/app/providers/TitleContext'
+import { usePage } from '@/app/providers/PageContext'
 import { useState, useEffect } from 'react'
 import { PaginationMeta, CommunityLite } from '@/data/types'
 import { CommunityCardLoader } from '@/app/components/molecules/community-card-loader'

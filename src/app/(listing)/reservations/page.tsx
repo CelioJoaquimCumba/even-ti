@@ -8,7 +8,7 @@ import {
   PaginationPrevious,
 } from '@/app/components/atoms/pagination'
 import { ReservationCard } from '@/app/components/molecules/reservation-card'
-import { usePage } from '@/app/providers/TitleContext'
+import { usePage } from '@/app/providers/PageContext'
 import { PaginationMeta, Reservation } from '@/data/types'
 import { convertDate } from '@/lib/utils'
 import { useEffect, useState } from 'react'

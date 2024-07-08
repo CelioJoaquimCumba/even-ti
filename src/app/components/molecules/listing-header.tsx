@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from '../atoms/select'
 import { MixerHorizontalIcon } from '@radix-ui/react-icons'
-import { usePage } from '@/app/providers/TitleContext'
+import { usePage } from '@/app/providers/PageContext'
 
 const filters = [
   {

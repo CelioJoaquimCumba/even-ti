@@ -2,7 +2,7 @@
 import { ListingHeader } from '@/app/components/molecules/listing-header'
 import SideBar from '@/app/components/molecules/side-bar'
 import '@/app/globals.css'
-import { PageProvider, usePage } from '@/app/providers/TitleContext'
+import { PageProvider, usePage } from '@/app/providers/PageContext'
 import { Inter } from 'next/font/google'
 
 const inter = Inter({ subsets: ['latin'] })

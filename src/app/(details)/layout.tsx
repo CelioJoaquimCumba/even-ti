@@ -1,7 +1,7 @@
 'use client'
 import SideBar from '@/app/components/molecules/side-bar'
 import '@/app/globals.css'
-import { PageProvider } from '@/app/providers/TitleContext'
+import { PageProvider } from '@/app/providers/PageContext'
 import { Inter } from 'next/font/google'
 
 const inter = Inter({ subsets: ['latin'] })
