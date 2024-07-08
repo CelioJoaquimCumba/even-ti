@@ -1,31 +1,39 @@
 'use client'
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useContext, ReactNode } from 'react'
 
-interface TitleContextType {
-  title: string;
-  setTitle: (title: string) => void;
+interface PageContextType {
+  title: string
+  setTitle: (title: string) => void
+  search: string
+  setSearch: (search: string) => void
+  page: number
+  setPage: (page: number) => void
 }
 
-const TitleContext = createContext<TitleContextType | undefined>(undefined);
+const PageContext = createContext<PageContextType | undefined>(undefined)
 
-interface TitleProviderProps {
-  children: ReactNode;
+interface PageProviderProps {
+  children: ReactNode
 }
 
-export const TitleProvider: React.FC<TitleProviderProps> = ({ children }) => {
-  const [title, setTitle] = useState('Title');
+export const PageProvider: React.FC<PageProviderProps> = ({ children }) => {
+  const [title, setTitle] = useState('Title')
+  const [search, setSearch] = useState('')
+  const [page, setPage] = useState(1)
 
   return (
-    <TitleContext.Provider value={{ title, setTitle }}>
+    <PageContext.Provider
+      value={{ title, setTitle, search, setSearch, page, setPage }}
+    >
       {children}
-    </TitleContext.Provider>
-  );
-};
+    </PageContext.Provider>
+  )
+}
 
-export const useTitle = (): TitleContextType => {
-  const context = useContext(TitleContext);
+export const usePage = (): PageContextType => {
+  const context = useContext(PageContext)
   if (!context) {
-    throw new Error('useTitle must be used within a TitleProvider');
+    throw new Error('usePage must be used within a PageProvider')
   }
-  return context;
-};
+  return context
+}
