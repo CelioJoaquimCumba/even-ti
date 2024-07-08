@@ -7,13 +7,16 @@ const SALT = 10
 const communities = [
   {
     id: '410544b2-4001-7271-9855-fec4b6a6442a',
-    name: "MozDevz",
-    location: "Maputo, Mozambique",
-    image: "https://firebasestorage.googleapis.com/v0/b/even-ti.appspot.com/o/communities%2Fmozdevz%2Fmozdevz.png?alt=media&token=98274d48-f24a-4859-a272-f85974f7ac35",
-    background: "https://firebasestorage.googleapis.com/v0/b/even-ti.appspot.com/o/communities%2Fmozdevz%2Fmozdevz-background.png?alt=media&token=769a69ce-b192-48a1-876e-d52ba14c1d11",
-    description: "MozDevz Community is a community of MozDevz contributors. We are always looking for new contributors. Join us and get your questions answered!",
+    name: 'MozDevz',
+    location: 'Maputo, Mozambique',
+    image:
+      'https://firebasestorage.googleapis.com/v0/b/even-ti.appspot.com/o/communities%2Fmozdevz%2Fmozdevz.png?alt=media&token=98274d48-f24a-4859-a272-f85974f7ac35',
+    background:
+      'https://firebasestorage.googleapis.com/v0/b/even-ti.appspot.com/o/communities%2Fmozdevz%2Fmozdevz-background.png?alt=media&token=769a69ce-b192-48a1-876e-d52ba14c1d11',
+    description:
+      'MozDevz Community is a community of MozDevz contributors. We are always looking for new contributors. Join us and get your questions answered!',
     url: 'https://www.mozdevz.org/',
-    tagLine: 'Impactamos milhares de devz e impulsionamos carreiras'
+    tagLine: 'Impactamos milhares de devz e impulsionamos carreiras',
   },
 ]
 
@@ -46,7 +49,8 @@ const events = [
       'https://firebasestorage.googleapis.com/v0/b/even-ti.appspot.com/o/events%2Fdatawave%2Fdatawave-background.png?alt=media&token=138071c4-1907-48d1-8248-e030fdc64668',
     logo: 'https://firebasestorage.googleapis.com/v0/b/even-ti.appspot.com/o/events%2Fdatawave%2Fdatawave.png?alt=media&token=631665e6-12da-4843-960d-b0a83031e98f',
     title: 'DataWave',
-    tagLine: 'Explorando o Potencial da Ciência de Dados e Inteligência Artificial',
+    tagLine:
+      'Explorando o Potencial da Ciência de Dados e Inteligência Artificial',
     date: '2023-06-05T00:00:00.000Z',
     time: '08:00 - 17:00',
     description:
@@ -65,7 +69,7 @@ const eventOrganizers = [
     eventId: '410544b2-4001-4271-9875-fec4b6a6442b',
     organizerId: '410544b2-4001-7271-9855-fec4b6a6442a',
   },
-];
+]
 
 const communityMembers = [
   {
@@ -81,20 +85,29 @@ const eventPartners = [
     eventId: '410544b2-4001-4271-9875-fec4b6a6442b',
     partnerId: '410544b2-4001-4271-9855-fec4b6a6442c',
   },
-];
+]
 const communityPartners = [
   {
-    id: "410544b2-4001-4271-9855-eec4b6a6442b",
-    communityId: "410544b2-4001-7271-9855-fec4b6a6442a",
-    partnerId: "410544b2-4001-4271-9855-fec4b6a6442c",
+    id: '410544b2-4001-4271-9855-eec4b6a6442b',
+    communityId: '410544b2-4001-7271-9855-fec4b6a6442a',
+    partnerId: '410544b2-4001-4271-9855-fec4b6a6442c',
   },
-];
+]
 
 const eventSpeakers = [
   {
     id: '410544b2-4001-4276-9855-cec4b6a6442b',
     eventId: '410544b2-4001-4271-9875-fec4b6a6442b',
     speakerId: '410544b2-4001-4271-9855-fec4b6a6442b',
+  },
+]
+
+const reservations = [
+  {
+    id: '410544b2-4001-4276-9855-ceczb6a6442b',
+    code: '13-10-122-23',
+    eventId: '410544b2-4001-4271-9875-fec4b6a6442b',
+    userId: '410544b2-4001-4271-9855-fec4b6a6442b',
   },
 ]
 
@@ -145,17 +158,17 @@ async function seed() {
       })
     }
 
-    //Seed CommunityPartners
-    for(const communityPartner of communityPartners) {
+    // Seed CommunityPartners
+    for (const communityPartner of communityPartners) {
       await prisma.communityPartner.create({
-        data: communityPartner
+        data: communityPartner,
       })
     }
 
-    //Seed CommunityPartners
-    for(const communityPartner of communityPartners) {
+    // Seed CommunityPartners
+    for (const communityPartner of communityPartners) {
       await prisma.communityPartner.create({
-        data: communityPartner
+        data: communityPartner,
       })
     }
 
@@ -177,7 +190,13 @@ async function seed() {
     for (const communityMember of communityMembers) {
       await prisma.communityMember.create({
         data: communityMember,
-      });
+      })
+    }
+
+    for (const reservation of reservations) {
+      await prisma.reservation.create({
+        data: reservation,
+      })
     }
 
     console.log('Database seeded successfully')

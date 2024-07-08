@@ -72,7 +72,7 @@ export function EventCardLite(props: { event: EventLite }) {
           </p>
         </section>
       </CardContent>
-      <CardFooter className={`flex flex-col justify-between items-end p-0`}>
+      <CardFooter className={`flex flex-col justify-end items-end p-0`}>
         <div className="flex gap-2 w-full">
           <Button
             variant={'default'}

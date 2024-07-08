@@ -51,6 +51,12 @@ export interface Community extends CommunityLite {
   partners: Partner[]
 }
 
+export interface Reservation {
+  id: string
+  code: string
+  event: EventLite
+}
+
 export interface PaginationMeta {
   totalCount: number
   page: number
