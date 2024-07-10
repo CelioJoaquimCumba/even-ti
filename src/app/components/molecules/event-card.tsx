@@ -12,6 +12,8 @@ import { EventLite } from '@/data/types'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import ReserveEventModal from './reserve-event-modal'
+import { useUser } from '@auth0/nextjs-auth0/client'
+import AuthenticateModal from './authenticate-modal'
 
 export function EventCard(props: { event: EventLite }) {
   const {
@@ -27,8 +29,32 @@ export function EventCard(props: { event: EventLite }) {
     tickets,
   } = props.event
   const [isOpen, setIsOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
   const [showModal, setShowModal] = useState(false)
+  const { user } = useUser()
+
+  const handleReservation = async () => {
+    setLoading(true)
+    const response = await fetch('/api/reservation', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: user && user.sub && user.sub.toString().replace('auth0|', ''),
+        eventId: id,
+      }),
+    })
+
+    const data = await response.json()
+    if (response.ok) {
+      console.log('Reservation created:', data)
+    } else {
+      console.error('Error creating reservation:', data)
+    }
+    setLoading(false)
+  }
 
   const toggleModal = () => setShowModal(!showModal)
   return (
@@ -137,11 +163,17 @@ export function EventCard(props: { event: EventLite }) {
           </div>
         </CardFooter>
       </Card>
-      <ReserveEventModal
-        open={showModal}
-        close={toggleModal}
-        event={props.event}
-      />
+      {user ? (
+        <ReserveEventModal
+          open={showModal}
+          close={toggleModal}
+          event={props.event}
+          onClick={handleReservation}
+          loading={loading}
+        />
+      ) : (
+        <AuthenticateModal open={showModal} close={toggleModal} />
+      )}
     </>
   )
 }

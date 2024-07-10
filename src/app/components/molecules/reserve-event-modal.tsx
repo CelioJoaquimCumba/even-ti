@@ -12,7 +12,9 @@ import {
 export default function ReserveEventModal(props: {
   open: boolean
   close: () => void
+  onClick: () => void
   event: EventLite
+  loading: boolean
 }) {
   const { open, event } = props
   const { title, description, logo, date, time } = event
@@ -41,7 +43,13 @@ export default function ReserveEventModal(props: {
           <Button variant={'outline'} onClick={props.close}>
             Cancelar
           </Button>
-          <Button variant={'default'}>Reservar</Button>
+          <Button
+            variant={'default'}
+            onClick={props.onClick}
+            disabled={props.loading}
+          >
+            {props.loading ? 'Reservando...' : 'Reservar'}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
