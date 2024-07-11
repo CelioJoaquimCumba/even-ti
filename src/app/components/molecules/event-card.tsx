@@ -8,7 +8,7 @@ import { Button } from '../atoms/button'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { useState } from 'react'
 import { SpeakerCard } from '../atoms/speaker-card'
-import { EventLite } from '@/data/types'
+import { EventLite, ModalType } from '@/data/types'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import ReserveEventModal from './reserve-event-modal'
@@ -16,8 +16,6 @@ import { useUser } from '@auth0/nextjs-auth0/client'
 import AuthenticateModal from './authenticate-modal'
 import FailedReservationEventModal from './failed-reservation-event-modal'
 import SuccessfulReservationEventModal from './successful-reservation-event-modal'
-
-type ModalType = 'error' | 'success' | 'reservation'
 
 export function EventCard(props: { event: EventLite }) {
   const {
