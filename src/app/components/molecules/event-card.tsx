@@ -14,6 +14,9 @@ import { useRouter } from 'next/navigation'
 import ReserveEventModal from './reserve-event-modal'
 import { useUser } from '@auth0/nextjs-auth0/client'
 import AuthenticateModal from './authenticate-modal'
+import FailedReservationEventModal from './failed-reservation-event-modal'
+
+type ModalType = 'error' | 'success' | 'reservation'
 
 export function EventCard(props: { event: EventLite }) {
   const {
@@ -32,9 +35,11 @@ export function EventCard(props: { event: EventLite }) {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const [showModal, setShowModal] = useState(false)
+  const [typeModal, setTypeModal] = useState<ModalType>('error')
+  const [errorMessage, setErrorMessage] = useState('')
   const { user } = useUser()
 
-  const handleReservation = async () => {
+  const handleRequestReservation = async () => {
     setLoading(true)
     const response = await fetch('/api/reservation', {
       method: 'POST',
@@ -52,11 +57,21 @@ export function EventCard(props: { event: EventLite }) {
       console.log('Reservation created:', data)
     } else {
       console.error('Error creating reservation:', data)
+      setErrorMessage(data.error)
+      setTypeModal('error')
     }
     setLoading(false)
   }
+  const goToReservation = () => {
+    setShowModal(true)
+    setTypeModal('reservation')
+  }
 
-  const toggleModal = () => setShowModal(!showModal)
+  const toggleModal = () => {
+    setTypeModal('reservation')
+    setErrorMessage('')
+    setShowModal(!showModal)
+  }
   return (
     <>
       <Card
@@ -154,7 +169,7 @@ export function EventCard(props: { event: EventLite }) {
               variant={'default'}
               className="w-full md:w-fit whitespace-pre-line px-8 py-4"
               onClick={(e) => {
-                toggleModal()
+                goToReservation()
                 e.stopPropagation()
               }}
             >
@@ -164,13 +179,22 @@ export function EventCard(props: { event: EventLite }) {
         </CardFooter>
       </Card>
       {user ? (
-        <ReserveEventModal
-          open={showModal}
-          close={toggleModal}
-          event={props.event}
-          onClick={handleReservation}
-          loading={loading}
-        />
+        typeModal === 'reservation' ? (
+          <ReserveEventModal
+            open={showModal}
+            close={toggleModal}
+            event={props.event}
+            onClick={handleRequestReservation}
+            loading={loading}
+          />
+        ) : (
+          <FailedReservationEventModal
+            open={showModal}
+            close={toggleModal}
+            onClick={goToReservation}
+            message={errorMessage}
+          />
+        )
       ) : (
         <AuthenticateModal open={showModal} close={toggleModal} />
       )}
