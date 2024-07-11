@@ -46,9 +46,9 @@ export default function ReserveEventModal(props: {
           <Button
             variant={'default'}
             onClick={props.onClick}
-            disabled={props.loading}
+            loading={props.loading}
           >
-            {props.loading ? 'Reservando...' : 'Reservar'}
+            Reservar
           </Button>
         </DialogFooter>
       </DialogContent>
