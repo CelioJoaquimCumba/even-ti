@@ -10,7 +10,7 @@ import { EventLite, ModalType } from '@/data/types'
 import { useRouter } from 'next/navigation'
 import { useUser } from '@auth0/nextjs-auth0/client'
 import AuthenticateModal from './authenticate-modal'
-import FailedReservationEventModal from './failed-reservation-event-modal'
+import ErrorModal from './error-modal'
 import ReserveEventModal from './reserve-event-modal'
 import SuccessfulReservationEventModal from './successful-reservation-event-modal'
 
@@ -144,7 +144,7 @@ export function EventCardLite(props: { event: EventLite }) {
             loading={loading}
           />
         ) : typeModal === 'error' ? (
-          <FailedReservationEventModal
+          <ErrorModal
             open={showModal}
             close={toggleModal}
             onClick={goToReservation}

@@ -5,7 +5,7 @@ import { Button } from '@/app/components/atoms/button'
 import { Card, CardContent } from '@/app/components/atoms/card'
 import { SpeakerCard } from '@/app/components/atoms/speaker-card'
 import AuthenticateModal from '@/app/components/molecules/authenticate-modal'
-import FailedReservationEventModal from '@/app/components/molecules/failed-reservation-event-modal'
+import ErrorModal from '@/app/components/molecules/error-modal'
 import ReserveEventModal from '@/app/components/molecules/reserve-event-modal'
 import SuccessfulReservationEventModal from '@/app/components/molecules/successful-reservation-event-modal'
 import { Event, ModalType } from '@/data/types'
@@ -247,7 +247,7 @@ export default function EventPage({ params }: { params: { id: string } }) {
                   loading={reservationLoading}
                 />
               ) : typeModal === 'error' ? (
-                <FailedReservationEventModal
+                <ErrorModal
                   open={showModal}
                   close={toggleModal}
                   onClick={goToReservation}

@@ -13,4 +13,6 @@ export enum errorMessages {
   userNotReservedEvent = 'Nao foi possivel cancelar a reserva do evento',
   userAlreadyReservedEvent = 'O evento já foi reservado por este usuario',
   internalServerError = 'Algo de errado não está certo',
+  missingRequiredFields = 'Faltam campos obrigatórios',
+  reservationNotFound = 'Nao foi possivel encontrar a reserva',
 }
