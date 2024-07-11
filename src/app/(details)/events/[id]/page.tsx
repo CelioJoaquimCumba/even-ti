@@ -25,7 +25,7 @@ export default function EventPage({ params }: { params: { id: string } }) {
   const router = useRouter()
   const { id } = params
   const [loading, setLoading] = useState(true)
-  const [ reservationLoading, setReservationLoading ] = useState(false)
+  const [reservationLoading, setReservationLoading] = useState(false)
   const handleCommunity = (id: string) => {
     router.push(`/community/${id}`)
   }
