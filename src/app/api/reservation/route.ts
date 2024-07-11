@@ -2,6 +2,7 @@ import type { NextApiResponse } from 'next'
 import { NextResponse, NextRequest } from 'next/server'
 import prisma from '@/lib/prisma'
 import { nanoid } from 'nanoid'
+import { errorMessages } from '@/data/messages/errorMessages'
 
 // POST /api/post
 // Required fields in body: title
@@ -56,7 +57,7 @@ export async function POST(req: NextRequest) {
 
     if (existingReservation) {
       return NextResponse.json(
-        { error: 'User already has a reservation for this event' },
+        { error: errorMessages.userAlreadyReservedEvent },
         { status: 400 },
       )
     }
@@ -86,7 +87,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ reservation }, { status: 201 })
   } catch (e) {
     return NextResponse.json(
-      { error: 'Algo de errado não está certo' },
+      { error: errorMessages.internalServerError },
       { status: 500 },
     )
   }

@@ -1,0 +1,16 @@
+export enum errorMessages {
+  eventNotFound = 'Evento não encontrado',
+  eventNotAvailable = 'Evento não disponível',
+  eventNotReserved = 'Nao foi possivel cancelar a reserva',
+  eventNotCreated = 'Nao foi possivel criar o evento',
+  eventNotUpdated = 'Nao foi possivel atualizar o evento',
+  eventNotDeleted = 'Nao foi possivel deletar o evento',
+  userNotCreated = 'Nao foi possivel criar o usuario',
+  userNotUpdated = 'Nao foi possivel atualizar o usuario',
+  userNotDeleted = 'Nao foi possivel deletar o usuario',
+  userNotAuthenticated = 'Nao foi possivel autenticar o usuario',
+  userNotFound = 'Nao foi possivel encontrar o usuario',
+  userNotReservedEvent = 'Nao foi possivel cancelar a reserva do evento',
+  userAlreadyReservedEvent = 'O evento já foi reservado por este usuario',
+  internalServerError = 'Algo de errado não está certo',
+}

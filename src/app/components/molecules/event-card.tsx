@@ -15,6 +15,7 @@ import ReserveEventModal from './reserve-event-modal'
 import { useUser } from '@auth0/nextjs-auth0/client'
 import AuthenticateModal from './authenticate-modal'
 import FailedReservationEventModal from './failed-reservation-event-modal'
+import SuccessfulReservationEventModal from './successful-reservation-event-modal'
 
 type ModalType = 'error' | 'success' | 'reservation'
 
@@ -55,6 +56,8 @@ export function EventCard(props: { event: EventLite }) {
     const data = await response.json()
     if (response.ok) {
       console.log('Reservation created:', data)
+      setErrorMessage('')
+      setTypeModal('success')
     } else {
       console.error('Error creating reservation:', data)
       setErrorMessage(data.error)
@@ -187,12 +190,17 @@ export function EventCard(props: { event: EventLite }) {
             onClick={handleRequestReservation}
             loading={loading}
           />
-        ) : (
+        ) : typeModal === 'error' ? (
           <FailedReservationEventModal
             open={showModal}
             close={toggleModal}
             onClick={goToReservation}
             message={errorMessage}
+          />
+        ) : (
+          <SuccessfulReservationEventModal
+            open={showModal}
+            close={toggleModal}
           />
         )
       ) : (
