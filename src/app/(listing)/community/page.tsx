@@ -43,7 +43,6 @@ export default function CommunityPage() {
           pageSize: data.pageSize,
           totalPages: data.totalPages,
         })
-        console.log(data.communities)
         const responseCommunities: CommunityLite[] = data.communities.map(
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (community: any) => ({
