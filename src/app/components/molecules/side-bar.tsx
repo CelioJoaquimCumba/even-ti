@@ -4,7 +4,7 @@ import ProfileNavItem from '../atoms/profile-nav-item'
 import NavItem from '../atoms/nav-item'
 import SideBarButton from '../atoms/sidebar-button'
 import { useEffect, useState } from 'react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { routes } from '@/data/routes'
 import { isBreakpointLowOrEqual } from '@/utils'
 import { useUser } from '@auth0/nextjs-auth0/client'
@@ -31,9 +31,16 @@ export default function SideBar() {
   const toggleOpen = () => setIsOpen(!isOpen)
   const path = usePathname()
   const { user } = useUser()
+  const router = useRouter()
+  const [refresh, setRefresh] = useState(false)
   useEffect(() => {
     setIsOpen(isBreakpointLowOrEqual('md'))
-  }, [])
+  }, [refresh])
+
+  const handleNavigation = (path: string) => {
+    router.push(path)
+    setRefresh(!refresh)
+  }
   return (
     <aside
       className={`flex ${isOpen ? 'bg-background absolute w-full h-full' : 'static h-fit'}  md:relative md:w-fit flex-col px-6 py-4 md:py-8 space-y-16 z-20`}
@@ -76,7 +83,7 @@ export default function SideBar() {
           <NavItem
             key={item.label}
             label={item.label}
-            path={item.path}
+            onClick={() => handleNavigation(item.path)}
             selected={path === item.path}
           />
         ))}
