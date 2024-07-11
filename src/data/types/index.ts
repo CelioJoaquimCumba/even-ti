@@ -64,5 +64,4 @@ export interface PaginationMeta {
   totalPages: number
 }
 
-
 export type ModalType = 'error' | 'success' | 'reservation' | 'cancelation'
