@@ -4,8 +4,13 @@ import { Button } from '@/app/components/atoms/button'
 
 import { Card, CardContent } from '@/app/components/atoms/card'
 import { SpeakerCard } from '@/app/components/atoms/speaker-card'
-import { Event } from '@/data/types'
+import AuthenticateModal from '@/app/components/molecules/authenticate-modal'
+import ErrorModal from '@/app/components/molecules/error-modal'
+import ReserveEventModal from '@/app/components/molecules/reserve-event-modal'
+import SuccessfulReservationEventModal from '@/app/components/molecules/successful-reservation-event-modal'
+import { Event, ModalType } from '@/data/types'
 import { convertDate } from '@/lib/utils'
+import { useUser } from '@auth0/nextjs-auth0/client'
 import { ChevronLeft } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
@@ -13,11 +18,50 @@ import { useEffect, useState } from 'react'
 
 export default function EventPage({ params }: { params: { id: string } }) {
   const [event, setEvent] = useState<Event>()
+  const { user } = useUser()
+  const [showModal, setShowModal] = useState(false)
+  const [typeModal, setTypeModal] = useState<ModalType>('error')
+  const [errorMessage, setErrorMessage] = useState('')
   const router = useRouter()
   const { id } = params
   const [loading, setLoading] = useState(true)
+  const [reservationLoading, setReservationLoading] = useState(false)
   const handleCommunity = (id: string) => {
     router.push(`/community/${id}`)
+  }
+  const handleRequestReservation = async () => {
+    setReservationLoading(true)
+    const response = await fetch('/api/reservation', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: user && user.sub && user.sub.toString().replace('auth0|', ''),
+        eventId: id,
+      }),
+    })
+
+    const data = await response.json()
+    if (response.ok) {
+      console.log('Reservation created:', data)
+      setErrorMessage('')
+      setTypeModal('success')
+    } else {
+      console.error('Error creating reservation:', data)
+      setErrorMessage(data.error)
+      setTypeModal('error')
+    }
+    setReservationLoading(false)
+  }
+  const goToReservation = () => {
+    setShowModal(true)
+    setTypeModal('reservation')
+  }
+  const toggleModal = () => {
+    setTypeModal('reservation')
+    setErrorMessage('')
+    setShowModal(!showModal)
   }
   useEffect(() => {
     ;(async function () {
@@ -73,7 +117,9 @@ export default function EventPage({ params }: { params: { id: string } }) {
             </Button>
             <h1 className="text-lg md:text-2xl text-gray-700">{event.title}</h1>
           </div>
-          <Button className="px-8 py-4">Reservar bilhete</Button>
+          <Button className="px-8 py-4" onClick={goToReservation}>
+            Reservar bilhete
+          </Button>
         </header>
       )}
       <main className="flex flex-grow overflow-hidden p-2 md:p-4 bg-white rounded-md">
@@ -105,7 +151,9 @@ export default function EventPage({ params }: { params: { id: string } }) {
                   {event.date}, {event.time}
                 </p>
                 <p className="md:text-xl">{event.location}</p>
-                <Button variant={'secondary'}>Reservar bilhete</Button>
+                <Button variant={'secondary'} onClick={goToReservation}>
+                  Reservar bilhete
+                </Button>
                 <i>{event.tickets} bilhetes restantes</i>
               </div>
             </section>
@@ -189,6 +237,31 @@ export default function EventPage({ params }: { params: { id: string } }) {
                 ))}
               </div>
             </section>
+            {user ? (
+              typeModal === 'reservation' ? (
+                <ReserveEventModal
+                  open={showModal}
+                  close={toggleModal}
+                  event={event}
+                  onClick={handleRequestReservation}
+                  loading={reservationLoading}
+                />
+              ) : typeModal === 'error' ? (
+                <ErrorModal
+                  open={showModal}
+                  close={toggleModal}
+                  onClick={goToReservation}
+                  message={errorMessage}
+                />
+              ) : (
+                <SuccessfulReservationEventModal
+                  open={showModal}
+                  close={toggleModal}
+                />
+              )
+            ) : (
+              <AuthenticateModal open={showModal} close={toggleModal} />
+            )}
           </div>
         )}
       </main>
