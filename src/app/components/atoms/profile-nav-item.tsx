@@ -1,7 +1,6 @@
 'use client'
 
 import Image from 'next/image'
-import Profile from '@/../assets/images/profile.png'
 import { useState } from 'react'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -16,7 +15,11 @@ export default function ProfileNavItem(props: { user: any }) {
     >
       <div className="flex flex-row justify-center items-center space-x-2">
         <Image
-          src={Profile}
+          unoptimized
+          src={
+            user.picture ||
+            `https://ui-avatars.com/api/?name=${user.name}&&background=random`
+          }
           width={40}
           height={40}
           alt="profile"
