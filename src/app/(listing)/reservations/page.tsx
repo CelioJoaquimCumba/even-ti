@@ -73,7 +73,6 @@ export default function Home() {
         'Resultados não encontrados'
       ) : (
         <>
-          <h2 className="text-2xl text-gray-700">Reservas</h2>
           <div className="flex flex-col h-full w-full gap-2 md:gap-6 overflow-y-auto ">
             {reservations.map((reservation: Reservation) => (
               <ReservationCard key={reservation.id} reservation={reservation} />
