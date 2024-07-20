@@ -92,7 +92,7 @@ export function EventCard(props: { event: EventLite }) {
             alt="datawave-event"
             width={200}
             height={200}
-            className={`flex flex-col ${isOpen ? 'w-80 aspect-[3/4]' : 'w-40 h-40 aspect-square bg-cover'} justify-center items-center border rounded-3xl`}
+            className={`flex flex-col w-full md:w-40 aspect-[4/3] md:aspect-square bg-cover justify-center items-center border rounded-3xl`}
           />
           <section className="flex flex-col space-y-2">
             <div className="flex justify-between w-full">
