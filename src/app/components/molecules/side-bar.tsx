@@ -17,7 +17,7 @@ const navItems = [
     path: routes.events,
   },
   {
-    label: 'Comunidade',
+    label: 'Comunidades',
     path: routes.community,
   },
   {
