@@ -1,18 +1,19 @@
 import { useState } from 'react'
 import { Button } from '../atoms/button'
 import { Input } from '../atoms/input'
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from '../atoms/select'
+// import {
+//   Select,
+//   SelectContent,
+//   SelectGroup,
+//   SelectItem,
+//   SelectLabel,
+//   SelectTrigger,
+//   SelectValue,
+// } from '../atoms/select'
 import { MixerHorizontalIcon } from '@radix-ui/react-icons'
 import { usePage } from '@/app/providers/PageContext'
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const filters = [
   {
     id: '1',
