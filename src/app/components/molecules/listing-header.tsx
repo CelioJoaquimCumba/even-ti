@@ -96,6 +96,7 @@ export function ListingHeader() {
   const [selectedFilters, setSelectedFilters] = useState<selectedFilters[]>([])
   const [isOpen, setIsOpen] = useState(false)
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleSelectChange = (event: string, id: string) => {
     const value = event.toString()
     const index = selectedFilters.findIndex((filter) => filter.filterId === id)
@@ -115,17 +116,20 @@ export function ListingHeader() {
     setSearch(searchInput)
     setPage(1)
   }
+  const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
+    setSearchInput(e.currentTarget.value)
+  }
   return (
     <div className="flex flex-row flex-wrap p-4 bg-background rounded-md gap-8">
       <form
-        className="flex grow-[2] items-center space-x-2"
+        className="flex grow-[2] items-center space-x-2 max-w-3xl"
         onSubmit={handleSearch}
       >
         <Input
           type="text"
           placeholder="Pesquise o evento"
           value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
+          onChange={handleChange}
         />
         <Button type="submit">Pesquisar</Button>
         <Button
@@ -137,7 +141,7 @@ export function ListingHeader() {
           <MixerHorizontalIcon />
         </Button>
       </form>
-      <div
+      {/* <div
         className={`flex flex-wrap md:flex-nowrap md:flex gap-2 flex-grow ${!isOpen && 'hidden '}}`}
       >
         {filters.map((filter) => (
@@ -160,7 +164,7 @@ export function ListingHeader() {
             </SelectContent>
           </Select>
         ))}
-      </div>
+      </div> */}
     </div>
   )
 }
