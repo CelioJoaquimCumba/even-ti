@@ -17,7 +17,7 @@ export default function NavItem({
   return (
     <li
       onClick={onClick}
-      className={`flex  px-6 py-3 rounded-lg ${selected || state === 'hover' ? 'bg-secondary' : 'bg-background'}`}
+      className={`flex  px-6 py-3 rounded-lg cursor-pointer ${selected || state === 'hover' ? 'bg-secondary' : 'bg-background'}`}
       onMouseEnter={() => state === 'default' && setState('hover')}
       onMouseLeave={() => state === 'hover' && setState('default')}
     >

@@ -74,15 +74,3 @@
       @apply bg-background text-foreground;
     }
   }
-  @layer base {
-    ::-webkit-scrollbar-thumb{
-    @apply bg-transparent shadow-sm
-    }
-    ::-webkit-scrollbar{
-    @apply w-1 md:w-2  bg-transparent
-    }
-    ::-webkit-scrollbar-thumb{
-    @apply  rounded-md bg-muted-foreground /*color trackbar*/
-    }
-  }
-

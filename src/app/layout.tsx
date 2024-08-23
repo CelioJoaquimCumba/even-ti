@@ -1,5 +1,5 @@
 'use client'
-import { PageProvider } from './providers/TitleContext'
+import { PageProvider } from './providers/PageContext'
 import { UserProvider } from '@auth0/nextjs-auth0/client'
 
 export default function RootLayout({

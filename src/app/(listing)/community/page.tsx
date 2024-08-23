@@ -8,7 +8,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/app/components/atoms/pagination'
-import { usePage } from '@/app/providers/TitleContext'
+import { usePage } from '@/app/providers/PageContext'
 import { useState, useEffect } from 'react'
 import { PaginationMeta, CommunityLite } from '@/data/types'
 import { CommunityCardLoader } from '@/app/components/molecules/community-card-loader'
@@ -44,7 +44,7 @@ export default function CommunityPage() {
   return (
     <main className="flex w-full h-full flex-col items-center gap-2 md:gap-6 bg-white rounded-2xl overflow-y-auto">
       {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 h-full w-full gap-2 md:gap-6 overflow-y-auto">
+        <div className="flex flex-col h-full w-full gap-2 md:gap-6 overflow-y-auto">
           {[1, 2, 3].map((_community, index) => (
             <CommunityCardLoader key={index} />
           ))}
@@ -53,7 +53,7 @@ export default function CommunityPage() {
         'Resultados não encontrados'
       ) : (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 h-full w-full gap-2 md:gap-6 overflow-y-auto ">
+          <div className="flex flex-col h-full w-full gap-2 md:gap-6 overflow-y-auto ">
             {communities.map((community: CommunityLite) => (
               <CommunityCard key={community.id} community={community} />
             ))}
