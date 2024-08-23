@@ -41,7 +41,7 @@ export default function EventPage({ params }: { params: { id: string } }) {
       setErrorMessage('')
       setTypeModal('success')
     } catch (e) {
-      const error = e as any
+      const error = e as unknown as { message: string }
       setTypeModal('error')
       setErrorMessage(error.message)
     } finally {

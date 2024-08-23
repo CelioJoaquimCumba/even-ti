@@ -46,7 +46,7 @@ export function EventCardLite(props: { event: EventLite }) {
       setErrorMessage('')
       setTypeModal('success')
     } catch (e) {
-      const error = e as any
+      const error = e as unknown as { message: string }
       setTypeModal('error')
       setErrorMessage(error.message)
     } finally {

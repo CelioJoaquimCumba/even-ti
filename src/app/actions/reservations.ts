@@ -11,6 +11,7 @@ export async function getReservations(props: {
   pageSize?: number
   userId: string
 }): Promise<{ reservations: Reservation[]; paginationMeta: PaginationMeta }> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { search = '', page = 1, pageSize = 10, userId } = props
   if (!userId)
     return {

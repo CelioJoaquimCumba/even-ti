@@ -44,7 +44,8 @@ export function ReservationCard(props: {
       setTypeModal('success')
     } catch (error) {
       console.log(error)
-      setErrorMessage(error.message)
+      const e = error as unknown as { message: string }
+      setErrorMessage(e.message)
       setTypeModal('error')
     } finally {
       setLoading(false)
