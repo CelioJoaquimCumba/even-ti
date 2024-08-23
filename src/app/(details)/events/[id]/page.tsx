@@ -44,7 +44,6 @@ export default function EventPage({ params }: { params: { id: string } }) {
 
     const data = await response.json()
     if (response.ok) {
-      console.log('Reservation created:', data)
       setErrorMessage('')
       setTypeModal('success')
     } else {
@@ -93,7 +92,6 @@ export default function EventPage({ params }: { params: { id: string } }) {
             image: partner.partner.image,
           })),
         }
-        console.log(responseEvent)
         setEvent(responseEvent)
       } catch (error) {
         console.log(error)

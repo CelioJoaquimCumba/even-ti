@@ -53,7 +53,6 @@ export function EventCard(props: { event: EventLite }) {
 
     const data = await response.json()
     if (response.ok) {
-      console.log('Reservation created:', data)
       setErrorMessage('')
       setTypeModal('success')
     } else {

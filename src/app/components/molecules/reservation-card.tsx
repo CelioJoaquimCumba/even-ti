@@ -46,7 +46,6 @@ export function ReservationCard(props: {
 
     const data = await response.json()
     if (response.ok) {
-      console.log('Reservation canceled:', data)
       setErrorMessage('')
       setTypeModal('success')
     } else {
