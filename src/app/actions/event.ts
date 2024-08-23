@@ -1,5 +1,5 @@
 'use server'
-import { EventLite, PaginationMeta } from '@/data/types'
+import { Event, EventLite, PaginationMeta } from '@/data/types'
 import prisma from '@/lib/prisma'
 import { convertDate } from '@/lib/utils'
 
@@ -77,4 +77,52 @@ export async function getEvents(props: {
     },
   }
   return response
+}
+export async function getEventById(id: string): Promise<Event | null> {
+  const eventsWithSpeakers = await prisma.event.findFirst({
+    where: {
+      id,
+    },
+    include: {
+      speakers: {
+        include: {
+          speaker: true,
+        },
+      },
+      organizers: {
+        include: {
+          community: true,
+        },
+      },
+      partners: {
+        include: {
+          partner: true,
+        },
+      },
+    },
+  })
+  if (!eventsWithSpeakers) return null
+  const event: Event = {
+    ...eventsWithSpeakers,
+    date: convertDate(eventsWithSpeakers.date.toDateString()),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    speakers: eventsWithSpeakers.speakers.map((speaker: any) => ({
+      id: speaker.speaker.id,
+      name: speaker.speaker.name,
+      image: speaker.speaker.image,
+    })),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    organizers: eventsWithSpeakers.organizers.map((organizer: any) => ({
+      id: organizer.community.id,
+      name: organizer.community.name,
+      image: organizer.community.image,
+    })),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    partners: eventsWithSpeakers.partners.map((partner: any) => ({
+      id: partner.partner.id,
+      name: partner.partner.name,
+      image: partner.partner.image,
+    })),
+  }
+  return event
 }

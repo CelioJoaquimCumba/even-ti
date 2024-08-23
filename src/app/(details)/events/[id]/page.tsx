@@ -1,5 +1,6 @@
 'use client'
 
+import { getEventById } from '@/app/actions/event'
 import { Button } from '@/app/components/atoms/button'
 
 import { Card, CardContent } from '@/app/components/atoms/card'
@@ -9,7 +10,6 @@ import ErrorModal from '@/app/components/molecules/error-modal'
 import ReserveEventModal from '@/app/components/molecules/reserve-event-modal'
 import SuccessfulReservationEventModal from '@/app/components/molecules/successful-reservation-event-modal'
 import { Event, ModalType } from '@/data/types'
-import { convertDate } from '@/lib/utils'
 import { useUser } from '@auth0/nextjs-auth0/client'
 import { ChevronLeft } from 'lucide-react'
 import Image from 'next/image'
@@ -66,33 +66,12 @@ export default function EventPage({ params }: { params: { id: string } }) {
     ;(async function () {
       try {
         setLoading(true)
-        const response = await fetch(`/api/event/${id}`, {
-          method: 'GET',
-        })
-        const data = await response.json()
-        const responseEvent: Event = {
-          ...data.event,
-          date: convertDate(data.event.date),
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          speakers: data.event.speakers.map((speaker: any) => ({
-            id: speaker.speaker.id,
-            name: speaker.speaker.name,
-            image: speaker.speaker.image,
-          })),
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          organizers: data.event.organizers.map((organizer: any) => ({
-            id: organizer.community.id,
-            name: organizer.community.name,
-            image: organizer.community.image,
-          })),
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          partners: data.event.partners.map((partner: any) => ({
-            id: partner.partner.id,
-            name: partner.partner.name,
-            image: partner.partner.image,
-          })),
+        const response = await getEventById(id)
+        if (!response || !response == null) {
+          throw new Error('Event not found')
+          return
         }
-        setEvent(responseEvent)
+        setEvent(response)
       } catch (error) {
         console.log(error)
       } finally {

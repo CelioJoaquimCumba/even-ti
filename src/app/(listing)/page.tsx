@@ -12,7 +12,7 @@ import { usePage } from '@/app/providers/TitleContext'
 import { EventLite, PaginationMeta } from '@/data/types'
 import { useEffect, useState } from 'react'
 import { EventCardLoader } from '../components/molecules/event-card-loader'
-import { getEvents } from '../actions/event'
+import { getEvents } from '@/app/actions/event'
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true)
@@ -31,9 +31,9 @@ export default function Home() {
     ;(async function () {
       try {
         setIsLoading(true)
-        const test = await getEvents({ search, page })
-        setMeta(test.paginationMeta)
-        setEvents(test.events)
+        const response = await getEvents({ search, page })
+        setMeta(response.paginationMeta)
+        setEvents(response.events)
       } catch (error) {
         console.log(error)
       } finally {
