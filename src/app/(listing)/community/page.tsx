@@ -12,6 +12,7 @@ import { usePage } from '@/app/providers/TitleContext'
 import { useState, useEffect } from 'react'
 import { PaginationMeta, CommunityLite } from '@/data/types'
 import { CommunityCardLoader } from '@/app/components/molecules/community-card-loader'
+import { getCommunities } from '@/app/actions/community'
 
 export default function CommunityPage() {
   const { setTitle, search, page, setPage } = usePage()
@@ -30,26 +31,9 @@ export default function CommunityPage() {
     ;(async function () {
       try {
         setIsLoading(true)
-        const response = await fetch(
-          `/api/community?${search && new URLSearchParams({ search }) + '&'}${new URLSearchParams({ page: page.toString() })}`,
-          {
-            method: 'GET',
-          },
-        )
-        const data = await response.json()
-        setMeta({
-          totalCount: data.totalCount,
-          page: data.page,
-          pageSize: data.pageSize,
-          totalPages: data.totalPages,
-        })
-        const responseCommunities: CommunityLite[] = data.communities.map(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (community: any) => ({
-            ...community,
-          }),
-        )
-        setCommunities(responseCommunities)
+        const response = await getCommunities({ search, page })
+        setMeta(response.paginationMeta)
+        setCommunities(response.communities)
       } catch (error) {
         console.log(error)
       } finally {
