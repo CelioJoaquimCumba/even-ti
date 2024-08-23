@@ -1,6 +1,7 @@
 'use client'
 
 import { getEventById } from '@/app/actions/event'
+import { makeReservation } from '@/app/actions/reservations'
 import { Button } from '@/app/components/atoms/button'
 
 import { Card, CardContent } from '@/app/components/atoms/card'
@@ -30,28 +31,22 @@ export default function EventPage({ params }: { params: { id: string } }) {
     router.push(`/community/${id}`)
   }
   const handleRequestReservation = async () => {
-    setReservationLoading(true)
-    const response = await fetch('/api/reservation', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        userId: user && user.sub && user.sub.toString().replace('auth0|', ''),
+    try {
+      setReservationLoading(true)
+      await makeReservation({
+        userId:
+          (user && user.sub && user.sub.toString().replace('auth0|', '')) || '',
         eventId: id,
-      }),
-    })
-
-    const data = await response.json()
-    if (response.ok) {
+      })
       setErrorMessage('')
       setTypeModal('success')
-    } else {
-      console.error('Error creating reservation:', data)
-      setErrorMessage(data.error)
+    } catch (e) {
+      const error = e as any
       setTypeModal('error')
+      setErrorMessage(error.message)
+    } finally {
+      setReservationLoading(false)
     }
-    setReservationLoading(false)
   }
   const goToReservation = () => {
     setShowModal(true)
