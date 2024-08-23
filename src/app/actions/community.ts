@@ -1,5 +1,5 @@
 'use server'
-import { CommunityLite, Event, PaginationMeta } from '@/data/types'
+import { Community, CommunityLite, PaginationMeta } from '@/data/types'
 import prisma from '@/lib/prisma'
 import { convertDate } from '@/lib/utils'
 
@@ -48,21 +48,22 @@ export async function getCommunities(props: {
   }
   return response
 }
-export async function getEventById(id: string): Promise<Event | null> {
-  const eventsWithSpeakers = await prisma.event.findFirst({
+export async function getCommunityById(id: string): Promise<Community | null> {
+  const community = await prisma.community.findFirst({
     where: {
       id,
     },
     include: {
-      speakers: {
+      members: {
         include: {
-          speaker: true,
+          member: true,
         },
       },
-      organizers: {
+      events: {
         include: {
-          community: true,
+          event: true,
         },
+        take: 3,
       },
       partners: {
         include: {
@@ -71,28 +72,29 @@ export async function getEventById(id: string): Promise<Event | null> {
       },
     },
   })
-  if (!eventsWithSpeakers) return null
-  const event: Event = {
-    ...eventsWithSpeakers,
-    date: convertDate(eventsWithSpeakers.date.toDateString()),
+  if (!community) return null
+  const responseCommunity: Community = {
+    ...community,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    speakers: eventsWithSpeakers.speakers.map((speaker: any) => ({
-      id: speaker.speaker.id,
-      name: speaker.speaker.name,
-      image: speaker.speaker.image,
+    members: community.members.map((member: any) => ({
+      id: member.member.id,
+      name: member.member.name,
+      image: member.member.image,
     })),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    organizers: eventsWithSpeakers.organizers.map((organizer: any) => ({
-      id: organizer.community.id,
-      name: organizer.community.name,
-      image: organizer.community.image,
+    events: community.events.map((event: any) => ({
+      ...event.event,
+      date: convertDate(event.event.date.toString()),
+      id: event.event.id,
+      name: event.event.name,
+      image: event.event.image,
     })),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    partners: eventsWithSpeakers.partners.map((partner: any) => ({
+    partners: community.partners.map((partner: any) => ({
       id: partner.partner.id,
       name: partner.partner.name,
       image: partner.partner.image,
     })),
   }
-  return event
+  return responseCommunity
 }
