@@ -99,3 +99,40 @@ export async function makeReservation(props: {
     },
   })
 }
+
+export async function cancelReservation(props: {
+  userId?: string
+  eventId?: string
+}): Promise<Reservation | void> {
+  try {
+    const { userId, eventId } = props
+
+    if (!userId || !eventId) {
+      return
+    }
+
+    const reservation = await prisma.reservation.findFirst({
+      where: {
+        userId: {
+          equals: userId,
+        },
+        eventId: {
+          equals: eventId,
+        },
+      },
+    })
+
+    if (!reservation) {
+      throw new Error(errorMessages.reservationNotFound)
+    }
+
+    await prisma.reservation.delete({
+      where: {
+        id: reservation.id,
+      },
+    })
+  } catch (error) {
+    console.log(error)
+    throw new Error(errorMessages.internalServerError)
+  }
+}

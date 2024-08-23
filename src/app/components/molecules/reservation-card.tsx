@@ -9,6 +9,7 @@ import { useUser } from '@auth0/nextjs-auth0/client'
 import ErrorModal from './error-modal'
 import SuccessfulCancelationEventModal from './successful-cancelation-event-modal'
 import EventCancelationModal from './event-cancelation-modal'
+import { cancelReservation } from '@/app/actions/reservations'
 
 export function ReservationCard(props: {
   isDisabled?: boolean
@@ -32,28 +33,22 @@ export function ReservationCard(props: {
   const { user } = useUser()
 
   const handleCancelReservation = async () => {
-    setLoading(true)
-    const response = await fetch('/api/reservation/cancel', {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        userId: user && user.sub && user.sub.toString().replace('auth0|', ''),
+    try {
+      setLoading(true)
+      await cancelReservation({
         eventId,
-      }),
-    })
-
-    const data = await response.json()
-    if (response.ok) {
+        userId:
+          (user && user.sub && user.sub.toString().replace('auth0|', '')) || '',
+      })
       setErrorMessage('')
       setTypeModal('success')
-    } else {
-      console.error('Error cancelling reservation:', data)
-      setErrorMessage(data.error)
+    } catch (error) {
+      console.log(error)
+      setErrorMessage(error.message)
       setTypeModal('error')
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
   const goToCancelation = () => {
     setShowModal(true)
