@@ -62,6 +62,10 @@ export interface PaginationMeta {
   pageSize: number
   totalPages: number
 }
+export interface space {
+  id: string
+  name: string
+}
 
 export type ModalType = 'error' | 'success' | 'reservation' | 'cancelation'
-export type space = 'personal' | 'community'
+export type spaceType = 'personal' | 'community'
