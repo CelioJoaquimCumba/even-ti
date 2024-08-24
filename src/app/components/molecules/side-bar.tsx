@@ -10,20 +10,22 @@ import { isBreakpointLowOrEqual } from '@/utils'
 import { useUser } from '@auth0/nextjs-auth0/client'
 import { EnterIcon, ExitIcon } from '@radix-ui/react-icons'
 import { Button } from '../atoms/button'
+import { usePage } from '@/app/providers/PageContext'
 
-const navItems = [
-  {
-    label: 'Eventos',
-    path: routes.events,
-  },
-  {
-    label: 'Comunidades',
-    path: routes.community,
-  },
-  {
-    label: 'Reservas',
-    path: routes.reservations,
-  },
+const personalNavItems = [
+  routes.events,
+  routes.community,
+  routes.reservations,
+  routes.settings,
+]
+
+const communityNavItems = [
+  routes.stats,
+  routes.events,
+  routes.members,
+  routes.participants,
+  routes.partners,
+  routes.settings,
 ]
 
 export default function SideBar() {
@@ -36,6 +38,10 @@ export default function SideBar() {
   useEffect(() => {
     setIsOpen(isBreakpointLowOrEqual('md'))
   }, [refresh])
+  const { space } = usePage()
+
+  const navItems =
+    space === 'personal' || !user ? personalNavItems : communityNavItems
 
   const handleNavigation = (path: string) => {
     router.push(path)

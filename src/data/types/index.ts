@@ -64,3 +64,4 @@ export interface PaginationMeta {
 }
 
 export type ModalType = 'error' | 'success' | 'reservation' | 'cancelation'
+export type space = 'personal' | 'community'
