@@ -91,6 +91,7 @@ export default function SideBar() {
             label={item.label}
             onClick={() => handleNavigation(item.path)}
             selected={path === item.path}
+            icon={item.icon}
           />
         ))}
       </ul>
