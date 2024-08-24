@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from './dialog'
 import { CheckIcon } from '@radix-ui/react-icons'
 export default function SuccessfulCancelationEventModal(props: {
   open: boolean

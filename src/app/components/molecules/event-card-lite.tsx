@@ -1,24 +1,20 @@
 'use client'
 
 import Image from 'next/image'
-import { Card, CardContent, CardFooter } from '../../atoms/card'
-import { Badge } from '../../atoms/badge'
+import { Card, CardContent, CardFooter } from '../atoms/card'
+import { Badge } from '../atoms/badge'
 import { ClockIcon, SewingPinIcon, CalendarIcon } from '@radix-ui/react-icons'
-import { Button } from '../../atoms/button'
-import { ChevronDown, ChevronUp } from 'lucide-react'
+import { Button } from '../atoms/button'
 import { useState } from 'react'
-import { SpeakerCard } from '../../atoms/speaker-card'
 import { EventLite, ModalType } from '@/data/types'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import ReserveEventModal from '../reservation/reserve-event-modal'
 import { useUser } from '@auth0/nextjs-auth0/client'
-import AuthenticateModal from '../authenticate-modal'
-import ErrorModal from '../error-modal'
-import SuccessfulReservationEventModal from '../reservation/successful-reservation-event-modal'
-import { makeReservation } from '@/app/actions/reservations'
+import AuthenticateModal from './authenticate-modal'
+import ErrorModal from './error-modal'
+import ReserveEventModal from './reserve-event-modal'
+import SuccessfulReservationEventModal from './successful-reservation-event-modal'
 
-export function EventCard(props: { event: EventLite }) {
+export function EventCardLite(props: { event: EventLite }) {
   const {
     id,
     community,
@@ -28,10 +24,9 @@ export function EventCard(props: { event: EventLite }) {
     time,
     location,
     description,
-    speakers,
     tickets,
   } = props.event
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const [showModal, setShowModal] = useState(false)
@@ -40,22 +35,29 @@ export function EventCard(props: { event: EventLite }) {
   const { user } = useUser()
 
   const handleRequestReservation = async () => {
-    try {
-      setLoading(true)
-      await makeReservation({
-        userId:
-          (user && user.sub && user.sub.toString().replace('auth0|', '')) || '',
+    setLoading(true)
+    const response = await fetch('/api/reservation', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: user && user.sub && user.sub.toString().replace('auth0|', ''),
         eventId: id,
-      })
+      }),
+    })
+
+    const data = await response.json()
+    if (response.ok) {
+      console.log('Reservation created:', data)
       setErrorMessage('')
       setTypeModal('success')
-    } catch (e) {
-      const error = e as unknown as { message: string }
+    } else {
+      console.error('Error creating reservation:', data)
+      setErrorMessage(data.error)
       setTypeModal('error')
-      setErrorMessage(error.message)
-    } finally {
-      setLoading(false)
     }
+    setLoading(false)
   }
   const goToReservation = () => {
     setShowModal(true)
@@ -91,17 +93,6 @@ export function EventCard(props: { event: EventLite }) {
           <section className="flex flex-col space-y-2">
             <div className="flex justify-between w-full">
               <h2 className="text-base font-normal">{community}</h2>
-              <Button
-                variant={'outline'}
-                size={'icon'}
-                className={`rounded-full hidden md:flex ${!isOpen && 'md:hidden'}`}
-                onClick={(e) => {
-                  setIsOpen(!isOpen)
-                  e.stopPropagation()
-                }}
-              >
-                <ChevronUp />
-              </Button>
             </div>
             <h2 className="text-lg font-medium">{title}</h2>
             <ul
@@ -126,40 +117,10 @@ export function EventCard(props: { event: EventLite }) {
             <p className={`${isOpen && 'md:block'} hidden text-primary`}>
               {description}
             </p>
-            <section className={`hidden flex-col ${isOpen && 'md:flex'}`}>
-              <h3>Speakers:</h3>
-              <div className="flex gap-2 flex-wrap">
-                {speakers.map((speaker) => (
-                  <SpeakerCard key={speaker.id} speaker={speaker} />
-                ))}
-              </div>
-            </section>
           </section>
         </CardContent>
-        <CardFooter className={`flex flex-col justify-between items-end p-0`}>
-          <Button
-            variant={'outline'}
-            size={'icon'}
-            className={`rounded-full hidden md:flex ${isOpen && 'md:hidden'}`}
-            onClick={(e) => {
-              setIsOpen(!isOpen)
-              e.stopPropagation()
-            }}
-          >
-            <ChevronDown />
-          </Button>
+        <CardFooter className={`flex flex-col justify-end items-end p-0`}>
           <div className="flex gap-2 w-full">
-            <Link
-              href={`/event/${props.event.id}`}
-              className={`w-full md:w-fit whitespace-pre-line hidden ${isOpen && 'md:flex'}`}
-            >
-              <Button
-                variant={'outline'}
-                className="w-full md:w-fit whitespace-pre-line px-8 py-4"
-              >
-                Ver mais detalhes
-              </Button>
-            </Link>
             <Button
               variant={'default'}
               className="w-full md:w-fit whitespace-pre-line px-8 py-4"

@@ -1,20 +1,14 @@
 import Image from 'next/image'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-} from '../../atoms/card'
-import { Badge } from '../../atoms/badge'
+import { Card, CardContent, CardDescription, CardFooter } from '../atoms/card'
+import { Badge } from '../atoms/badge'
 import { ClockIcon, SewingPinIcon, CalendarIcon } from '@radix-ui/react-icons'
-import { Button } from '../../atoms/button'
+import { Button } from '../atoms/button'
 import { ModalType, Reservation } from '@/data/types'
 import { useState } from 'react'
 import { useUser } from '@auth0/nextjs-auth0/client'
-import ErrorModal from '../error-modal'
+import ErrorModal from './error-modal'
 import SuccessfulCancelationEventModal from './successful-cancelation-event-modal'
-import EventCancelationModal from '../event/event-cancelation-modal'
-import { cancelReservation } from '@/app/actions/reservations'
+import EventCancelationModal from './event-cancelation-modal'
 
 export function ReservationCard(props: {
   isDisabled?: boolean
@@ -38,23 +32,29 @@ export function ReservationCard(props: {
   const { user } = useUser()
 
   const handleCancelReservation = async () => {
-    try {
-      setLoading(true)
-      await cancelReservation({
+    setLoading(true)
+    const response = await fetch('/api/reservation/cancel', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: user && user.sub && user.sub.toString().replace('auth0|', ''),
         eventId,
-        userId:
-          (user && user.sub && user.sub.toString().replace('auth0|', '')) || '',
-      })
+      }),
+    })
+
+    const data = await response.json()
+    if (response.ok) {
+      console.log('Reservation canceled:', data)
       setErrorMessage('')
       setTypeModal('success')
-    } catch (error) {
-      console.log(error)
-      const e = error as unknown as { message: string }
-      setErrorMessage(e.message)
+    } else {
+      console.error('Error cancelling reservation:', data)
+      setErrorMessage(data.error)
       setTypeModal('error')
-    } finally {
-      setLoading(false)
     }
+    setLoading(false)
   }
   const goToCancelation = () => {
     setShowModal(true)
