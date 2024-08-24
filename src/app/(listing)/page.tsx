@@ -7,11 +7,11 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/app/components/atoms/pagination'
-import { EventCard } from '@/app/components/molecules/event-card'
+import { EventCard } from '@/app/components/molecules/event/event-card'
 import { usePage } from '@/app/providers/PageContext'
 import { EventLite, PaginationMeta } from '@/data/types'
 import { useEffect, useState } from 'react'
-import { EventCardLoader } from '../components/molecules/event-card-loader'
+import { EventCardLoader } from '../components/molecules/event/event-card-loader'
 import { getEvents } from '@/app/actions/event'
 
 export default function Home() {

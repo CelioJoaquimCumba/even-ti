@@ -98,3 +98,23 @@ export async function getCommunityById(id: string): Promise<Community | null> {
   }
   return responseCommunity
 }
+export async function getMyCommunities(
+  userId: string,
+): Promise<{ name: string; id: string }[] | null> {
+  const communities = await prisma.community.findMany({
+    where: {
+      members: {
+        some: {
+          memberId: {
+            equals: userId,
+          },
+        },
+      },
+    },
+  })
+  if (!communities) return null
+  return communities.map((community) => ({
+    name: community.name,
+    id: community.id,
+  }))
+}

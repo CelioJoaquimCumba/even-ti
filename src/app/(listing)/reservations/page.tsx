@@ -7,11 +7,11 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/app/components/atoms/pagination'
-import { ReservationCard } from '@/app/components/molecules/reservation-card'
+import { ReservationCard } from '@/app/components/molecules/reservation/reservation-card'
 import { usePage } from '@/app/providers/PageContext'
 import { PaginationMeta, Reservation } from '@/data/types'
 import { useEffect, useState } from 'react'
-import { EventCardLoader } from '@/app/components/molecules/event-card-loader'
+import { EventCardLoader } from '@/app/components/molecules/event/event-card-loader'
 import { useUser } from '@auth0/nextjs-auth0/client'
 import { getReservations } from '@/app/actions/reservations'
 

@@ -1,14 +1,19 @@
 import Image from 'next/image'
-import { Card, CardContent, CardDescription, CardFooter } from '../atoms/card'
-import { Badge } from '../atoms/badge'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+} from '../../atoms/card'
+import { Badge } from '../../atoms/badge'
 import { ClockIcon, SewingPinIcon, CalendarIcon } from '@radix-ui/react-icons'
-import { Button } from '../atoms/button'
+import { Button } from '../../atoms/button'
 import { ModalType, Reservation } from '@/data/types'
 import { useState } from 'react'
 import { useUser } from '@auth0/nextjs-auth0/client'
-import ErrorModal from './error-modal'
+import ErrorModal from '../error-modal'
 import SuccessfulCancelationEventModal from './successful-cancelation-event-modal'
-import EventCancelationModal from './event-cancelation-modal'
+import EventCancelationModal from '../event/event-cancelation-modal'
 import { cancelReservation } from '@/app/actions/reservations'
 
 export function ReservationCard(props: {
