@@ -24,10 +24,9 @@ export interface EventLite {
   location: string
   description: string
   speakers: User[]
-  tickets?: number
+  tickets?: number | null
 }
 export interface Event extends EventLite {
-  tickets: number
   tagLine: string
   background: string
   objectives: string[]
