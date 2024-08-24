@@ -16,6 +16,7 @@ import { useUser } from '@auth0/nextjs-auth0/client'
 import AuthenticateModal from './authenticate-modal'
 import ErrorModal from './error-modal'
 import SuccessfulReservationEventModal from './successful-reservation-event-modal'
+import { makeReservation } from '@/app/actions/reservations'
 
 export function EventCard(props: { event: EventLite }) {
   const {
@@ -39,29 +40,22 @@ export function EventCard(props: { event: EventLite }) {
   const { user } = useUser()
 
   const handleRequestReservation = async () => {
-    setLoading(true)
-    const response = await fetch('/api/reservation', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        userId: user && user.sub && user.sub.toString().replace('auth0|', ''),
+    try {
+      setLoading(true)
+      await makeReservation({
+        userId:
+          (user && user.sub && user.sub.toString().replace('auth0|', '')) || '',
         eventId: id,
-      }),
-    })
-
-    const data = await response.json()
-    if (response.ok) {
-      console.log('Reservation created:', data)
+      })
       setErrorMessage('')
       setTypeModal('success')
-    } else {
-      console.error('Error creating reservation:', data)
-      setErrorMessage(data.error)
+    } catch (e) {
+      const error = e as unknown as { message: string }
       setTypeModal('error')
+      setErrorMessage(error.message)
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
   const goToReservation = () => {
     setShowModal(true)

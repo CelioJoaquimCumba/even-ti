@@ -18,8 +18,5 @@ export const getBreakpoint = () => {
 }
 export const isBreakpointLowOrEqual = (bp: keyof typeof breakpoints) => {
   const breakpoint = getBreakpoint()
-  console.log(breakpoint, '')
-  console.log(bp, '')
-  console.log(breakpoint <= bp, '')
   return breakpoint <= bp
 }
