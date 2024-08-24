@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 import { Community } from '@/data/types'
 import { ChevronLeft } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { EventCardLite } from '@/app/components/molecules/event-card-lite'
+import { EventCardLite } from '@/app/components/molecules/event/event-card-lite'
 import { ExternalLinkIcon } from '@radix-ui/react-icons'
 import { getCommunityById } from '@/app/actions/community'
 

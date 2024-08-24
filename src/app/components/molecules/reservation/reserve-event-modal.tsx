@@ -1,5 +1,5 @@
 import { EventLite } from '@/data/types'
-import { Button } from '../atoms/button'
+import { Button } from '../../atoms/button'
 import Image from 'next/image'
 import {
   Dialog,
@@ -8,7 +8,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from './dialog'
+} from '../dialog'
 export default function ReserveEventModal(props: {
   open: boolean
   close: () => void
