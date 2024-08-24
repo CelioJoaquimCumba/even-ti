@@ -143,15 +143,17 @@ export default function SideBar() {
         className={`flex flex-col h-full justify-between ${!isOpen && 'hidden'}`}
       >
         <ul className={`flex flex-col space-y-4 overflow-y-auto`}>
-          {navItems.map((item) => (
-            <NavItem
-              key={item.label}
-              label={item.label}
-              onClick={() => handleNavigation(item.path)}
-              selected={path === item.path}
-              icon={item.icon}
-            />
-          ))}
+          {navItems
+            .filter((item) => !item.requiresAuth || user)
+            .map((item) => (
+              <NavItem
+                key={item.label}
+                label={item.label}
+                onClick={() => handleNavigation(item.path)}
+                selected={path === item.path}
+                icon={item.icon}
+              />
+            ))}
         </ul>
         {user && (
           <a href="/api/auth/logout">
