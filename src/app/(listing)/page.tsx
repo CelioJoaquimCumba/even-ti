@@ -7,12 +7,12 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/app/components/atoms/pagination'
-import { EventCard } from '@/app/components/molecules/event/event-card'
+import { EventCard } from '@/app/components/molecules/event-card'
 import { usePage } from '@/app/providers/PageContext'
 import { EventLite, PaginationMeta } from '@/data/types'
+import { convertDate } from '@/lib/utils'
 import { useEffect, useState } from 'react'
-import { EventCardLoader } from '../components/molecules/event/event-card-loader'
-import { getEvents } from '@/app/actions/event'
+import { EventCardLoader } from '../components/molecules/event-card-loader'
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true)
@@ -31,9 +31,31 @@ export default function Home() {
     ;(async function () {
       try {
         setIsLoading(true)
-        const response = await getEvents({ search, page })
-        setMeta(response.paginationMeta)
-        setEvents(response.events)
+        const response = await fetch(
+          `/api/event?${search && new URLSearchParams({ search }) + '&'}${new URLSearchParams({ page: page.toString() })}`,
+          {
+            method: 'GET',
+          },
+        )
+        const data = await response.json()
+        setMeta({
+          totalCount: data.totalCount,
+          page: data.page,
+          pageSize: data.pageSize,
+          totalPages: data.totalPages,
+        })
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const responseEvents: EventLite[] = data.events.map((event: any) => ({
+          ...event,
+          date: convertDate(event.date.toString()),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          speakers: event.speakers.map((speaker: any) => ({
+            id: speaker.speaker.id,
+            name: speaker.speaker.name,
+            image: speaker.speaker.image,
+          })),
+        }))
+        setEvents(responseEvents)
       } catch (error) {
         console.log(error)
       } finally {

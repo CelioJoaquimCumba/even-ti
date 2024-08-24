@@ -1,16 +1,15 @@
 'use client'
 
-import { getEventById } from '@/app/actions/event'
-import { makeReservation } from '@/app/actions/reservations'
 import { Button } from '@/app/components/atoms/button'
 
 import { Card, CardContent } from '@/app/components/atoms/card'
 import { SpeakerCard } from '@/app/components/atoms/speaker-card'
 import AuthenticateModal from '@/app/components/molecules/authenticate-modal'
 import ErrorModal from '@/app/components/molecules/error-modal'
-import ReserveEventModal from '@/app/components/molecules/reservation/reserve-event-modal'
-import SuccessfulReservationEventModal from '@/app/components/molecules/reservation/successful-reservation-event-modal'
+import ReserveEventModal from '@/app/components/molecules/reserve-event-modal'
+import SuccessfulReservationEventModal from '@/app/components/molecules/successful-reservation-event-modal'
 import { Event, ModalType } from '@/data/types'
+import { convertDate } from '@/lib/utils'
 import { useUser } from '@auth0/nextjs-auth0/client'
 import { ChevronLeft } from 'lucide-react'
 import Image from 'next/image'
@@ -31,22 +30,29 @@ export default function EventPage({ params }: { params: { id: string } }) {
     router.push(`/community/${id}`)
   }
   const handleRequestReservation = async () => {
-    try {
-      setReservationLoading(true)
-      await makeReservation({
-        userId:
-          (user && user.sub && user.sub.toString().replace('auth0|', '')) || '',
+    setReservationLoading(true)
+    const response = await fetch('/api/reservation', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: user && user.sub && user.sub.toString().replace('auth0|', ''),
         eventId: id,
-      })
+      }),
+    })
+
+    const data = await response.json()
+    if (response.ok) {
+      console.log('Reservation created:', data)
       setErrorMessage('')
       setTypeModal('success')
-    } catch (e) {
-      const error = e as unknown as { message: string }
+    } else {
+      console.error('Error creating reservation:', data)
+      setErrorMessage(data.error)
       setTypeModal('error')
-      setErrorMessage(error.message)
-    } finally {
-      setReservationLoading(false)
     }
+    setReservationLoading(false)
   }
   const goToReservation = () => {
     setShowModal(true)
@@ -61,12 +67,34 @@ export default function EventPage({ params }: { params: { id: string } }) {
     ;(async function () {
       try {
         setLoading(true)
-        const response = await getEventById(id)
-        if (!response || !response == null) {
-          throw new Error('Event not found')
-          return
+        const response = await fetch(`/api/event/${id}`, {
+          method: 'GET',
+        })
+        const data = await response.json()
+        const responseEvent: Event = {
+          ...data.event,
+          date: convertDate(data.event.date),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          speakers: data.event.speakers.map((speaker: any) => ({
+            id: speaker.speaker.id,
+            name: speaker.speaker.name,
+            image: speaker.speaker.image,
+          })),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          organizers: data.event.organizers.map((organizer: any) => ({
+            id: organizer.community.id,
+            name: organizer.community.name,
+            image: organizer.community.image,
+          })),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          partners: data.event.partners.map((partner: any) => ({
+            id: partner.partner.id,
+            name: partner.partner.name,
+            image: partner.partner.image,
+          })),
         }
-        setEvent(response)
+        console.log(responseEvent)
+        setEvent(responseEvent)
       } catch (error) {
         console.log(error)
       } finally {

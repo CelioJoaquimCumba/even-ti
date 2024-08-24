@@ -7,9 +7,9 @@ import { useRouter } from 'next/navigation'
 import { Community } from '@/data/types'
 import { ChevronLeft } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { EventCardLite } from '@/app/components/molecules/event/event-card-lite'
+import { convertDate } from '@/lib/utils'
+import { EventCardLite } from '@/app/components/molecules/event-card-lite'
 import { ExternalLinkIcon } from '@radix-ui/react-icons'
-import { getCommunityById } from '@/app/actions/community'
 
 export default function CommunityPage({ params }: { params: { id: string } }) {
   const [community, setCommunity] = useState<Community>()
@@ -20,12 +20,34 @@ export default function CommunityPage({ params }: { params: { id: string } }) {
     ;(async function () {
       try {
         setLoading(true)
-        const response = await getCommunityById(id)
-        if (!response || !response == null) {
-          throw new Error('Community not found')
-          return
+        const response = await fetch(`/api/community/${id}`, {
+          method: 'GET',
+        })
+        const data = await response.json()
+        const responseCommunity: Community = {
+          ...data.community,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          members: data.community.members.map((member: any) => ({
+            id: member.member.id,
+            name: member.member.name,
+            image: member.member.image,
+          })),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          events: data.community.events.map((event: any) => ({
+            ...event.event,
+            date: convertDate(event.event.date.toString()),
+            id: event.event.id,
+            name: event.event.name,
+            image: event.event.image,
+          })),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          partners: data.community.partners.map((partner: any) => ({
+            id: partner.partner.id,
+            name: partner.partner.name,
+            image: partner.partner.image,
+          })),
         }
-        setCommunity(response)
+        setCommunity(responseCommunity)
       } catch (error) {
         console.log(error)
       } finally {

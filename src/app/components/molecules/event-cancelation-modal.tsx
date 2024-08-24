@@ -1,4 +1,4 @@
-import { Button } from '../../atoms/button'
+import { Button } from '../atoms/button'
 import { EventLite } from '@/data/types'
 import {
   Dialog,
@@ -7,7 +7,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '../dialog'
+} from './dialog'
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
 export default function EventCancelationModal(props: {
   open: boolean
