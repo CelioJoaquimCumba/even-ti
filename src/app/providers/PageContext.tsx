@@ -1,4 +1,5 @@
 'use client'
+import { space, spaceType } from '@/data/types'
 import React, { createContext, useState, useContext, ReactNode } from 'react'
 
 interface PageContextType {
@@ -8,6 +9,10 @@ interface PageContextType {
   setSearch: (search: string) => void
   page: number
   setPage: (page: number) => void
+  space: space | null | undefined
+  setSpace: (space: space) => void
+  spaceType: spaceType
+  setSpaceType: (space: spaceType) => void
 }
 
 const PageContext = createContext<PageContextType | undefined>(undefined)
@@ -20,10 +25,23 @@ export const PageProvider: React.FC<PageProviderProps> = ({ children }) => {
   const [title, setTitle] = useState('Title')
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
+  const [spaceType, setSpaceType] = useState<spaceType>('personal')
+  const [space, setSpace] = useState<space | null | undefined>(null)
 
   return (
     <PageContext.Provider
-      value={{ title, setTitle, search, setSearch, page, setPage }}
+      value={{
+        title,
+        setTitle,
+        search,
+        setSearch,
+        page,
+        setPage,
+        spaceType,
+        setSpaceType,
+        space,
+        setSpace,
+      }}
     >
       {children}
     </PageContext.Provider>

@@ -1,6 +1,6 @@
 'use client'
 
-import { Card, CardContent, CardFooter } from '../atoms/card'
+import { Card, CardContent, CardFooter } from '../../atoms/card'
 
 export function EventCardLoader() {
   return (

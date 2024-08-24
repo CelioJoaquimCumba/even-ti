@@ -7,13 +7,13 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/app/components/atoms/pagination'
-import { ReservationCard } from '@/app/components/molecules/reservation-card'
+import { ReservationCard } from '@/app/components/molecules/reservation/reservation-card'
 import { usePage } from '@/app/providers/PageContext'
 import { PaginationMeta, Reservation } from '@/data/types'
-import { convertDate } from '@/lib/utils'
 import { useEffect, useState } from 'react'
-import { EventCardLoader } from '@/app/components/molecules/event-card-loader'
+import { EventCardLoader } from '@/app/components/molecules/event/event-card-loader'
 import { useUser } from '@auth0/nextjs-auth0/client'
+import { getReservations } from '@/app/actions/reservations'
 
 export default function Home() {
   const { user } = useUser()
@@ -34,30 +34,15 @@ export default function Home() {
       try {
         if (!user) return
         setIsLoading(true)
-        const response = await fetch(
-          `/api/reservation?${user && user.sub && new URLSearchParams({ userId: user.sub.toString().replace('auth0|', '') }) + '&'}${search && new URLSearchParams({ search }) + '&'}${new URLSearchParams({ page: page.toString() })}`,
-          {
-            method: 'GET',
-          },
-        )
-        const data = await response.json()
-        setMeta({
-          totalCount: data.totalCount,
-          page: data.page,
-          pageSize: data.pageSize,
-          totalPages: data.totalPages,
+        const response = await getReservations({
+          userId:
+            (user && user.sub && user.sub.toString().replace('auth0|', '')) ||
+            '',
+          search,
+          page,
         })
-        const responseReservations: Reservation[] = data.reservations.map(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (reservation: any) => ({
-            ...reservation,
-            event: {
-              ...reservation.event,
-              date: convertDate(reservation.event.date.toString()),
-            },
-          }),
-        )
-        setReservations(responseReservations)
+        setMeta(response.paginationMeta)
+        setReservations(response.reservations)
       } catch (error) {
         console.log(error)
       } finally {

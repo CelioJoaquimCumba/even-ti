@@ -1,5 +1,5 @@
 import { useRouter } from 'next/navigation'
-import { Button } from '../atoms/button'
+import { Button } from '../../atoms/button'
 import {
   Dialog,
   DialogContent,
@@ -7,7 +7,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from './dialog'
+} from '../dialog'
 import { CheckIcon } from '@radix-ui/react-icons'
 export default function SuccessfulReservationEventModal(props: {
   open: boolean
