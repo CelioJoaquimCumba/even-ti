@@ -1,5 +1,10 @@
 import Image from 'next/image'
-import { Card, CardContent, CardDescription, CardFooter } from '../../atoms/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+} from '../../atoms/card'
 import { Badge } from '../../atoms/badge'
 import { ClockIcon, SewingPinIcon, CalendarIcon } from '@radix-ui/react-icons'
 import { Button } from '../../atoms/button'
