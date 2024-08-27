@@ -12,6 +12,12 @@ export interface User {
   id: string
   name: string
   image: string
+  email?: string
+  phone?: string
+  username?: string
+  gender?: string
+  bio?: string
+  profession?: string
 }
 
 export interface EventLite {

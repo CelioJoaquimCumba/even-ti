@@ -115,6 +115,11 @@ model User {
   email        String            @unique
   password     String
   image        String
+  phone        String            @default("")
+  username     String            @default("")
+  gender       String            @default("")
+  bio          String            @default("")
+  profession   String            @default("")
   communities  CommunityMember[]
   events       EventSpeaker[]
   reservations Reservation[]
