@@ -6,9 +6,21 @@ import { useState } from 'react'
 import { Input } from '@/app/components/atoms/input'
 import { useFormik } from 'formik'
 import { EditProfileValidation } from '@/app/formValidations/edit-profile'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '../../atoms/select'
+import { genders } from '@/data'
+import { updateUser } from '@/app/actions/user'
 
 export default function SettingsProfileCard(props: { user: User }) {
   const { user: userData } = props
+  const [loading, setLoading] = useState<boolean>(false)
   const [user, setUser] = useState(userData)
   const [isEdit, setIsEdit] = useState<boolean>(false)
   const formik = useFormik(
@@ -21,23 +33,31 @@ export default function SettingsProfileCard(props: { user: User }) {
         fullName: user.name || '',
         phoneNumber: user.phone || '',
       },
-      onSubmit: () => {
-        setIsEdit(false)
-        setUser({
-          ...user,
-          name: formik.values.fullName,
-          username: formik.values.username,
-          gender: formik.values.gender,
-          phone: formik.values.phoneNumber,
-          profession: formik.values.profession,
-          bio: formik.values.bio,
-        })
+      onSubmit: async () => {
+        try {
+          setLoading(true)
+          const data: User = {
+            ...user,
+            name: formik.values.fullName,
+            username: formik.values.username,
+            gender: genders.find(
+              (gender) => gender.value === formik.values.gender,
+            )?.label,
+            phone: formik.values.phoneNumber,
+            profession: formik.values.profession,
+            bio: formik.values.bio,
+          }
+          const updatedUser = await updateUser(data)
+          if (!updatedUser) return
+          setIsEdit(false)
+          setUser(updatedUser)
+        } finally {
+          setLoading(false)
+        }
       },
     }),
   )
-  formik.initialValues.fullName = 'hello'
   const handleEdit = () => {
-    console.log('here')
     setIsEdit(true)
   }
   return (
@@ -102,11 +122,24 @@ export default function SettingsProfileCard(props: { user: User }) {
                 {!isEdit ? (
                   <p className="text-lg text-black">{user?.gender || '...'}</p>
                 ) : (
-                  <Input
-                    value={formik.values.gender}
-                    onChange={formik.handleChange('gender')}
-                    error={formik.errors.gender}
-                  />
+                  <Select
+                    onValueChange={formik.handleChange('gender')}
+                    defaultValue={formik.values.gender}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder={'Género'} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>{'Género'}</SelectLabel>
+                        {genders.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                 )}
               </div>
               <div>
@@ -150,7 +183,7 @@ export default function SettingsProfileCard(props: { user: User }) {
         )}
       </section>
       {isEdit && (
-        <Button type="submit" className="w-fit">
+        <Button type="submit" className="w-fit" loading={loading}>
           Salvar
         </Button>
       )}

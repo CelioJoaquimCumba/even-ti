@@ -16,3 +16,8 @@ export enum errorMessages {
   missingRequiredFields = 'Faltam campos obrigatórios',
   reservationNotFound = 'Nao foi possivel encontrar a reserva',
 }
+
+export enum editProfileValidationMessages {
+  invalid_phoneNumber = 'Formato de número de telefone inválido. Verifique se incluiu o código do país e que o número contém apenas dígitos.',
+  required = 'Este campo é obrigatório',
+}
