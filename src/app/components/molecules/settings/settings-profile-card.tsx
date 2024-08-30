@@ -1,5 +1,5 @@
 import { Button } from '@/app/components/atoms/button'
-import SettingsProfilePicture from './settings-profile-picture'
+import SettingsProfilePicture from '@/app/components/molecules/settings/settings-profile-picture'
 import { Pencil } from 'lucide-react'
 import { User } from '@/data/types'
 import { useState } from 'react'
@@ -11,6 +11,7 @@ export default function SettingsProfileCard(props: { user: User }) {
   const handleEdit = () => {
     setMode('edit')
   }
+  console.log(user)
   return (
     <article className="flex flex-col gap-3 p-8 rounded-md md:gap-6 border border-gray-200">
       <header>

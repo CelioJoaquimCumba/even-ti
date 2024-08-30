@@ -28,3 +28,19 @@ export async function getUserById(id: string): Promise<User | null> {
     return null
   }
 }
+
+export async function updateUserImage(id: string, image: string) {
+  if (!id || !image) return
+  try {
+    await prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        image,
+      },
+    })
+  } catch (error) {
+    console.log(error)
+  }
+}
