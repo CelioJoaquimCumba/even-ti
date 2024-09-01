@@ -36,11 +36,7 @@ export default function ListingLayout({
 }>) {
   return (
     <PageProvider>
-      <html lang="en">
-        <body suppressHydrationWarning={true}>
-          <LayoutContent>{children}</LayoutContent>
-        </body>
-      </html>
+      <LayoutContent>{children}</LayoutContent>
     </PageProvider>
   )
 }
