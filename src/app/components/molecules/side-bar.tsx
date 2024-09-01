@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from '../atoms/select'
 import { getMyCommunities } from '@/app/actions/community'
+import { getUserById } from '@/app/actions/user'
 
 const personalNavItems = [
   routes.events,
@@ -43,6 +44,16 @@ export default function SideBar() {
   const toggleOpen = () => setIsOpen(!isOpen)
   const path = usePathname()
   const { user } = useUser()
+  const [avatar, setAvatar] = useState<string | undefined | null>(user?.picture)
+  useEffect(() => {
+    ;(async () => {
+      const userProfile = await getUserById(
+        (user && user.sub && user.sub.toString().replace('auth0|', '')) || '',
+      )
+      if (!userProfile || !userProfile.image) return
+      setAvatar(userProfile.image)
+    })()
+  })
   const router = useRouter()
   const [refresh, setRefresh] = useState(false)
   const [spaceOptions, setSpaceOptions] = useState<
@@ -127,7 +138,12 @@ export default function SideBar() {
           </Select>
           {user ? (
             <>
-              <ProfileNavItem user={user} />
+              <ProfileNavItem
+                user={{
+                  ...user,
+                  picture: avatar,
+                }}
+              />
             </>
           ) : (
             <a href="/api/auth/login">
