@@ -5,6 +5,9 @@ import SettingsProfileCard from '@/app/components/molecules/settings/settings-pr
 import { User } from '@/data/types'
 import { getUserById } from '@/app/actions/user'
 import { useUser } from '@auth0/nextjs-auth0/client'
+import { Button } from '@/app/components/atoms/button'
+import { GitPullRequest } from 'lucide-react'
+import CreateCommunityModal from '../components/molecules/settings/create-community-modal'
 
 export default function SettingsPage() {
   const { setTitle } = usePage()
@@ -12,6 +15,14 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
   const { user } = useUser()
+  const [showCommunityModal, setShowCommunityModal] = useState(false)
+
+  const toggleCommunityModal = () => {
+    setShowCommunityModal(!showCommunityModal)
+  }
+  const handleCommunityRequest = () => {
+    toggleCommunityModal()
+  }
 
   useEffect(() => {
     setTitle('Definições')
@@ -43,6 +54,28 @@ export default function SettingsPage() {
   return (
     <div className="flex w-full h-full flex-col gap-2 md:gap-6 bg-white rounded-2xl overflow-y-auto">
       <SettingsProfileCard user={userData} />
+      <div className="bg-white p-8 flex flex-col gap-3 rounded-md border border-gray-200 w-fit">
+        <h3 className="text-xl font-medium">Pretendes criar uma comunidade?</h3>
+        <p>
+          Pode faze-lo preenchendo a informação da sua comunidade e mandando o
+          seu pedido.
+        </p>
+        <Button
+          variant={'default'}
+          className="w-fit gap-2"
+          onClick={toggleCommunityModal}
+        >
+          <GitPullRequest className="w-5 h-5" />
+          <span>Criar comunidade</span>
+        </Button>
+        {showCommunityModal && (
+          <CreateCommunityModal
+            open={showCommunityModal}
+            close={toggleCommunityModal}
+            onClick={handleCommunityRequest}
+          />
+        )}
+      </div>
     </div>
   )
 }
