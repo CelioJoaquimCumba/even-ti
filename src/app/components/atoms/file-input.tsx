@@ -10,6 +10,7 @@ export default function FileInput(props: {
   image?: boolean
   preview?: string
   aspectRatio?: string
+  error?: string
 }) {
   const {
     label,
@@ -19,6 +20,7 @@ export default function FileInput(props: {
     accept = 'image/*',
     preview,
     aspectRatio = '16/9',
+    error,
   } = props
   const fileInput = useRef(null)
 
@@ -67,6 +69,7 @@ export default function FileInput(props: {
           </p>
         </div>
       )}
+      <span className="text-sm text-red-500">{error}</span>
     </div>
   )
 }
