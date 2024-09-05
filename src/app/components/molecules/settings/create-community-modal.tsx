@@ -6,10 +6,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/app/components/molecules/dialog'
-import { DialogDescription } from '@radix-ui/react-dialog'
 import { useState } from 'react'
 import { Input } from '@/app/components/atoms/input'
 import { Textarea } from '@/app/components/atoms/textarea'
+import FileInput from '@/app/components/atoms/file-input'
 export default function CreateCommunityModal(props: {
   open: boolean
   close: () => void
@@ -17,6 +17,7 @@ export default function CreateCommunityModal(props: {
 }) {
   const { open, onClick, close } = props
   const [step, setStep] = useState(0)
+  const [logo, setLogo] = useState('')
   const handleNext = () => {
     setStep(step + 1)
   }
@@ -26,17 +27,18 @@ export default function CreateCommunityModal(props: {
   const handleSubmit = () => {
     onClick()
   }
+  const handleFileSelection = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLogo(URL.createObjectURL(e.target.files![0]))
+  }
   return (
     <Dialog open={open} onOpenChange={close}>
       <DialogContent className="sm:max-w-[425px] md:p-8 gap-8 md:gap-12">
         <DialogHeader className="flex flex-row flex-wrap items-center gap-2 md:gap-6">
-          <DialogTitle className="flex gap-2 items-center">
-            <h3 className="text-xl font-bold">
-              Formulário para pedido de criação de comunidade ({step + 1}/2)
-            </h3>
+          <DialogTitle className="flex gap-2 items-center text-xl font-bold">
+            Formulário para pedido de criação de comunidade ({step + 1}/2)
           </DialogTitle>
         </DialogHeader>
-        <DialogDescription>
+        <div>
           <form className="flex flex-col gap-6">
             {step === 0 ? (
               <section className="flex flex-col">
@@ -45,8 +47,19 @@ export default function CreateCommunityModal(props: {
                   required
                   placeholder="Insira o nome da comunidade"
                 />
-                <span>file input</span>
-                <span>another file input</span>
+                <FileInput
+                  onChange={handleFileSelection}
+                  onDelete={() => setLogo('')}
+                  label="Logotipo da comunidade"
+                  required
+                  preview={logo}
+                />
+                <FileInput
+                  onChange={handleFileSelection}
+                  onDelete={()=>{}}
+                  label="Imagem de fundo da comunidade"
+                  required
+                />
               </section>
             ) : (
               <section className="flex flex-col">
@@ -66,7 +79,7 @@ export default function CreateCommunityModal(props: {
               </section>
             )}
           </form>
-        </DialogDescription>
+        </div>
         <DialogFooter className="flex flex-wrap gap-2">
           <Button
             variant={'outline'}
