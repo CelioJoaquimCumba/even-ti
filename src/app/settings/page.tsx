@@ -20,9 +20,6 @@ export default function SettingsPage() {
   const toggleCommunityModal = () => {
     setShowCommunityModal(!showCommunityModal)
   }
-  const handleCommunityRequest = () => {
-    toggleCommunityModal()
-  }
 
   useEffect(() => {
     setTitle('Definições')
@@ -72,7 +69,7 @@ export default function SettingsPage() {
           <CreateCommunityModal
             open={showCommunityModal}
             close={toggleCommunityModal}
-            onClick={handleCommunityRequest}
+            user={userData}
           />
         )}
       </div>

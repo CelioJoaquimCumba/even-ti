@@ -34,7 +34,7 @@ export default function FileInput(props: {
       </p>
       <div
         onClick={() => fileInput.current && fileInput.current?.click()}
-        className={`flex flex-col items-center justify-center w-full aspect-[${aspectRatio}] border-dashed border border-slate-300 rounded-2xl bg-white hover:bg-slate-100 bg-center bg-cover`}
+        className={`flex flex-col items-center justify-center min-h-64 aspect-[${aspectRatio}] border-dashed border border-slate-300 rounded-2xl bg-white hover:bg-slate-100 bg-center bg-cover p-4 text-center`}
         style={{ backgroundImage: `url(${preview})` }}
       >
         <input

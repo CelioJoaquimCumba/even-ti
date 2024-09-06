@@ -12,10 +12,15 @@ import { Textarea } from '@/app/components/atoms/textarea'
 import FileInput from '@/app/components/atoms/file-input'
 import { useFormik } from 'formik'
 import { CreateCommunityValidation } from '@/app/formValidations/create-community'
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { storage } from '@/app/firebaseConfig'
+import { User } from '@/data/types'
+import { sendEmail } from '@/app/actions/community'
+
 export default function CreateCommunityModal(props: {
   open: boolean
   close: () => void
-  onClick: () => void
+  user: User
 }) {
   const formik = useFormik(
     CreateCommunityValidation({
@@ -28,16 +33,15 @@ export default function CreateCommunityModal(props: {
         site: '',
       },
       onSubmit: () => {
-        onClick()
+        handleSubmit()
       },
     }),
   )
-  const { open, onClick, close } = props
+  const { open, close, user } = props
   const [step, setStep] = useState(0)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_logo, setLogo] = useState('')
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_background, setBackground] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [logo, setLogo] = useState<File | null>(null)
+  const [background, setBackground] = useState<File | null>(null)
   const handleNext = () => {
     formik.validateField('name')
     formik.validateField('logo')
@@ -51,24 +55,58 @@ export default function CreateCommunityModal(props: {
     setStep(step - 1)
   }
   const handleLogoSelection = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLogo(URL.createObjectURL(e.target.files![0]))
+    setLogo(e.target.files![0])
     formik.values.logo = URL.createObjectURL(e.target.files![0])
     formik.validateField('logo')
-  }
-  const deleteLogo = () => {
-    setLogo('')
-    formik.values.logo = ''
-  }
-  const deleteBackground = () => {
-    setBackground('')
-    formik.values.background = ''
   }
   const handleBackgroundSelection = (
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    setBackground(URL.createObjectURL(e.target.files![0]))
+    setBackground(e.target.files![0])
     formik.values.background = URL.createObjectURL(e.target.files![0])
     formik.validateField('background')
+  }
+  const deleteLogo = () => {
+    setLogo(null)
+    formik.values.logo = ''
+  }
+  const deleteBackground = () => {
+    setBackground(null)
+    formik.values.background = ''
+  }
+  const handleSubmit = async () => {
+    try {
+      setLoading(true)
+      if (!logo || !background)
+        throw new Error('Logo and background are required')
+      const logoUrl = await handleUpload(logo)
+      const backgroundUrl = await handleUpload(background)
+      await sendEmail(user, {
+        name: formik.values.name,
+        logo: logoUrl,
+        background: backgroundUrl,
+        description: formik.values.description,
+        slogan: formik.values.slogan,
+        site: formik.values.site,
+      })
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+  const handleUpload = async (file: File): Promise<string> => {
+    if (!file) return ''
+
+    const storageRef = ref(storage, `users/${user.id}/${file.name}`)
+
+    try {
+      await uploadBytes(storageRef, file)
+      return await getDownloadURL(storageRef)
+    } catch (error) {
+      console.error('Error uploading the file', error)
+    }
+    return ''
   }
   return (
     <Dialog open={open} onOpenChange={close}>
@@ -143,6 +181,7 @@ export default function CreateCommunityModal(props: {
               type={step === 1 ? 'submit' : 'button'}
               variant={'default'}
               onClick={step !== 1 ? handleNext : () => {}}
+              loading={loading}
             >
               {step === 1 ? 'Criar comunidade' : 'Proximo'}
             </Button>

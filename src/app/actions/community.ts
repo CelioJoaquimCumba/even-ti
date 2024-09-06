@@ -1,7 +1,11 @@
 'use server'
-import { Community, CommunityLite, PaginationMeta } from '@/data/types'
+import { Community, CommunityLite, PaginationMeta, User } from '@/data/types'
 import prisma from '@/lib/prisma'
 import { convertDate } from '@/lib/utils'
+import { Resend } from 'resend'
+import { EmailTemplate } from '../templates/email/create-community'
+
+const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_API_KEY)
 
 export async function getCommunities(props: {
   search?: string
@@ -117,4 +121,36 @@ export async function getMyCommunities(
     name: community.name,
     id: community.id,
   }))
+}
+
+export async function sendEmail(
+  user: User,
+  communityData: {
+    name: string
+    background: string
+    logo: string
+    description: string
+    slogan: string
+    site: string
+  },
+) {
+  try {
+    if (!user || !communityData || !user.email || !user.name)
+      throw new Error('Invalid user or community data')
+    const data = await resend.emails.send({
+      from: 'Even-ti <onboarding@resend.dev>',
+      to: ['ccumba82@gmail.com'],
+      subject: 'Pedido de abertura de uma nova comunidade',
+      react: EmailTemplate({
+        username: user.name,
+        id: user.id,
+        email: user.email,
+        ...communityData,
+      }),
+    })
+    return data
+  } catch (error) {
+    console.log(error)
+    return error
+  }
 }
