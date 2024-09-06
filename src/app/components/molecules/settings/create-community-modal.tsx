@@ -21,6 +21,8 @@ export default function CreateCommunityModal(props: {
   open: boolean
   close: () => void
   user: User
+  onSuccess: () => void
+  onError: () => void
 }) {
   const formik = useFormik(
     CreateCommunityValidation({
@@ -37,7 +39,7 @@ export default function CreateCommunityModal(props: {
       },
     }),
   )
-  const { open, close, user } = props
+  const { open, close, user, onError, onSuccess } = props
   const [step, setStep] = useState(0)
   const [loading, setLoading] = useState(false)
   const [logo, setLogo] = useState<File | null>(null)
@@ -89,8 +91,10 @@ export default function CreateCommunityModal(props: {
         slogan: formik.values.slogan,
         site: formik.values.site,
       })
+      onSuccess()
     } catch (error) {
       console.log(error)
+      onError()
     } finally {
       setLoading(false)
     }

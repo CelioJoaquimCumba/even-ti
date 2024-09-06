@@ -2,12 +2,14 @@
 import { usePage } from '@/app/providers/PageContext'
 import { useEffect, useState } from 'react'
 import SettingsProfileCard from '@/app/components/molecules/settings/settings-profile-card'
-import { User } from '@/data/types'
+import { ModalType, User } from '@/data/types'
 import { getUserById } from '@/app/actions/user'
 import { useUser } from '@auth0/nextjs-auth0/client'
 import { Button } from '@/app/components/atoms/button'
 import { GitPullRequest } from 'lucide-react'
 import CreateCommunityModal from '../components/molecules/settings/create-community-modal'
+import ErrorModal from '../components/molecules/error-modal'
+import SuccessfulCommunityRequestModal from '../components/molecules/settings/successful-community-request-modal'
 
 export default function SettingsPage() {
   const { setTitle } = usePage()
@@ -15,10 +17,15 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
   const { user } = useUser()
-  const [showCommunityModal, setShowCommunityModal] = useState(false)
+  const [showModal, setShowModal] = useState(false)
+  const [modalType, setModalType] = useState<ModalType>('error')
 
   const toggleCommunityModal = () => {
-    setShowCommunityModal(!showCommunityModal)
+    setModalType('community-creation')
+    setShowModal(!showModal)
+  }
+  const toggleModal = () => {
+    setShowModal(!showModal)
   }
 
   useEffect(() => {
@@ -65,13 +72,28 @@ export default function SettingsPage() {
           <GitPullRequest className="w-5 h-5" />
           <span>Criar comunidade</span>
         </Button>
-        {showCommunityModal && (
-          <CreateCommunityModal
-            open={showCommunityModal}
-            close={toggleCommunityModal}
-            user={userData}
-          />
-        )}
+        {showModal &&
+          (modalType === 'community-creation' ? (
+            <CreateCommunityModal
+              open={showModal}
+              close={toggleCommunityModal}
+              user={userData}
+              onError={() => setModalType('error')}
+              onSuccess={() => setModalType('success')}
+            />
+          ) : modalType === 'error' ? (
+            <ErrorModal
+              open={showModal}
+              close={toggleModal}
+              message="Algo de errado não está certo"
+              onClick={toggleCommunityModal}
+            />
+          ) : (
+            <SuccessfulCommunityRequestModal
+              open={showModal}
+              close={toggleModal}
+            />
+          ))}
       </div>
     </div>
   )
