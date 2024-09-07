@@ -66,9 +66,9 @@ export default function SettingsProfileCard(props: { user: User }) {
       className="flex items-end flex-col gap-3 p-8 rounded-md md:gap-6 border border-gray-200"
     >
       <header className="flex justify-start w-full">
-        <h2 className="text-lg font-medium text-black">
+        <h4 className="text-lg font-medium text-black">
           Perfil {isEdit ? 'Edit' : 'View'}
-        </h2>
+        </h4>
       </header>
       <section className="flex flex-col md:items-center md:flex-row gap-16 w-full">
         <SettingsProfilePicture user={user} />

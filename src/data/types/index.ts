@@ -73,5 +73,10 @@ export interface space {
   name: string
 }
 
-export type ModalType = 'error' | 'success' | 'reservation' | 'cancelation'
+export type ModalType =
+  | 'error'
+  | 'success'
+  | 'reservation'
+  | 'cancelation'
+  | 'community-creation'
 export type spaceType = 'personal' | 'community'

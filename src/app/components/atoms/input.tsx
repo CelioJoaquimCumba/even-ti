@@ -10,16 +10,29 @@ export interface InputProps
   buttonLabel?: string
   button?: boolean
   error?: string | undefined
+  required?: boolean
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   (
-    { className, type, button, buttonLabel, helperText, error, ...props },
+    {
+      className,
+      type,
+      button,
+      buttonLabel,
+      helperText,
+      error,
+      required,
+      ...props
+    },
     ref,
   ) => {
     return (
       <div className="flex flex-col gap-1.5 w-full">
-        <h4 className="font-medium">{props.label}</h4>
+        <p className="flex gap-2">
+          {props.label}
+          {required && <span className="text-red-500">*</span>}
+        </p>
         <div className="flex gap-3">
           <input
             type={type}

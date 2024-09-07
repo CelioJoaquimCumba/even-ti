@@ -21,3 +21,7 @@ export enum editProfileValidationMessages {
   invalid_phoneNumber = 'Formato de número de telefone inválido. Verifique se incluiu o código do país e que o número contém apenas dígitos.',
   required = 'Este campo é obrigatório',
 }
+export enum createCommunityValidationMessages {
+  required = 'Este campo é obrigatório',
+  site = 'O endereço do site deve ser um link',
+}
