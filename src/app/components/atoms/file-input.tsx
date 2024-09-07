@@ -22,7 +22,7 @@ export default function FileInput(props: {
     aspectRatio = '16/9',
     error,
   } = props
-  const fileInput = useRef(null)
+  const fileInput = useRef<HTMLInputElement>(null)
 
   const handleFileInput = (e: ChangeEvent<HTMLInputElement>) => {
     onChange(e)
