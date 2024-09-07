@@ -75,11 +75,14 @@ export default function SettingsPage() {
           variant={'default'}
           className="w-fit gap-2"
           onClick={toggleCommunityModal}
+          disabled={!userData}
+          loading={loadingProfile}
         >
           <GitPullRequest className="w-5 h-5" />
           <span>Criar comunidade</span>
         </Button>
         {showModal &&
+          userData &&
           (modalType === 'community-creation' ? (
             <CreateCommunityModal
               open={showModal}
