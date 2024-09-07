@@ -1,5 +1,12 @@
 'use client'
-import { space, spaceType } from '@/data/types'
+import {
+  CommunityLite,
+  EventLite,
+  PaginationMeta,
+  Reservation,
+  space,
+  spaceType,
+} from '@/data/types'
 import React, { createContext, useState, useContext, ReactNode } from 'react'
 
 interface PageContextType {
@@ -13,6 +20,36 @@ interface PageContextType {
   setSpace: (space: space) => void
   spaceType: spaceType
   setSpaceType: (space: spaceType) => void
+  events: {
+    events: EventLite[]
+    paginationMeta: PaginationMeta
+  } | null
+  setEvents: (
+    value: {
+      events: EventLite[]
+      paginationMeta: PaginationMeta
+    } | null,
+  ) => void
+  communities: {
+    communities: CommunityLite[]
+    paginationMeta: PaginationMeta
+  } | null
+  setCommunities: (
+    value: {
+      communities: CommunityLite[]
+      paginationMeta: PaginationMeta
+    } | null,
+  ) => void
+  reservations: {
+    reservations: Reservation[]
+    paginationMeta: PaginationMeta
+  } | null
+  setReservations: (
+    value: {
+      reservations: Reservation[]
+      paginationMeta: PaginationMeta
+    } | null,
+  ) => void
 }
 
 const PageContext = createContext<PageContextType | undefined>(undefined)
@@ -28,6 +65,13 @@ export const PageProvider: React.FC<PageProviderProps> = ({ children }) => {
   const [spaceType, setSpaceType] = useState<spaceType>('personal')
   const [space, setSpace] = useState<space | null | undefined>(null)
 
+  const [events, setEvents] = useState<EventLite[] | null>(null)
+  const [communities, setCommunities] = useState<{
+    communities: CommunityLite[]
+    paginationMeta: PaginationMeta
+  } | null>(null)
+  const [reservations, setReservations] = useState<Reservation[] | null>(null)
+
   return (
     <PageContext.Provider
       value={{
@@ -41,6 +85,12 @@ export const PageProvider: React.FC<PageProviderProps> = ({ children }) => {
         setSpaceType,
         space,
         setSpace,
+        events,
+        setEvents,
+        communities,
+        setCommunities,
+        reservations,
+        setReservations,
       }}
     >
       {children}

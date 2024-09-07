@@ -23,7 +23,14 @@ export default function Home() {
     pageSize: 0,
     totalPages: 0,
   })
-  const { setTitle, search, page, setPage } = usePage()
+  const {
+    setTitle,
+    search,
+    page,
+    setPage,
+    events: storedEvents,
+    setEvents: setStoredEvents,
+  } = usePage()
   useEffect(() => {
     setTitle('Eventos')
   })
@@ -31,7 +38,15 @@ export default function Home() {
     ;(async function () {
       try {
         setIsLoading(true)
-        const response = await getEvents({ search, page })
+        let response = null
+        console.log(page, search)
+        if (!storedEvents || (page && page > 1) || (search && search !== '')) {
+          response = await getEvents({ search, page })
+          setStoredEvents(response)
+        } else {
+          response = storedEvents
+        }
+        if (!response) throw new Error('Events not found')
         setMeta(response.paginationMeta)
         setEvents(response.events)
       } catch (error) {

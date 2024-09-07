@@ -25,7 +25,14 @@ export default function Home() {
     pageSize: 0,
     totalPages: 0,
   })
-  const { setTitle, search, page, setPage } = usePage()
+  const {
+    setTitle,
+    search,
+    page,
+    setPage,
+    reservations: storedReservations,
+    setReservations: setStoredReservations,
+  } = usePage()
   useEffect(() => {
     setTitle('Reservas')
   })
@@ -34,13 +41,24 @@ export default function Home() {
       try {
         if (!user) return
         setIsLoading(true)
-        const response = await getReservations({
-          userId:
-            (user && user.sub && user.sub.toString().replace('auth0|', '')) ||
-            '',
-          search,
-          page,
-        })
+        let response = null
+        if (
+          !storedReservations ||
+          (page && page > 1) ||
+          (search && search !== '')
+        ) {
+          response = await getReservations({
+            userId:
+              (user && user.sub && user.sub.toString().replace('auth0|', '')) ||
+              '',
+            search,
+            page,
+          })
+          setStoredReservations(response)
+        } else {
+          response = storedReservations
+        }
+        if (!response) throw new Error('Reservations not found')
         setMeta(response.paginationMeta)
         setReservations(response.reservations)
       } catch (error) {
