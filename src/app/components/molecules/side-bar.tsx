@@ -50,6 +50,9 @@ export default function SideBar() {
       const userProfile = await getUserById(
         (user && user.sub && user.sub.toString().replace('auth0|', '')) || '',
       )
+      if (user) {
+        user.name = userProfile?.username
+      }
       if (!userProfile || !userProfile.image) return
       setAvatar(userProfile.image)
     })()
@@ -89,8 +92,7 @@ export default function SideBar() {
   const navItems =
     spaceType === 'personal' || !user ? personalNavItems : communityNavItems
 
-  const handleNavigation = (path: string) => {
-    router.push(path)
+  const handleNavigation = () => {
     setRefresh(!refresh)
   }
 
@@ -165,8 +167,9 @@ export default function SideBar() {
               <NavItem
                 key={item.label}
                 label={item.label}
-                onClick={() => handleNavigation(item.path)}
+                onClick={() => handleNavigation()}
                 selected={path === item.path}
+                path={item.path}
                 icon={item.icon}
               />
             ))}
