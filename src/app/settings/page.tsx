@@ -10,11 +10,12 @@ import { GitPullRequest } from 'lucide-react'
 import CreateCommunityModal from '../components/molecules/settings/create-community-modal'
 import ErrorModal from '../components/molecules/error-modal'
 import SuccessfulCommunityRequestModal from '../components/molecules/settings/successful-community-request-modal'
+import { ProfileCardLoader } from '../components/molecules/settings/profile-card-loader'
 
 export default function SettingsPage() {
   const { setTitle } = usePage()
   const [userData, setUserData] = useState<User | null>(null)
-  const [loading, setLoading] = useState<boolean>(true)
+  const [loadingProfile, setLoadingProfile] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
   const { user } = useUser()
   const [showModal, setShowModal] = useState(false)
@@ -36,7 +37,7 @@ export default function SettingsPage() {
     ;(async function () {
       if (!user) return
       try {
-        setLoading(true)
+        setLoadingProfile(true)
         const response = await getUserById(
           (user.sub && user.sub.toString().replace('auth0|', '')) || '',
         )
@@ -46,18 +47,24 @@ export default function SettingsPage() {
         setError('Algo de errado não está certo')
         console.error(err)
       } finally {
-        setLoading(false)
+        setLoadingProfile(false)
       }
     })()
   }, [user])
 
-  if (loading) return <div>Loading...</div>
   if (error) return <div>{error}</div>
-  if (!userData) return <div>Algo de errado não está certo</div>
 
   return (
     <div className="flex w-full h-full flex-col gap-2 md:gap-6 bg-white rounded-2xl overflow-y-auto">
-      <SettingsProfileCard user={userData} />
+      {!userData ? (
+        loadingProfile ? (
+          <ProfileCardLoader />
+        ) : (
+          <div>Algo de errado não está certo</div>
+        )
+      ) : (
+        <SettingsProfileCard user={userData} />
+      )}
       <div className="bg-white p-8 flex flex-col gap-3 rounded-md border border-gray-200 w-fit">
         <h3 className="text-xl font-medium">Pretendes criar uma comunidade?</h3>
         <p>
