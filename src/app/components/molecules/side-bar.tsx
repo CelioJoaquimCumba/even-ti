@@ -4,7 +4,7 @@ import ProfileNavItem from '../atoms/profile-nav-item'
 import NavItem from '../atoms/nav-item'
 import SideBarButton from '../atoms/sidebar-button'
 import { useEffect, useState } from 'react'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { routes } from '@/data/routes'
 import { isBreakpointLowOrEqual } from '@/utils'
 import { useUser } from '@auth0/nextjs-auth0/client'
@@ -57,7 +57,6 @@ export default function SideBar() {
       setAvatar(userProfile.image)
     })()
   })
-  const router = useRouter()
   const [refresh, setRefresh] = useState(false)
   const [spaceOptions, setSpaceOptions] = useState<
     { label: string; value: string }[]

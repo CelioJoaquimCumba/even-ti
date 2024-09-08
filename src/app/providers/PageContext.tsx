@@ -65,12 +65,18 @@ export const PageProvider: React.FC<PageProviderProps> = ({ children }) => {
   const [spaceType, setSpaceType] = useState<spaceType>('personal')
   const [space, setSpace] = useState<space | null | undefined>(null)
 
-  const [events, setEvents] = useState<EventLite[] | null>(null)
+  const [events, setEvents] = useState<{
+    events: EventLite[]
+    paginationMeta: PaginationMeta
+  } | null>(null)
   const [communities, setCommunities] = useState<{
     communities: CommunityLite[]
     paginationMeta: PaginationMeta
   } | null>(null)
-  const [reservations, setReservations] = useState<Reservation[] | null>(null)
+  const [reservations, setReservations] = useState<{
+    reservations: Reservation[]
+    paginationMeta: PaginationMeta
+  } | null>(null)
 
   return (
     <PageContext.Provider
