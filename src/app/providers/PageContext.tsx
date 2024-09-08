@@ -7,6 +7,11 @@ import {
   space,
   spaceType,
 } from '@/data/types'
+import {
+  getLocalStorage,
+  LOCAL_STORAGE_KEYS,
+  setLocalStorage,
+} from '@/utils/localStorage'
 import React, { createContext, useState, useContext, ReactNode } from 'react'
 
 interface PageContextType {
@@ -62,8 +67,16 @@ export const PageProvider: React.FC<PageProviderProps> = ({ children }) => {
   const [title, setTitle] = useState('Title')
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
+  const currentSpace = getLocalStorage(LOCAL_STORAGE_KEYS.SPACE) as space
   const [spaceType, setSpaceType] = useState<spaceType>('personal')
-  const [space, setSpace] = useState<space | null | undefined>(null)
+  const [space, setSpaceInitial] = useState<space | null | undefined>(
+    currentSpace || null,
+  )
+
+  const setSpace = (space: space) => {
+    setSpaceInitial(space)
+    setLocalStorage(LOCAL_STORAGE_KEYS.SPACE, space)
+  }
 
   const [events, setEvents] = useState<{
     events: EventLite[]

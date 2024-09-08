@@ -22,6 +22,12 @@ import {
 } from '../atoms/select'
 import { getMyCommunities } from '@/app/actions/community'
 import { getUserById } from '@/app/actions/user'
+import {
+  getLocalStorage,
+  LOCAL_STORAGE_KEYS,
+  removeLocalStorage,
+} from '@/utils/localStorage'
+import { space } from '@/data/types'
 
 const personalNavItems = [
   routes.events,
@@ -74,11 +80,16 @@ export default function SideBar() {
           (user && user.sub && user.sub.toString().replace('auth0|', '')) || '',
         )) as { name: string; id: string }[]
         if (!response) return
-        setSpaceOptions(
-          spaceOptions.concat(
-            response?.map((c) => ({ label: c.name, value: c.id })),
-          ),
-        )
+        const spaces = response?.map((c) => ({ label: c.name, value: c.id }))
+        setSpaceOptions(spaceOptions.concat(spaces))
+        const storedSpace = getLocalStorage(LOCAL_STORAGE_KEYS.SPACE) as space
+        console.log(storedSpace)
+        if (spaces.find((s) => s.value === storedSpace?.id)) {
+          setSpace(storedSpace)
+          setSpaceType('community')
+        } else {
+          removeLocalStorage(LOCAL_STORAGE_KEYS.SPACE)
+        }
       }
     })()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -86,7 +97,7 @@ export default function SideBar() {
   useEffect(() => {
     setIsOpen(isBreakpointLowOrEqual('md'))
   }, [refresh])
-  const { spaceType, setSpaceType, setSpace } = usePage()
+  const { spaceType, setSpaceType, setSpace, space } = usePage()
 
   const navItems =
     spaceType === 'personal' || !user ? personalNavItems : communityNavItems
@@ -120,7 +131,10 @@ export default function SideBar() {
         <div
           className={`${!isOpen && 'hidden'} flex flex-col gap-4 items-center`}
         >
-          <Select onValueChange={(e) => handleSelectChange(e)} defaultValue="1">
+          <Select
+            onValueChange={(e) => handleSelectChange(e)}
+            defaultValue={space?.id || '1'}
+          >
             <SelectTrigger
               className={`flex space-x-2 ${spaceOptions.length <= 1 && 'hidden'}`}
             >
