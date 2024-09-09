@@ -4,7 +4,7 @@ import ProfileNavItem from '../atoms/profile-nav-item'
 import NavItem from '../atoms/nav-item'
 import SideBarButton from '../atoms/sidebar-button'
 import { useEffect, useState } from 'react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { routes } from '@/data/routes'
 import { isBreakpointLowOrEqual } from '@/utils'
 import { useUser } from '@auth0/nextjs-auth0/client'
@@ -38,14 +38,15 @@ const personalNavItems = [
 
 const communityNavItems = [
   routes.stats,
-  routes.events,
+  routes.communityEvents,
   routes.members,
   routes.participants,
   routes.partners,
-  routes.settings,
+  routes.communitySettings,
 ]
 
 export default function SideBar() {
+  const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
   const toggleOpen = () => setIsOpen(!isOpen)
   const path = usePathname()
@@ -83,10 +84,10 @@ export default function SideBar() {
         const spaces = response?.map((c) => ({ label: c.name, value: c.id }))
         setSpaceOptions(spaceOptions.concat(spaces))
         const storedSpace = getLocalStorage(LOCAL_STORAGE_KEYS.SPACE) as space
-        console.log(storedSpace)
         if (spaces.find((s) => s.value === storedSpace?.id)) {
           setSpace(storedSpace)
           setSpaceType('community')
+          router.push(routes.communityEvents.path)
         } else {
           removeLocalStorage(LOCAL_STORAGE_KEYS.SPACE)
         }
@@ -108,7 +109,13 @@ export default function SideBar() {
 
   const handleSelectChange = (event: string) => {
     const value = event.toString()
-    setSpaceType(value !== '1' ? 'community' : 'personal')
+    if (value !== '1') {
+      setSpaceType('community')
+      router.push(routes.communityEvents.path)
+    } else {
+      setSpaceType('personal')
+      router.push(routes.events.path)
+    }
     const space = spaceOptions.find((s) => s.value === value)
     if (!space) return
     setSpace({ name: space.label, id: space.value })

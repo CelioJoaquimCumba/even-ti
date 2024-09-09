@@ -15,7 +15,7 @@ import { EventCardLoader } from '@/app/components/molecules/event/event-card-loa
 import { useUser } from '@auth0/nextjs-auth0/client'
 import { getReservations } from '@/app/actions/reservations'
 
-export default function Home() {
+export default function ReservationPage() {
   const { user } = useUser()
   const [isLoading, setIsLoading] = useState(true)
   const [reservations, setReservations] = useState<Reservation[]>()
