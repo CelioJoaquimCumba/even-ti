@@ -15,7 +15,14 @@ import { CommunityCardLoader } from '@/app/components/molecules/community-card-l
 import { getCommunities } from '@/app/actions/community'
 
 export default function CommunityPage() {
-  const { setTitle, search, page, setPage } = usePage()
+  const {
+    setTitle,
+    search,
+    page,
+    setPage,
+    communities: storedCommunities,
+    setCommunities: setStoredCommunities,
+  } = usePage()
   const [isLoading, setIsLoading] = useState(false)
   const [communities, setCommunities] = useState<CommunityLite[]>()
   const [meta, setMeta] = useState<PaginationMeta>({
@@ -31,9 +38,20 @@ export default function CommunityPage() {
     ;(async function () {
       try {
         setIsLoading(true)
-        const response = await getCommunities({ search, page })
-        setMeta(response.paginationMeta)
-        setCommunities(response.communities)
+        let response = null
+        if (
+          !storedCommunities ||
+          (page && page > 1) ||
+          (search && search !== '')
+        ) {
+          response = await getCommunities({ search, page })
+          setStoredCommunities(response)
+        } else {
+          response = storedCommunities
+        }
+        if (!response) throw new Error('Communities not found')
+        setMeta(response?.paginationMeta)
+        setCommunities(response?.communities)
       } catch (error) {
         console.log(error)
       } finally {

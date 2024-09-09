@@ -1,22 +1,11 @@
 'use client'
-import SideBar from '@/app/components/molecules/side-bar'
 import '@/app/globals.css'
 import { PageProvider } from '@/app/providers/PageContext'
-import { Inter } from 'next/font/google'
-
-const inter = Inter({ subsets: ['latin'] })
 
 const LayoutContent: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  return (
-    <div
-      className={`flex flex-col md:flex-row overflow-hidden h-dvh w-screen ${inter.className}`}
-    >
-      <SideBar />
-      {children}
-    </div>
-  )
+  return <>{children}</>
 }
 
 export default function ListingLayout({
