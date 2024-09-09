@@ -11,6 +11,7 @@ export const removeLocalStorage = (key: LOCAL_STORAGE_KEYS) => {
 }
 
 export const getLocalStorage = (key: LOCAL_STORAGE_KEYS) => {
+  if (typeof window === 'undefined') return null
   const value = localStorage.getItem(key)
   if (!value || value === 'undefined') {
     return null
