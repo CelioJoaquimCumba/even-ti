@@ -38,11 +38,11 @@ const personalNavItems = [
 
 const communityNavItems = [
   routes.stats,
-  routes.events,
+  routes.communityEvents,
   routes.members,
   routes.participants,
   routes.partners,
-  routes.settings,
+  routes.communitySettings,
 ]
 
 export default function SideBar() {
@@ -83,7 +83,6 @@ export default function SideBar() {
         const spaces = response?.map((c) => ({ label: c.name, value: c.id }))
         setSpaceOptions(spaceOptions.concat(spaces))
         const storedSpace = getLocalStorage(LOCAL_STORAGE_KEYS.SPACE) as space
-        console.log(storedSpace)
         if (spaces.find((s) => s.value === storedSpace?.id)) {
           setSpace(storedSpace)
           setSpaceType('community')
