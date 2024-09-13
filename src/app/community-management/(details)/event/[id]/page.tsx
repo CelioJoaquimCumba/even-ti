@@ -48,13 +48,13 @@ export default function EventPage({ params }: { params: { id: string } }) {
             </Button>
             <h1 className="text-lg md:text-2xl text-gray-700">{event.title}</h1>
           </div>
-          <Button className="px-8 py-4" onClick={()=>{}}>
+          <Button className="px-8 py-4" onClick={() => {}}>
             Marcar Presenças
           </Button>
         </header>
       )}
       <main className="flex flex-col gap-4 flex-grow overflow-y-auto">
-        <ParticipantsList />
+        <ParticipantsList event={event} />
         <EventPreview event={event} loading={loadingEvent} />
       </main>
     </div>

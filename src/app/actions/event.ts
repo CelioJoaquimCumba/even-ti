@@ -1,5 +1,5 @@
 'use server'
-import { Event, EventLite, PaginationMeta } from '@/data/types'
+import { Event, EventLite, PaginationMeta, User } from '@/data/types'
 import prisma from '@/lib/prisma'
 import { convertDate } from '@/lib/utils'
 
@@ -159,4 +159,89 @@ export async function getEventById(id: string): Promise<Event | null> {
     })),
   }
   return event
+}
+
+export async function getParticipantsOfEvent(props: {
+  eventId: string
+  page?: number
+  pageSize?: number
+  search?: string
+}): Promise<{ participants: User[]; paginationMeta: PaginationMeta }> {
+  const { eventId, page = 1, pageSize = 10, search = '' } = props
+
+  // Calculate pagination parameters
+  const skip = (page - 1) * pageSize
+  const take = pageSize
+
+  try {
+    const totalCount = await prisma.reservation.count({
+      where: {
+        eventId,
+        user: {
+          OR: [
+            {
+              name: {
+                contains: search,
+                mode: 'insensitive', // Case-insensitive search
+              },
+            },
+            {
+              email: {
+                contains: search,
+                mode: 'insensitive', // Case-insensitive search
+              },
+            },
+          ],
+        },
+      },
+    })
+
+    // Fetch reservations with user details matching the search criteria for the specific event
+    const reservations = await prisma.reservation.findMany({
+      where: {
+        eventId,
+        user: {
+          OR: [
+            {
+              name: {
+                contains: search,
+                mode: 'insensitive', // Case-insensitive search
+              },
+            },
+            {
+              email: {
+                contains: search,
+                mode: 'insensitive', // Case-insensitive search
+              },
+            },
+          ],
+        },
+      },
+      include: {
+        user: true, // Include user details
+      },
+      skip,
+      take,
+    })
+
+    // Map the reservations to return the participant data
+    const participants: User[] = reservations.map((reservation) => ({
+      id: reservation.user.id,
+      name: reservation.user.name,
+      email: reservation.user.email,
+      image: reservation.user.image,
+    }))
+
+    const paginationMeta: PaginationMeta = {
+      totalCount,
+      page,
+      pageSize,
+      totalPages: Math.ceil(totalCount / pageSize),
+    }
+
+    return { participants, paginationMeta }
+  } catch (error) {
+    console.error('Error fetching participants:', error)
+    throw error
+  }
 }
