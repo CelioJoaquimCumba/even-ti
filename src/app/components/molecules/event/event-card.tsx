@@ -18,19 +18,23 @@ import ErrorModal from '../error-modal'
 import SuccessfulReservationEventModal from '../reservation/successful-reservation-event-modal'
 import { makeReservation } from '@/app/actions/reservations'
 
-export function EventCard(props: { event: EventLite }) {
+type role = 'admin' | 'user'
+export function EventCard(props: { event: EventLite; role?: role }) {
   const {
-    id,
-    community,
-    title,
-    logo: image,
-    date,
-    time,
-    location,
-    description,
-    speakers,
-    tickets,
-  } = props.event
+    event: {
+      id,
+      community,
+      title,
+      logo: image,
+      date,
+      time,
+      location,
+      description,
+      speakers,
+      tickets,
+    },
+    role = 'user',
+  } = props
   const [isOpen, setIsOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
@@ -71,7 +75,13 @@ export function EventCard(props: { event: EventLite }) {
     <>
       <Card
         className={`flex flex-col space-y-2 ${!isOpen && 'md:flex-row'} w-full hover:bg-gray-50 justify-between p-4 rounded-2xl gap-2 cursor-pointer`}
-        onClick={() => router.push(`/events/${id}`)}
+        onClick={() =>
+          router.push(
+            role === 'user'
+              ? `/event/${props.event.id}`
+              : `/community-management/event/${props.event.id}`,
+          )
+        }
       >
         <CardContent className="flex flex-wrap md:flex-nowrap gap-6 p-0 ">
           <div
@@ -137,21 +147,27 @@ export function EventCard(props: { event: EventLite }) {
           </section>
         </CardContent>
         <CardFooter className={`flex flex-col justify-between items-end p-0`}>
-          <Button
-            variant={'outline'}
-            size={'icon'}
-            className={`rounded-full hidden md:flex ${isOpen && 'md:hidden'}`}
-            onClick={(e) => {
-              setIsOpen(!isOpen)
-              e.stopPropagation()
-            }}
-          >
-            <ChevronDown />
-          </Button>
-          <div className="flex gap-2 w-full">
+          {role === 'user' && (
+            <Button
+              variant={'outline'}
+              size={'icon'}
+              className={`rounded-full hidden md:flex ${isOpen && 'md:hidden'}`}
+              onClick={(e) => {
+                setIsOpen(!isOpen)
+                e.stopPropagation()
+              }}
+            >
+              <ChevronDown />
+            </Button>
+          )}
+          <div className="flex gap-2 w-full h-full items-end">
             <Link
-              href={`/event/${props.event.id}`}
-              className={`w-full md:w-fit whitespace-pre-line hidden ${isOpen && 'md:flex'}`}
+              href={
+                role === 'user'
+                  ? `/event/${props.event.id}`
+                  : `/community-management/event/${props.event.id}`
+              }
+              className={`w-full md:w-fit whitespace-pre-line hidden ${(isOpen || role === 'admin') && 'md:flex'}`}
             >
               <Button
                 variant={'outline'}
@@ -160,16 +176,30 @@ export function EventCard(props: { event: EventLite }) {
                 Ver mais detalhes
               </Button>
             </Link>
-            <Button
-              variant={'default'}
-              className="w-full md:w-fit whitespace-pre-line px-8 py-4"
-              onClick={(e) => {
-                goToReservation()
-                e.stopPropagation()
-              }}
-            >
-              Reservar Bilhete {tickets && `(${tickets} disponiveis)`}
-            </Button>
+            {role === 'admin' ? (
+              <Link
+                href={`/community-management/event/edit/${props.event.id}`}
+                className={`w-full md:w-fit whitespace-pre-line`}
+              >
+                <Button
+                  variant={'default'}
+                  className="w-full md:w-fit whitespace-pre-line px-8 py-4"
+                >
+                  Editar
+                </Button>
+              </Link>
+            ) : (
+              <Button
+                variant={'default'}
+                className="w-full md:w-fit whitespace-pre-line px-8 py-4"
+                onClick={(e) => {
+                  goToReservation()
+                  e.stopPropagation()
+                }}
+              >
+                Reservar Bilhete {tickets && `(${tickets} disponiveis)`}
+              </Button>
+            )}
           </div>
         </CardFooter>
       </Card>
