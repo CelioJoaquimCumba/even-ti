@@ -5,7 +5,7 @@ import { Button } from '@/app/components/atoms/button'
 
 import ParticipantsList from '@/app/community-management/(details)/event/[id]/participantsList'
 import { Event } from '@/data/types'
-import { ChevronLeft } from 'lucide-react'
+import { ChevronLeft, ListChecks } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import EventPreview from './eventPreview'
@@ -48,8 +48,14 @@ export default function EventPage({ params }: { params: { id: string } }) {
             </Button>
             <h1 className="text-lg md:text-2xl text-gray-700">{event.title}</h1>
           </div>
-          <Button className="px-8 py-4" onClick={() => {}}>
-            Marcar Presenças
+          <Button
+            className="px-8 py-4"
+            onClick={() =>
+              router.push(`/community-management/event/${event.id}/`)
+            }
+          >
+            <ListChecks className="w-4 h-4" />
+            <span>Marcar Presenças</span>
           </Button>
         </header>
       )}
