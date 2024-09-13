@@ -3,46 +3,72 @@ import { Event, EventLite, PaginationMeta } from '@/data/types'
 import prisma from '@/lib/prisma'
 import { convertDate } from '@/lib/utils'
 
+type filter = {
+  communityId?: string
+}
+
 export async function getEvents(props: {
   search?: string
   page?: number
   pageSize?: number
+  filter?: filter
 }): Promise<{ events: EventLite[]; paginationMeta: PaginationMeta }> {
-  const { search = '', page = 1, pageSize = 10 } = props
+  const { search = '', page = 1, pageSize = 10, filter } = props
+  const { communityId } = filter || {}
+
+  // Filter condition for communityId, accessed via EventOrganizer relation
+  const communityFilter = communityId
+    ? { organizers: { some: { community: { id: communityId } } } }
+    : {}
+
+  // Count total events matching the criteria
   const totalCount = await prisma.event.count({
     where: {
-      OR: [
+      AND: [
+        communityFilter,
         {
-          title: {
-            contains: search,
-            mode: 'insensitive',
-          },
-        },
-        {
-          community: {
-            contains: search,
-            mode: 'insensitive',
-          },
+          OR: [
+            {
+              title: {
+                contains: search,
+                mode: 'insensitive' as const,
+              },
+            },
+            {
+              community: {
+                contains: search,
+                mode: 'insensitive' as const,
+              },
+            },
+          ],
         },
       ],
     },
   })
+
   const skip = (page - 1) * pageSize
   const take = pageSize
+
+  // Fetch events with speakers and apply filters
   const eventsWithSpeakers = await prisma.event.findMany({
     where: {
-      OR: [
+      AND: [
+        communityFilter,
         {
-          title: {
-            contains: search,
-            mode: 'insensitive',
-          },
-        },
-        {
-          community: {
-            contains: search,
-            mode: 'insensitive',
-          },
+          OR: [
+            {
+              title: {
+                contains: search,
+                mode: 'insensitive' as const,
+              },
+            },
+            {
+              community: {
+                contains: search,
+                mode: 'insensitive' as const,
+              },
+            },
+          ],
         },
       ],
     },
@@ -52,21 +78,27 @@ export async function getEvents(props: {
           speaker: true,
         },
       },
+      organizers: {
+        include: {
+          community: true,
+        },
+      },
     },
     skip,
     take,
   })
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const events: EventLite[] = eventsWithSpeakers.map((event: any) => ({
+
+  // Process the events data
+  const events: EventLite[] = eventsWithSpeakers.map((event) => ({
     ...event,
     date: convertDate(event.date.toString()),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    speakers: event.speakers.map((speaker: any) => ({
+    speakers: event.speakers.map((speaker) => ({
       id: speaker.speaker.id,
       name: speaker.speaker.name,
       image: speaker.speaker.image,
     })),
   }))
+
   const response = {
     events,
     paginationMeta: {
@@ -76,8 +108,10 @@ export async function getEvents(props: {
       totalPages: Math.ceil(totalCount / pageSize),
     },
   }
+
   return response
 }
+
 export async function getEventById(id: string): Promise<Event | null> {
   const eventsWithSpeakers = await prisma.event.findFirst({
     where: {
