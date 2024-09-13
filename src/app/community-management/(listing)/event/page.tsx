@@ -13,6 +13,9 @@ import { EventLite, PaginationMeta } from '@/data/types'
 import { useEffect, useState } from 'react'
 import { EventCardLoader } from '@/app/components/molecules/event/event-card-loader'
 import { getEvents } from '@/app/actions/event'
+import { Button } from '@/app/components/atoms/button'
+import { Plus } from 'lucide-react'
+import Link from 'next/link'
 
 export default function EventPage() {
   const [isLoading, setIsLoading] = useState(true)
@@ -61,7 +64,15 @@ export default function EventPage() {
     })()
   }, [search, page])
   return (
-    <main className="flex w-full h-full flex-col items-center gap-2 md:gap-6 bg-white rounded-2xl overflow-y-auto">
+    <main className="flex w-full h-full flex-col items-center gap-2 md:gap-6 bg-white overflow-y-auto">
+      <div className="flex justify-end w-full">
+        <Link href={`/community-management/event/create`}>
+          <Button onClick={() => setPage(1)}>
+            <Plus className="w-4 h-4" />
+            <span>Adicionar evento</span>
+          </Button>
+        </Link>
+      </div>
       {isLoading ? (
         [1, 2].map((_event, index) => <EventCardLoader key={index} />)
       ) : !events || events.length === 0 ? (
