@@ -177,17 +177,18 @@ export function EventCard(props: { event: EventLite; role?: role }) {
               </Button>
             </Link>
             {role === 'admin' ? (
-              <Link
-                href={`/community-management/event/edit/${props.event.id}`}
-                className={`w-full md:w-fit whitespace-pre-line`}
+              <Button
+                variant={'default'}
+                className="w-full md:w-fit whitespace-pre-line px-8 py-4"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  router.push(
+                    `/community-management/event/edit/${props.event.id}`,
+                  )
+                }}
               >
-                <Button
-                  variant={'default'}
-                  className="w-full md:w-fit whitespace-pre-line px-8 py-4"
-                >
-                  Editar
-                </Button>
-              </Link>
+                Editar
+              </Button>
             ) : (
               <Button
                 variant={'default'}
