@@ -78,7 +78,7 @@ export function EventCard(props: { event: EventLite; role?: role }) {
         onClick={() =>
           router.push(
             role === 'user'
-              ? `/event/${props.event.id}`
+              ? `/events/${props.event.id}`
               : `/community-management/event/${props.event.id}`,
           )
         }
@@ -164,7 +164,7 @@ export function EventCard(props: { event: EventLite; role?: role }) {
             <Link
               href={
                 role === 'user'
-                  ? `/event/${props.event.id}`
+                  ? `/events/${props.event.id}`
                   : `/community-management/event/${props.event.id}`
               }
               className={`w-full md:w-fit whitespace-pre-line hidden ${(isOpen || role === 'admin') && 'md:flex'}`}

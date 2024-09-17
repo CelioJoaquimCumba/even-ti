@@ -39,7 +39,6 @@ export default function Home() {
       try {
         setIsLoading(true)
         let response = null
-        console.log(page, search)
         if (!storedEvents || (page && page > 1) || (search && search !== '')) {
           response = await getEvents({ search, page })
           setStoredEvents(response)
