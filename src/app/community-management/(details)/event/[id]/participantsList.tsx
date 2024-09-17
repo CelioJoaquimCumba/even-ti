@@ -62,11 +62,11 @@ export default function ParticipantsList(props: { event: Event | undefined }) {
     <div className="flex flex-col gap-4 p-2 md:p-4 bg-white rounded-md">
       <h3 className="text-2xl text-gray-600 font-medium">Participantes</h3>
       {loading ? (
-        <>
+        <div>
           <span className="w-full animate-pulse aspect-[3/4]">
             carregando...
           </span>
-        </>
+        </div>
       ) : (
         <div className="flex flex-col items-end gap-4">
           <form
