@@ -1,7 +1,7 @@
 import { Trash } from 'lucide-react'
 import { Button } from '../../atoms/button'
 
-export default function SponsorCardCreation(props: {
+export default function PartnerCardCreation(props: {
   label: string
   onDelete: () => void
 }) {

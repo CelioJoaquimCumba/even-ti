@@ -16,9 +16,11 @@ import {
 } from '@/app/components/atoms/select'
 import { ChevronLeft, Plus } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import { CreateEventValidation } from '@/app/formValidations/create-event'
+import { getPartners } from '@/app/actions/partner'
+import { usePage } from '@/app/providers/PageContext'
 
 export default function EventPage() {
   const router = useRouter()
@@ -35,26 +37,42 @@ export default function EventPage() {
         max_tickets: 0,
         goals: [],
         speakers: [],
-        sponsors: [],
+        partners: [],
       },
       onSubmit: () => {
         handleSubmit()
       },
     }),
   )
-  const handleSubmit = () => {
-    console.log('submitting')
-  }
+  const {space} = usePage()
+  useEffect(() => {
+    ;(async function () {
+      try {
+        const response = await getPartners({communityId: space?.id})
+        if (!response || !response == null) {
+          throw new Error('Event not found')
+          return
+        }
+        setPartnerOptions(response.partners.map((partner) => {
+          return {
+            label: partner.name,
+            value: partner.id,
+          }
+        }))
+      } catch (error) {
+        console.log(error)
+      }
+    })()
+  }, [])
 
   const [logo, setLogo] = useState<File | null>(null)
   const [background, setBackground] = useState<File | null>(null)
-  const [date, setDate] = useState<Date>()
   const [currentGoal, setCurrentGoal] = useState('')
   const [currentSpeaker, setCurrentSpeaker] = useState<{
     label: string
     id: string
   }>()
-  const [currentSponsor, setCurrentSponsor] = useState<{
+  const [currentPartner, setCurrentPartner] = useState<{
     label: string
     id: string
   }>()
@@ -121,29 +139,24 @@ export default function EventPage() {
       (s) => s.id !== speaker.id,
     )
   }
-  const addSponsor = () => {
-    if (!currentSponsor) return
-    formik.values.sponsors = [...formik.values.sponsors, currentSponsor]
+  const addPartner = () => {
+    if (!currentPartner) return
+    formik.values.partners = [...formik.values.partners, currentPartner]
   }
-  const removeSponsor = (sponsor: { id: string; label: string }) => {
-    formik.values.sponsors = formik.values.sponsors.filter(
-      (s) => s.id !== sponsor.id,
+  const removePartner = (partner: { id: string; label: string }) => {
+    formik.values.partners = formik.values.partners.filter(
+      (s) => s.id !== partner.id,
     )
   }
-  const [sponsorOptions, setSponsorOptions] = useState<
+  const [partnerOptions, setPartnerOptions] = useState<
     { label: string; value: string }[]
-  >([
-    {
-      label: 'Pessoal',
-      value: '1',
-    },
-  ])
-  const handleSponsor = (e: string) => {
-    const sponsor = sponsorOptions.find((s) => s.value === e)
-    const label = sponsor?.label
-    const id = sponsor?.value
+  >([])
+  const handlePartner = (e: string) => {
+    const partner = partnerOptions.find((s) => s.value === e)
+    const label = partner?.label
+    const id = partner?.value
     if (!label || !id) return
-    setCurrentSponsor({
+    setCurrentPartner({
       label,
       id,
     })
@@ -256,10 +269,7 @@ export default function EventPage() {
               error={formik.errors.max_tickets}
             />
 
-            <Select
-              onValueChange={(e) => handleSpeaker(e)}
-              defaultValue={currentSpeaker}
-            >
+            <Select onValueChange={(e) => handleSpeaker(e)}>
               <p>Speakers do evento</p>
               <div className="flex gap-2">
                 <SelectTrigger className={`flex space-x-2 `}>
@@ -295,42 +305,39 @@ export default function EventPage() {
               />
             ))}
 
-            <Select
-              onValueChange={(e) => handleSponsor(e)}
-              defaultValue={currentSponsor}
-            >
+            <Select onValueChange={(e) => handlePartner(e)}>
               <p>Patrocinadores do evento</p>
               <div className="flex gap-2">
                 <SelectTrigger className={`flex space-x-2 `}>
                   <SelectValue placeholder={'Sponsers'} />
                 </SelectTrigger>
-                <Button variant={'outline'} onClick={() => addSponsor()}>
+                <Button variant={'outline'} onClick={() => addPartner()}>
                   Adicionar
                 </Button>
               </div>
               <SelectContent>
                 <SelectGroup>
-                  <SelectLabel>{'Sponsors'}</SelectLabel>
-                  {sponsorOptions
-                    .filter((sponsor) => {
-                      return !formik.values.sponsors.find(
-                        (sponsorr: { id: string }) =>
-                          sponsorr.id === sponsor.value,
+                  <SelectLabel>{'Partners'}</SelectLabel>
+                  {partnerOptions
+                    .filter((partner) => {
+                      return !formik.values.partners.find(
+                        (partnerr: { id: string }) =>
+                          partnerr.id === partner.value,
                       )
                     })
-                    .map((sponsor) => (
-                      <SelectItem key={sponsor.value} value={sponsor.value}>
-                        {sponsor.label}
+                    .map((partner) => (
+                      <SelectItem key={partner.value} value={partner.value}>
+                        {partner.label}
                       </SelectItem>
                     ))}
                 </SelectGroup>
               </SelectContent>
             </Select>
-            {formik.values.sponsors.map((sponsor) => (
+            {formik.values.partners.map((partner) => (
               <ObjectiveCardCreation
-                label={sponsor.label}
-                key={sponsor.id}
-                onDelete={() => removeSponsor(sponsor)}
+                label={partner.label}
+                key={partner.id}
+                onDelete={() => removePartner(partner)}
               />
             ))}
           </div>

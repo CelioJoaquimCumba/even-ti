@@ -13,7 +13,7 @@ export interface ICreateCommunity {
     max_tickets: number
     goals: string[]
     speakers: { id: string; label: string }[]
-    sponsors: { id: string; label: string }[]
+    partners: { id: string; label: string }[]
   }
 }
 
@@ -33,7 +33,7 @@ export const CreateEventValidation = ({
       max_tickets: initialValues?.max_tickets || 0,
       goals: initialValues?.goals || [''],
       speakers: initialValues?.speakers || [],
-      sponsors: initialValues?.sponsors || [],
+      partners: initialValues?.partners || [],
     },
     validationSchema: Yup.object({
       name: Yup.string()
@@ -58,7 +58,7 @@ export const CreateEventValidation = ({
       speakers: Yup.array().required(
         createCommunityValidationMessages.required,
       ),
-      sponsors: Yup.array().required(
+      partners: Yup.array().required(
         createCommunityValidationMessages.required,
       ),
     }),
