@@ -61,7 +61,7 @@ export default function EventPage() {
                 onDelete={() => {}}
               />
             ))}
-            <DateInput date={date} setDate={(date: Date) => setDate(date)} />
+            <DateInput date={date} setDate={setDate} />
             <Input label="Local do evento" />
             <Input label="Numero de ingressos" />
           </div>

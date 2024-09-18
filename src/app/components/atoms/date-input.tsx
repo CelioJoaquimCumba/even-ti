@@ -17,7 +17,7 @@ import {
 
 export function DateInput(props: {
   date: Date | undefined
-  setDate: (date: Date) => void
+  setDate: React.Dispatch<React.SetStateAction<Date | undefined>>
 }) {
   const { date, setDate } = props
 
