@@ -46,7 +46,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             {...props}
           />
           {button && (
-            <Button type={buttonOnClick ? 'button' : 'submit'}>
+            <Button
+              type={buttonOnClick ? 'button' : 'submit'}
+              onClick={buttonOnClick}
+            >
               {buttonLabel}
             </Button>
           )}

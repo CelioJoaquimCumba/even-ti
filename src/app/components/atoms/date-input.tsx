@@ -16,31 +16,43 @@ import {
 } from '@/app/components/atoms/popover'
 
 export function DateInput(props: {
-  date: Date | undefined
-  setDate: React.Dispatch<React.SetStateAction<Date | undefined>>
+  value: Date | undefined
+  onChange: (value: string) => void
+  error?: string
 }) {
-  const { date, setDate } = props
+  const { value, onChange, error } = props
+  const handleSelect = (date: Date) => {
+    onChange(date.toISOString())
+  }
 
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button
-          variant={'outline'}
-          className={cn(
-            'w-full justify-start text-left font-normal',
-            !date && 'text-muted-foreground',
-          )}
-        >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? (
-            format(date, 'PPP', { locale: pt })
-          ) : (
-            <span>Pick a date</span>
-          )}
-        </Button>
+        <div>
+          <Button
+            variant={'outline'}
+            className={cn(
+              'w-full justify-start text-left font-normal',
+              !value && 'text-muted-foreground',
+            )}
+          >
+            <CalendarIcon className="mr-2 h-4 w-4" />
+            {value ? (
+              format(value, 'PPP', { locale: pt })
+            ) : (
+              <span>Pick a date</span>
+            )}
+          </Button>
+          <p className="text-red-500">{error}</p>
+        </div>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
-        <Calendar lang="pt" mode="single" selected={date} onSelect={setDate} />
+        <Calendar
+          lang="pt"
+          mode="single"
+          selected={value}
+          onSelect={(selectedDay) => selectedDay && handleSelect(selectedDay)}
+        />
       </PopoverContent>
     </Popover>
   )
