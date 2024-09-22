@@ -245,3 +245,45 @@ export async function getParticipantsOfEvent(props: {
     throw error
   }
 }
+
+export async function createEvent(event: Event, communityId: string) {
+  if (!communityId) return
+  try {
+    const eventData = await prisma.event.create({
+      data: {
+        community: event.community,
+        title: event.title,
+        background: event.background,
+        logo: event.logo,
+        tagLine: event.tagLine,
+        date: event.date,
+        time: event.time,
+        location: event.location,
+        description: event.description,
+        tickets: event.tickets,
+        objectives: event.objectives,
+      },
+    })
+    await prisma.eventOrganizer.create({
+      data: {
+        eventId: eventData.id,
+        organizerId: communityId,
+      },
+    })
+    await prisma.eventSpeaker.createMany({
+      data: event.speakers.map((speaker) => ({
+        speakerId: speaker.id,
+        eventId: eventData.id,
+      })),
+    })
+    await prisma.eventPartner.createMany({
+      data: event.partners.map((partner) => ({
+        partnerId: partner.id,
+        eventId: eventData.id,
+      })),
+    })
+    return eventData
+  } catch (error) {
+    console.log(error)
+  }
+}

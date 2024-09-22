@@ -6,12 +6,12 @@ export interface Organizer {
 export interface Partner {
   id: string
   name: string
-  image: string
+  image?: string
 }
 export interface User {
   id: string
   name: string
-  image: string
+  image?: string
   email?: string
   phone?: string
   username?: string

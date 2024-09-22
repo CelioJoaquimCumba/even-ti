@@ -9,6 +9,7 @@ export interface ICreateCommunity {
     description: string
     slogan: string
     date: Date | undefined
+    time: string | undefined
     location: string
     max_tickets: number
     goals: string[]
@@ -29,6 +30,7 @@ export const CreateEventValidation = ({
       description: initialValues?.description || '',
       slogan: initialValues?.slogan || '',
       date: initialValues?.date || undefined,
+      time: initialValues?.time || '',
       location: initialValues?.location || '',
       max_tickets: initialValues?.max_tickets || 0,
       goals: initialValues?.goals || [''],
@@ -48,6 +50,7 @@ export const CreateEventValidation = ({
       ),
       slogan: Yup.string(),
       date: Yup.date().required(createCommunityValidationMessages.required),
+      time: Yup.string().required(createCommunityValidationMessages.required),
       location: Yup.string().required(
         createCommunityValidationMessages.required,
       ),

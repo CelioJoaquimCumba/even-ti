@@ -21,6 +21,11 @@ import { useFormik } from 'formik'
 import { CreateEventValidation } from '@/app/formValidations/create-event'
 import { getPartners } from '@/app/actions/partner'
 import { usePage } from '@/app/providers/PageContext'
+import { getSpeakers } from '@/app/actions/speaker'
+import { createEvent } from '@/app/actions/event'
+import { Event } from '@/data/types'
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { storage } from '@/app/firebaseConfig'
 
 export default function EventPage() {
   const router = useRouter()
@@ -34,6 +39,7 @@ export default function EventPage() {
         slogan: '',
         date: undefined,
         location: '',
+        time: '',
         max_tickets: 0,
         goals: [],
         speakers: [],
@@ -44,27 +50,48 @@ export default function EventPage() {
       },
     }),
   )
-  const {space} = usePage()
+  const { space } = usePage()
   useEffect(() => {
     ;(async function () {
       try {
-        const response = await getPartners({communityId: space?.id})
+        const response = await getPartners({ communityId: space?.id })
         if (!response || !response == null) {
           throw new Error('Event not found')
           return
         }
-        setPartnerOptions(response.partners.map((partner) => {
-          return {
-            label: partner.name,
-            value: partner.id,
-          }
-        }))
+        setPartnerOptions(
+          response.partners.map((partner) => {
+            return {
+              label: partner.name,
+              value: partner.id,
+            }
+          }),
+        )
+      } catch (error) {
+        console.log(error)
+      }
+    })()
+    ;(async function () {
+      try {
+        const response = await getSpeakers({ communityId: space?.id })
+        if (!response || !response == null) {
+          throw new Error('Event not found')
+          return
+        }
+        setSpeakerOptions(
+          response.speakers.map((speaker) => {
+            return {
+              label: speaker.name,
+              value: speaker.id,
+            }
+          }),
+        )
       } catch (error) {
         console.log(error)
       }
     })()
   }, [])
-
+  const [loading, setLoading] = useState<boolean>(false)
   const [logo, setLogo] = useState<File | null>(null)
   const [background, setBackground] = useState<File | null>(null)
   const [currentGoal, setCurrentGoal] = useState('')
@@ -84,12 +111,7 @@ export default function EventPage() {
   }
   const [speakerOptions, setSpeakerOptions] = useState<
     { label: string; value: string }[]
-  >([
-    {
-      label: 'Pessoal',
-      value: '1',
-    },
-  ])
+  >([])
   const handleLogoSelection = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLogo(e.target.files![0])
     formik.values.logo = URL.createObjectURL(e.target.files![0])
@@ -110,19 +132,6 @@ export default function EventPage() {
     setBackground(null)
     formik.values.background = ''
   }
-  // const handleUpload = async (file: File): Promise<string> => {
-  //   if (!file) return ''
-
-  //   const storageRef = ref(storage, `users/${user.id}/community/${file.name}`)
-
-  //   try {
-  //     await uploadBytes(storageRef, file)
-  //     return await getDownloadURL(storageRef)
-  //   } catch (error) {
-  //     console.error('Error uploading the file', error)
-  //   }
-  //   return ''
-  // }
 
   const addGoal = (goal: string) => {
     formik.values.goals = [...formik.values.goals, goal]
@@ -132,7 +141,10 @@ export default function EventPage() {
   }
   const addSpeaker = () => {
     if (!currentSpeaker) return
-    formik.values.speakers = [...formik.values.speakers, currentSpeaker]
+    formik.setFieldValue('speakers', [
+      ...formik.values.speakers,
+      currentSpeaker,
+    ])
   }
   const removeSpeaker = (speaker: { id: string; label: string }) => {
     formik.values.speakers = formik.values.speakers.filter(
@@ -141,7 +153,10 @@ export default function EventPage() {
   }
   const addPartner = () => {
     if (!currentPartner) return
-    formik.values.partners = [...formik.values.partners, currentPartner]
+    formik.setFieldValue('partners', [
+      ...formik.values.partners,
+      currentPartner,
+    ])
   }
   const removePartner = (partner: { id: string; label: string }) => {
     formik.values.partners = formik.values.partners.filter(
@@ -170,6 +185,62 @@ export default function EventPage() {
       label,
       id,
     })
+  }
+  const handleUpload = async (
+    file: File,
+    fileName?: string,
+  ): Promise<string> => {
+    if (!file) return ''
+
+    const storageRef = ref(
+      storage,
+      `/communities/${space?.name}/${formik.values.name}/${fileName || file.name}`,
+    )
+
+    try {
+      await uploadBytes(storageRef, file)
+      return await getDownloadURL(storageRef)
+    } catch (error) {
+      console.error('Error uploading the file', error)
+    }
+    return ''
+  }
+  const handleSubmit = async () => {
+    setLoading(true)
+    try {
+      const backgroundSrc = await handleUpload(background!, 'background')
+      const logoSrc = await handleUpload(logo!, 'logo')
+      console.log(formik.values.date?.toString())
+      const event: Event = {
+        community: space?.name || '',
+        title: formik.values.name,
+        background: backgroundSrc,
+        logo: logoSrc,
+        tagLine: formik.values.slogan,
+        date: formik.values.date?.toString() || '',
+        time: formik.values.time,
+        location: formik.values.location,
+        description: formik.values.description,
+        tickets: formik.values.max_tickets,
+        objectives: formik.values.goals,
+        organizers: [],
+        partners: formik.values.partners.map((partner) => ({
+          id: partner.id,
+          name: partner.label,
+        })),
+        id: '',
+        speakers: formik.values.speakers.map((speaker) => ({
+          id: speaker.id,
+          name: speaker.label,
+        })),
+      }
+      const eventResponse = await createEvent(event, space?.id || '')
+      router.push(`/community-management/event/${eventResponse?.id}`)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
   }
   return (
     <div className="flex flex-col pt-2 pb-8 px-6 bg-secondary overflow-hidden w-full h-full gap-2 md:gap-6">
@@ -254,6 +325,14 @@ export default function EventPage() {
               error={formik.errors.date}
             />
             <Input
+              label="Periodo do evento(tempo)"
+              value={formik.values.time}
+              required
+              placeholder="Insira a hora inicial e final"
+              onChange={formik.handleChange('time')}
+              error={formik.errors.time}
+            />
+            <Input
               label="Local do evento"
               placeholder="Insira o local do evento"
               value={formik.values.location}
@@ -275,7 +354,11 @@ export default function EventPage() {
                 <SelectTrigger className={`flex space-x-2 `}>
                   <SelectValue placeholder={'Speakers'} />
                 </SelectTrigger>
-                <Button variant={'outline'} onClick={() => addSpeaker()}>
+                <Button
+                  type="button"
+                  variant={'outline'}
+                  onClick={() => addSpeaker()}
+                >
                   Adicionar
                 </Button>
               </div>
@@ -311,7 +394,11 @@ export default function EventPage() {
                 <SelectTrigger className={`flex space-x-2 `}>
                   <SelectValue placeholder={'Sponsers'} />
                 </SelectTrigger>
-                <Button variant={'outline'} onClick={() => addPartner()}>
+                <Button
+                  type="button"
+                  variant={'outline'}
+                  onClick={() => addPartner()}
+                >
                   Adicionar
                 </Button>
               </div>
@@ -343,7 +430,7 @@ export default function EventPage() {
           </div>
           <div className="flex gap-2 w-full justify-center">
             <Button variant={'outline'}>Cancelar</Button>
-            <Button className="gap-2">
+            <Button className="gap-2" loading={loading}>
               <Plus className="h-4 w-4" />
               <span>Criar evento</span>
             </Button>
