@@ -88,8 +88,8 @@ export function EventCard(props: { event: EventLite; role?: role }) {
           <div
             className={`hidden ${!isOpen && 'md:flex md:flex-col'} w-40 h-40 justify-center items-center border rounded-3xl`}
           >
-            <h2>{date.getDay()}</h2>
-            <h3>{date.getMonth()}</h3>
+            <h2>{convertDate(date.toDateString(), 'day')}</h2>
+            <h3>{convertDate(date.toDateString(), 'month')}</h3>
           </div>
           <Image
             unoptimized
