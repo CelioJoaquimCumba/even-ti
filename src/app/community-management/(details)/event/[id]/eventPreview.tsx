@@ -8,6 +8,7 @@ import { Event } from '@/data/types'
 import { Pencil } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import { convertDate } from '@/lib/utils'
 
 export default function EventPreview(props: {
   event: Event | undefined
@@ -64,7 +65,7 @@ export default function EventPreview(props: {
               <h2 className="text-2xl md:text-5xl">{event.title}</h2>
               <p className="md:text-2xl">{event.tagLine}</p>
               <p className="md:text-xl">
-                {event.date}, {event.time}
+                {convertDate(event.date.toDateString())}, {event.time}
               </p>
               <p className="md:text-xl">{event.location}</p>
               <Button variant={'secondary'} onClick={goToReservation}>
@@ -144,7 +145,7 @@ export default function EventPreview(props: {
                 <Image
                   unoptimized
                   key={partner.id}
-                  src={partner.image}
+                  src={partner.image || ''}
                   alt={partner.name}
                   width={300}
                   height={300}

@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function convertDate(dateString: string) {
+export function convertDate(dateString: string, part?: 'day' | 'month') {
   // Parse the input date string
   const date = new Date(dateString)
 
@@ -28,9 +28,12 @@ export function convertDate(dateString: string) {
     'Novembro',
     'Dezembro',
   ]
-
+  const formattedDay = day.toString().padStart(2, '0')
+  if (part === 'day') return formattedDay
+  const formattedMonth = months[month]
+  if (part === 'month') return formattedMonth
   // Format the date as "dd de Month"
-  const formattedDate = `${day.toString().padStart(2, '0')} de ${months[month]}`
+  const formattedDate = `${formattedDay} de ${formattedMonth}`
 
   return formattedDate
 }

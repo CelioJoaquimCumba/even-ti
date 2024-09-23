@@ -191,6 +191,7 @@ export default function SideBar() {
                 selected={path === item.path}
                 path={item.path}
                 icon={item.icon}
+                comingSoon={item.comingSoon}
               />
             ))}
         </ul>

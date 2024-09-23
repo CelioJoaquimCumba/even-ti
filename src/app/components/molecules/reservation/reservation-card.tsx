@@ -15,6 +15,7 @@ import ErrorModal from '../error-modal'
 import SuccessfulCancelationEventModal from './successful-cancelation-event-modal'
 import EventCancelationModal from '../event/event-cancelation-modal'
 import { cancelReservation } from '@/app/actions/reservations'
+import { convertDate } from '@/lib/utils'
 
 export function ReservationCard(props: {
   isDisabled?: boolean
@@ -76,8 +77,8 @@ export function ReservationCard(props: {
           <div
             className={`hidden md:flex md:flex-col w-40 h-40 min-w-40 aspect-square justify-center items-center border rounded-3xl`}
           >
-            <h2>{date.split('de')[1]}</h2>
-            <h3>{date.split('de')[0]}</h3>
+            <h2>{convertDate(date.toDateString(), 'day')}</h2>
+            <h3>{convertDate(date.toDateString(), 'month')}</h3>
           </div>
           <Image
             unoptimized
@@ -98,7 +99,9 @@ export function ReservationCard(props: {
                 className={`gap-2 px-2 py-1 w-fit md:hidden`}
               >
                 <CalendarIcon />
-                <span className="md:whitespace-nowrap">{date}</span>
+                <span className="md:whitespace-nowrap">
+                  {convertDate(date.toDateString())}
+                </span>
               </Badge>
               <Badge variant={'secondary'} className="gap-2 px-2 py-1 w-fit">
                 <ClockIcon />

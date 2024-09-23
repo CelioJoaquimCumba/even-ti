@@ -11,6 +11,7 @@ import ErrorModal from '@/app/components/molecules/error-modal'
 import ReserveEventModal from '@/app/components/molecules/reservation/reserve-event-modal'
 import SuccessfulReservationEventModal from '@/app/components/molecules/reservation/successful-reservation-event-modal'
 import { Event, ModalType } from '@/data/types'
+import { convertDate } from '@/lib/utils'
 import { useUser } from '@auth0/nextjs-auth0/client'
 import { ChevronLeft } from 'lucide-react'
 import Image from 'next/image'
@@ -120,7 +121,7 @@ export default function EventPage({ params }: { params: { id: string } }) {
                 <h2 className="text-2xl md:text-5xl">{event.title}</h2>
                 <p className="md:text-2xl">{event.tagLine}</p>
                 <p className="md:text-xl">
-                  {event.date}, {event.time}
+                  {convertDate(event?.date.toDateString())}, {event.time}
                 </p>
                 <p className="md:text-xl">{event.location}</p>
                 <Button variant={'secondary'} onClick={goToReservation}>
@@ -200,7 +201,7 @@ export default function EventPage({ params }: { params: { id: string } }) {
                   <Image
                     unoptimized
                     key={partner.id}
-                    src={partner.image}
+                    src={partner.image || ''}
                     alt={partner.name}
                     width={300}
                     height={300}

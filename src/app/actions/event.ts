@@ -1,7 +1,6 @@
 'use server'
 import { Event, EventLite, PaginationMeta, User } from '@/data/types'
 import prisma from '@/lib/prisma'
-import { convertDate } from '@/lib/utils'
 
 type filter = {
   communityId?: string
@@ -91,7 +90,7 @@ export async function getEvents(props: {
   // Process the events data
   const events: EventLite[] = eventsWithSpeakers.map((event) => ({
     ...event,
-    date: convertDate(event.date.toString()),
+    date: event.date,
     speakers: event.speakers.map((speaker) => ({
       id: speaker.speaker.id,
       name: speaker.speaker.name,
@@ -138,7 +137,7 @@ export async function getEventById(id: string): Promise<Event | null> {
   if (!eventsWithSpeakers) return null
   const event: Event = {
     ...eventsWithSpeakers,
-    date: convertDate(eventsWithSpeakers.date.toDateString()),
+    date: eventsWithSpeakers.date,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     speakers: eventsWithSpeakers.speakers.map((speaker: any) => ({
       id: speaker.speaker.id,
@@ -243,5 +242,102 @@ export async function getParticipantsOfEvent(props: {
   } catch (error) {
     console.error('Error fetching participants:', error)
     throw error
+  }
+}
+
+export async function createEvent(event: Event, communityId: string) {
+  if (!communityId) return
+  try {
+    const eventData = await prisma.event.create({
+      data: {
+        community: event.community,
+        title: event.title,
+        background: event.background,
+        logo: event.logo,
+        tagLine: event.tagLine,
+        date: event.date,
+        time: event.time,
+        location: event.location,
+        description: event.description,
+        tickets: event.tickets,
+        objectives: event.objectives,
+      },
+    })
+    await prisma.eventOrganizer.create({
+      data: {
+        eventId: eventData.id,
+        organizerId: communityId,
+      },
+    })
+    await prisma.eventSpeaker.createMany({
+      data: event.speakers.map((speaker) => ({
+        speakerId: speaker.id,
+        eventId: eventData.id,
+      })),
+    })
+    await prisma.eventPartner.createMany({
+      data: event.partners.map((partner) => ({
+        partnerId: partner.id,
+        eventId: eventData.id,
+      })),
+    })
+    return eventData
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export async function editEvent(
+  eventId: string,
+  event: Event,
+  communityId: string,
+) {
+  if (!communityId) return
+  if (!eventId) return
+
+  try {
+    // Update the event details
+    const updatedEvent = await prisma.event.update({
+      where: { id: eventId }, // Find the event by ID
+      data: {
+        community: event.community,
+        title: event.title,
+        background: event.background,
+        logo: event.logo,
+        tagLine: event.tagLine,
+        date: event.date,
+        time: event.time,
+        location: event.location,
+        description: event.description,
+        tickets: event.tickets,
+        objectives: event.objectives,
+      },
+    })
+
+    // Remove old speakers and add new ones
+    await prisma.eventSpeaker.deleteMany({
+      where: { eventId: updatedEvent.id },
+    })
+    await prisma.eventSpeaker.createMany({
+      data: event.speakers.map((speaker) => ({
+        speakerId: speaker.id,
+        eventId: updatedEvent.id,
+      })),
+    })
+
+    // Remove old partners and add new ones
+    await prisma.eventPartner.deleteMany({
+      where: { eventId: updatedEvent.id },
+    })
+    await prisma.eventPartner.createMany({
+      data: event.partners.map((partner) => ({
+        partnerId: partner.id,
+        eventId: updatedEvent.id,
+      })),
+    })
+
+    return updatedEvent
+  } catch (error) {
+    console.log('Error updating event:', error)
   }
 }

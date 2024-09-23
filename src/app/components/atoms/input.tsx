@@ -9,6 +9,7 @@ export interface InputProps
   helperText?: string
   buttonLabel?: string
   button?: boolean
+  buttonOnClick?: () => void
   error?: string | undefined
   required?: boolean
 }
@@ -23,6 +24,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       helperText,
       error,
       required,
+      buttonOnClick,
       ...props
     },
     ref,
@@ -43,7 +45,14 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             {...props}
           />
-          {button && <Button type="submit">{buttonLabel}</Button>}
+          {button && (
+            <Button
+              type={buttonOnClick ? 'button' : 'submit'}
+              onClick={buttonOnClick}
+            >
+              {buttonLabel}
+            </Button>
+          )}
         </div>
         <span className="text-sm text-red-500">{error}</span>
         <span className="text-sm text-gray-400">{helperText}</span>

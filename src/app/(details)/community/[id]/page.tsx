@@ -134,7 +134,7 @@ export default function CommunityPage({ params }: { params: { id: string } }) {
                   <Image
                     unoptimized
                     key={partner.id}
-                    src={partner.image}
+                    src={partner.image || ''}
                     alt={partner.name}
                     width={300}
                     height={300}

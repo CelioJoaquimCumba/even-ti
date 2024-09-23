@@ -102,7 +102,7 @@ export default function CreateCommunityModal(props: {
   const handleUpload = async (file: File): Promise<string> => {
     if (!file) return ''
 
-    const storageRef = ref(storage, `users/${user.id}/${file.name}`)
+    const storageRef = ref(storage, `users/${user.id}/community/${file.name}`)
 
     try {
       await uploadBytes(storageRef, file)
