@@ -55,6 +55,7 @@ export default function Home() {
       }
     })()
   }, [search, page])
+
   return (
     <main className="flex w-full h-full flex-col items-center gap-2 md:gap-6 bg-white rounded-2xl overflow-y-auto">
       {isLoading ? (
