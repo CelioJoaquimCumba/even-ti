@@ -35,7 +35,6 @@ const personalNavItems = [
   routes.reservations,
   routes.settings,
 ]
-
 const communityNavItems = [
   routes.stats,
   routes.communityEvents,
