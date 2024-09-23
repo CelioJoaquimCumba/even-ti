@@ -25,7 +25,7 @@ export interface EventLite {
   community: string
   title: string
   logo: string
-  date: string
+  date: Date
   time: string
   location: string
   description: string

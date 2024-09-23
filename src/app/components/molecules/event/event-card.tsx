@@ -17,6 +17,7 @@ import AuthenticateModal from '../authenticate-modal'
 import ErrorModal from '../error-modal'
 import SuccessfulReservationEventModal from '../reservation/successful-reservation-event-modal'
 import { makeReservation } from '@/app/actions/reservations'
+import { convertDate } from '@/lib/utils'
 
 type role = 'admin' | 'user'
 export function EventCard(props: { event: EventLite; role?: role }) {
@@ -87,8 +88,8 @@ export function EventCard(props: { event: EventLite; role?: role }) {
           <div
             className={`hidden ${!isOpen && 'md:flex md:flex-col'} w-40 h-40 justify-center items-center border rounded-3xl`}
           >
-            <h2>{date.split('de')[1]}</h2>
-            <h3>{date.split('de')[0]}</h3>
+            <h2>{date.getDay()}</h2>
+            <h3>{date.getMonth()}</h3>
           </div>
           <Image
             unoptimized
@@ -122,7 +123,9 @@ export function EventCard(props: { event: EventLite; role?: role }) {
                 className={`gap-2 px-2 py-1 w-fit ${!isOpen && 'md:hidden'}`}
               >
                 <CalendarIcon />
-                <span className="md:whitespace-nowrap">{date}</span>
+                <span className="md:whitespace-nowrap">
+                  {convertDate(date.toDateString())}
+                </span>
               </Badge>
               <Badge variant={'secondary'} className="gap-2 px-2 py-1 w-fit">
                 <ClockIcon />

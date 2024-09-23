@@ -27,7 +27,7 @@ import { Event } from '@/data/types'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { storage } from '@/app/firebaseConfig'
 
-export default function EventPage() {
+export default function EventCreatePage() {
   const router = useRouter()
   const formik = useFormik(
     CreateEventValidation({
@@ -208,16 +208,16 @@ export default function EventPage() {
   const handleSubmit = async () => {
     setLoading(true)
     try {
+      if (!formik.values.date) return
       const backgroundSrc = await handleUpload(background!, 'background')
       const logoSrc = await handleUpload(logo!, 'logo')
-      console.log(formik.values.date?.toString())
       const event: Event = {
         community: space?.name || '',
         title: formik.values.name,
         background: backgroundSrc,
         logo: logoSrc,
         tagLine: formik.values.slogan,
-        date: formik.values.date?.toString() || '',
+        date: formik.values.date,
         time: formik.values.time,
         location: formik.values.location,
         description: formik.values.description,
@@ -429,7 +429,13 @@ export default function EventPage() {
             ))}
           </div>
           <div className="flex gap-2 w-full justify-center">
-            <Button variant={'outline'}>Cancelar</Button>
+            <Button
+              variant={'outline'}
+              type="button"
+              onClick={() => router.back()}
+            >
+              Cancelar
+            </Button>
             <Button className="gap-2" loading={loading}>
               <Plus className="h-4 w-4" />
               <span>Criar evento</span>
