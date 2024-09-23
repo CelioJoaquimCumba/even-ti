@@ -15,7 +15,7 @@ export function SpeakerCard(props: { speaker: User; className?: string }) {
       <CardHeader className="p-0">
         <Image
           unoptimized
-          src={image}
+          src={image || ''}
           width={100}
           height={100}
           alt={`profile-${name}`}

@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function convertDate(dateString: string , part?: 'day' | 'month') {
+export function convertDate(dateString: string, part?: 'day' | 'month') {
   // Parse the input date string
   const date = new Date(dateString)
 

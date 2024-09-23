@@ -9,6 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '../dialog'
+import { convertDate } from '@/lib/utils'
 export default function ReserveEventModal(props: {
   open: boolean
   close: () => void
@@ -35,7 +36,9 @@ export default function ReserveEventModal(props: {
             <p className="text-base font-normal text-slate-700">
               {description}
             </p>
-            <p className="text-base font-normal text-slate-700">{date}</p>
+            <p className="text-base font-normal text-slate-700">
+              {convertDate(date.toDateString())}
+            </p>
             <p className="text-base font-normal text-slate-700">{time}</p>
           </DialogDescription>
         </DialogHeader>
