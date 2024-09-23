@@ -126,7 +126,8 @@ export function EventCardLite(props: { event: EventLite }) {
                 e.stopPropagation()
               }}
             >
-              Reservar Bilhete {tickets && `(${tickets} disponiveis)`}
+              Reservar Bilhete{' '}
+              {tickets && tickets < 10 && `(${tickets} disponiveis)`}
             </Button>
           </div>
         </CardFooter>

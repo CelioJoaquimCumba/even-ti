@@ -201,7 +201,8 @@ export function EventCard(props: { event: EventLite; role?: role }) {
                   e.stopPropagation()
                 }}
               >
-                Reservar Bilhete {tickets && `(${tickets} disponiveis)`}
+                Reservar Bilhete{' '}
+                {tickets && tickets < 10 && `(${tickets} disponiveis)`}
               </Button>
             )}
           </div>
