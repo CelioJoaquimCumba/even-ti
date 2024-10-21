@@ -1,14 +1,22 @@
 'use client'
 
-import { getEventById } from '@/app/actions/event'
+import { cancelEvent, getEventById } from '@/app/actions/event'
 import { Button } from '@/app/components/atoms/button'
 
 import ParticipantsList from '@/app/community-management/(details)/event/[id]/participantsList'
 import { Event } from '@/data/types'
-import { ChevronLeft, ListChecks } from 'lucide-react'
+import { ChevronLeft, ListChecks, Pencil, CircleX } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import EventPreview from './eventPreview'
+import {
+  DropdownMenu,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/app/components/molecules/dropdown-menu'
+import { DotsVerticalIcon } from '@radix-ui/react-icons'
 
 export default function EventPage({ params }: { params: { id: string } }) {
   const [event, setEvent] = useState<Event>()
@@ -33,6 +41,15 @@ export default function EventPage({ params }: { params: { id: string } }) {
       }
     })()
   }, [id])
+  const handleEventCancelation = async () => {
+    try {
+      if (!event) throw new Error('Event not found')
+      await cancelEvent(event.id)
+      router.push('/community-management/events')
+    } catch {
+      console.log('error canceling event')
+    }
+  }
   return (
     <div className="flex flex-col pt-2 pb-8 px-6 bg-secondary overflow-hidden w-full h-full gap-2 md:gap-6">
       {!loadingEvent && event && (
@@ -48,15 +65,52 @@ export default function EventPage({ params }: { params: { id: string } }) {
             </Button>
             <h1 className="text-lg md:text-2xl text-gray-700">{event.title}</h1>
           </div>
-          <Button
-            className="px-8 py-4"
-            onClick={() =>
-              router.push(`/community-management/event/${event.id}/`)
-            }
-          >
-            <ListChecks className="w-4 h-4" />
-            <span>Marcar Presenças</span>
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              className="px-8 py-4"
+              onClick={() =>
+                router.push(`/community-management/event/${event.id}/`)
+              }
+            >
+              <ListChecks className="w-4 h-4" />
+              <span>Marcar Presenças</span>
+            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant={'outline'} size={'icon'}>
+                  <DotsVerticalIcon />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuGroup className="flex flex-col">
+                  <DropdownMenuItem>
+                    <Button
+                      variant={'ghost'}
+                      className="px-8 py-4 gap-2 flex-grow"
+                      onClick={() =>
+                        router.push(
+                          `/community-management/event/edit/${event.id}`,
+                        )
+                      }
+                    >
+                      <Pencil className="w-4 h-4" />
+                      <span>Editar evento</span>
+                    </Button>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Button
+                      variant={'destructive'}
+                      className="px-8 py-4 gap-2 flex-grow"
+                      onClick={() => handleEventCancelation}
+                    >
+                      <CircleX className="w-4 h-4" />
+                      <span>Cancelar evento</span>
+                    </Button>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </header>
       )}
       <main className="flex flex-col gap-4 flex-grow overflow-y-auto">
