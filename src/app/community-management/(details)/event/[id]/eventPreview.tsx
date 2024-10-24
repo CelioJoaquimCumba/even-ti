@@ -5,8 +5,6 @@ import { Button } from '@/app/components/atoms/button'
 import { Card, CardContent } from '@/app/components/atoms/card'
 import { SpeakerCard } from '@/app/components/atoms/speaker-card'
 import { Event } from '@/data/types'
-import { Pencil } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { convertDate } from '@/lib/utils'
 
@@ -15,7 +13,6 @@ export default function EventPreview(props: {
   loading: boolean
 }) {
   const { event, loading } = props
-  const router = useRouter()
   const handleCommunity = () => {
     alert('go to community')
   }
@@ -24,22 +21,6 @@ export default function EventPreview(props: {
   }
   return (
     <div className="flex flex-col gap-4 p-2 md:p-4 bg-white rounded-md">
-      <div className="flex w-full justify-between">
-        <h3 className="text-2xl text-gray-600 font-medium">
-          Previsualização do evento
-        </h3>
-        {event && (
-          <Button
-            className="px-8 py-4 gap-2"
-            onClick={() =>
-              router.push(`/community-management/event/edit/${event.id}`)
-            }
-          >
-            <Pencil className="w-4 h-4" />
-            <span>Editar evento</span>
-          </Button>
-        )}
-      </div>
       {loading ? (
         <section
           className={`flex flex-col self-stretch w-full animate-pulse rounded-md justify-center items-center text-white text-center gap-4 bg-cover`}

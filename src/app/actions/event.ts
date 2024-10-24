@@ -341,3 +341,16 @@ export async function editEvent(
     console.log('Error updating event:', error)
   }
 }
+
+export async function cancelEvent(eventId: string) {
+  if (!eventId) return
+  try {
+    await prisma.event.delete({
+      where: {
+        id: eventId,
+      },
+    })
+  } catch (error) {
+    console.log(error)
+  }
+}

@@ -123,6 +123,78 @@ export async function getMyCommunities(
   }))
 }
 
+export async function getMembersOfCommunity(props: {
+  communityId: string
+  page?: number
+  pageSize?: number
+  search?: string
+  isCore?: boolean
+}): Promise<{ members: User[]; paginationMeta: PaginationMeta }> {
+  const {
+    communityId,
+    page = 1,
+    pageSize = 10,
+    search = '',
+    isCore = false,
+  } = props
+
+  // Calculate pagination parameters
+  const skip = (page - 1) * pageSize
+  const take = pageSize
+
+  try {
+    // Fetch reservations with user details matching the search criteria for the specific event
+    const communityMembers = await prisma.communityMember.findMany({
+      where: {
+        communityId,
+        role: isCore ? { in: ['ADMIN', 'CORE_MEMBER'] } : 'MEMBER',
+        member: {
+          OR: [
+            {
+              name: {
+                contains: search,
+                mode: 'insensitive', // Case-insensitive search
+              },
+            },
+            {
+              email: {
+                contains: search,
+                mode: 'insensitive', // Case-insensitive search
+              },
+            },
+          ],
+        },
+      },
+      include: {
+        member: true, // Include user details
+      },
+      skip,
+      take,
+    })
+    const totalCount = communityMembers.length
+
+    // Map the reservations to return the participant data
+    const members: User[] = communityMembers.map((communityMember) => ({
+      id: communityMember.member.id,
+      name: communityMember.member.name,
+      email: communityMember.member.email,
+      image: communityMember.member.image,
+    }))
+
+    const paginationMeta: PaginationMeta = {
+      totalCount,
+      page,
+      pageSize,
+      totalPages: Math.ceil(totalCount / pageSize),
+    }
+
+    return { members, paginationMeta }
+  } catch (error) {
+    console.error('Error fetching members:', error)
+    throw error
+  }
+}
+
 export async function sendEmail(
   user: User,
   communityData: {
