@@ -45,6 +45,7 @@ export default function ParticipantsList(props: { event: Event | undefined }) {
       const response = await getParticipantsOfEvent({
         eventId: event.id,
         search,
+        page,
       })
       if (!response) throw new Error('Events not found')
       setMeta(response.paginationMeta)
