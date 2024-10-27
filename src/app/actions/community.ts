@@ -1,7 +1,6 @@
 'use server'
 import { Community, CommunityLite, PaginationMeta, User } from '@/data/types'
 import prisma from '@/lib/prisma'
-import { convertDate } from '@/lib/utils'
 import { Resend } from 'resend'
 import { EmailTemplate } from '../templates/email/create-community'
 
