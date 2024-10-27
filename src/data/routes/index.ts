@@ -62,14 +62,14 @@ export const routes = {
     path: '/community-management/member',
     requiresAuth: true,
     icon: UsersIcon,
-    comingSoon: true,
+    comingSoon: false,
   },
   participants: {
     label: 'Participantes',
-    path: '/community-management/participants',
+    path: '/community-management/participant',
     requiresAuth: true,
     icon: BookUser,
-    comingSoon: true,
+    comingSoon: false,
   },
   partners: {
     label: 'Parceiros',
