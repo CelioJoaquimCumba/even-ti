@@ -23,7 +23,6 @@ export default function CommunityPage({ params }: { params: { id: string } }) {
         const response = await getCommunityById(id)
         if (!response || !response == null) {
           throw new Error('Community not found')
-          return
         }
         setCommunity(response)
       } catch (error) {

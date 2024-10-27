@@ -10,6 +10,7 @@ import AuthenticateModal from '@/app/components/molecules/authenticate-modal'
 import ErrorModal from '@/app/components/molecules/error-modal'
 import ReserveEventModal from '@/app/components/molecules/reservation/reserve-event-modal'
 import SuccessfulReservationEventModal from '@/app/components/molecules/reservation/successful-reservation-event-modal'
+import { routes } from '@/data/routes'
 import { Event, ModalType } from '@/data/types'
 import { convertDate } from '@/lib/utils'
 import { useUser } from '@auth0/nextjs-auth0/client'
@@ -29,7 +30,7 @@ export default function EventPage({ params }: { params: { id: string } }) {
   const [loading, setLoading] = useState(true)
   const [reservationLoading, setReservationLoading] = useState(false)
   const handleCommunity = (id: string) => {
-    router.push(`/community/${id}`)
+    router.push(routes.community.path + '/' + id)
   }
   const handleRequestReservation = async () => {
     try {

@@ -88,7 +88,6 @@ export async function getCommunityById(id: string): Promise<Community | null> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     events: community.events.map((event: any) => ({
       ...event.event,
-      date: convertDate(event.event.date.toString()),
       id: event.event.id,
       name: event.event.name,
       image: event.event.image,

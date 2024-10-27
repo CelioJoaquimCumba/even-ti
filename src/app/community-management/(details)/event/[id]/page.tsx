@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from '@/app/components/molecules/dropdown-menu'
 import { DotsVerticalIcon } from '@radix-ui/react-icons'
+import { routes } from '@/data/routes'
 
 export default function EventPage({ params }: { params: { id: string } }) {
   const [event, setEvent] = useState<Event>()
@@ -43,9 +44,10 @@ export default function EventPage({ params }: { params: { id: string } }) {
   }, [id])
   const handleEventCancelation = async () => {
     try {
+      console.log('here')
       if (!event) throw new Error('Event not found')
       await cancelEvent(event.id)
-      router.push('/community-management/events')
+      router.push(routes.communityEvents.path)
     } catch {
       console.log('error canceling event')
     }
@@ -101,7 +103,7 @@ export default function EventPage({ params }: { params: { id: string } }) {
                     <Button
                       variant={'destructive'}
                       className="px-8 py-4 gap-2 flex-grow"
-                      onClick={() => handleEventCancelation}
+                      onClick={() => handleEventCancelation()}
                     >
                       <CircleX className="w-4 h-4" />
                       <span>Cancelar evento</span>
