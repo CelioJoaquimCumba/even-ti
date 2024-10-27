@@ -345,10 +345,22 @@ export async function editEvent(
 export async function cancelEvent(eventId: string) {
   if (!eventId) return
   try {
+    await prisma.eventOrganizer.deleteMany({
+      where: { eventId },
+    })
+    await prisma.eventPartner.deleteMany({
+      where: { eventId },
+    })
+    await prisma.eventSpeaker.deleteMany({
+      where: { eventId },
+    })
+    await prisma.reservation.deleteMany({
+      where: { eventId },
+    })
+
+    // Finally, delete the event itself
     await prisma.event.delete({
-      where: {
-        id: eventId,
-      },
+      where: { id: eventId },
     })
   } catch (error) {
     console.log(error)
