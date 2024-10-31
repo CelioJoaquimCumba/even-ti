@@ -52,6 +52,12 @@ export default function EventCreatePage() {
   )
   const { space } = usePage()
   useEffect(() => {
+    if (!space) {
+      // Redirect to the desired path if spaces is not defined
+      router.push('/') // replace with the desired path
+    }
+  }, [space, router])
+  useEffect(() => {
     ;(async function () {
       try {
         const response = await getPartners({ communityId: space?.id })

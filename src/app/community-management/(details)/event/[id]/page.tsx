@@ -18,12 +18,20 @@ import {
 } from '@/app/components/molecules/dropdown-menu'
 import { DotsVerticalIcon } from '@radix-ui/react-icons'
 import { routes } from '@/data/routes'
+import { usePage } from '@/app/providers/PageContext'
 
 export default function EventPage({ params }: { params: { id: string } }) {
   const [event, setEvent] = useState<Event>()
-  const router = useRouter()
   const { id } = params
   const [loadingEvent, setLoadingEvent] = useState(true)
+  const router = useRouter()
+  const { space } = usePage()
+  useEffect(() => {
+    if (!space) {
+      // Redirect to the desired path if spaces is not defined
+      router.push('/') // replace with the desired path
+    }
+  }, [space, router])
 
   useEffect(() => {
     ;(async function () {

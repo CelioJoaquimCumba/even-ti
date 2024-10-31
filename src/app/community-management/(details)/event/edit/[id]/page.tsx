@@ -67,6 +67,13 @@ export default function EventEditPage({ params }: { params: { id: string } }) {
     label: string
     id: string
   }>()
+
+  useEffect(() => {
+    if (!space) {
+      // Redirect to the desired path if spaces is not defined
+      router.push('/') // replace with the desired path
+    }
+  }, [space, router])
   useEffect(() => {
     ;(async function () {
       try {
